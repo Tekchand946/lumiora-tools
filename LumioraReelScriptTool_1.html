@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumiora — Reel Script Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Marcellus&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0a0c16;
+    --bg-panel:#12142a;
+    --bg-panel-2:#171a35;
+    --line:#2a2d52;
+    --gold:#d4af37;
+    --gold-soft:#f0d796;
+    --teal:#3fd0c9;
+    --text:#eae8f5;
+    --muted:#8d8ba8;
+    --danger:#e0664f;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, #221b3d 0%, transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 0%, #0f2a2c 0%, transparent 55%),
+      var(--bg-deep);
+    color:var(--text);
+    font-family:'Poppins',sans-serif;
+    min-height:100vh;
+    padding:36px 20px 80px;
+  }
+  .stars{
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, #fff8 40%, transparent),
+      radial-gradient(1px 1px at 75% 15%, #fff6 40%, transparent),
+      radial-gradient(1px 1px at 50% 70%, #fff5 40%, transparent),
+      radial-gradient(1.5px 1.5px at 90% 60%, #fff7 40%, transparent),
+      radial-gradient(1px 1px at 30% 85%, #fff5 40%, transparent),
+      radial-gradient(1.5px 1.5px at 10% 55%, #fff6 40%, transparent);
+    background-size:600px 600px;
+    opacity:.7;
+  }
+  .wrap{max-width:900px; margin:0 auto; position:relative; z-index:1;}
+
+  header{text-align:center; margin-bottom:38px;}
+  .eyebrow{
+    font-family:'Marcellus',serif; letter-spacing:.35em; text-transform:uppercase;
+    font-size:11px; color:var(--teal); margin-bottom:10px;
+  }
+  h1{
+    font-family:'Cormorant Garamond',serif; font-weight:600; font-style:italic;
+    font-size:44px; margin:0 0 6px; color:var(--gold-soft);
+    text-shadow:0 0 30px rgba(212,175,55,.25);
+  }
+  .sub{color:var(--muted); font-size:14px; font-weight:300;}
+
+  .panel{
+    background:linear-gradient(160deg,var(--bg-panel),var(--bg-panel-2));
+    border:1px solid var(--line); border-radius:14px;
+    padding:24px; margin-bottom:22px;
+    box-shadow:0 10px 30px -12px #000a;
+  }
+  .panel h2{
+    font-family:'Marcellus',serif; font-size:15px; letter-spacing:.08em;
+    color:var(--gold); margin:0 0 16px; text-transform:uppercase; font-weight:400;
+  }
+  .row{display:flex; gap:14px; flex-wrap:wrap;}
+  .field{flex:1; min-width:180px; margin-bottom:14px;}
+  label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px; letter-spacing:.02em;}
+  input[type=text], input[type=number], select, textarea{
+    width:100%; background:#0d0f22; border:1px solid var(--line); color:var(--text);
+    border-radius:8px; padding:10px 12px; font-family:'Poppins',sans-serif; font-size:13.5px;
+    outline:none; transition:border .2s;
+  }
+  input:focus, select:focus, textarea:focus{border-color:var(--gold);}
+  textarea{resize:vertical; min-height:64px; line-height:1.5;}
+  select{cursor:pointer;}
+
+  /* Scene timeline */
+  .timeline{position:relative; padding-left:34px;}
+  .timeline::before{
+    content:''; position:absolute; left:11px; top:6px; bottom:6px; width:2px;
+    background:linear-gradient(var(--gold), var(--teal), var(--danger), var(--gold));
+    opacity:.5;
+  }
+  .scene{position:relative; margin-bottom:20px;}
+  .scene:last-child{margin-bottom:0;}
+  .scene-dot{
+    position:absolute; left:-34px; top:2px; width:22px; height:22px; border-radius:50%;
+    background:var(--bg-deep); border:2px solid var(--gold); color:var(--gold-soft);
+    display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600;
+    font-family:'Marcellus',serif;
+  }
+  .scene-title{font-family:'Marcellus',serif; font-size:14px; color:var(--gold-soft); margin-bottom:2px;}
+  .scene-tag{font-size:11px; color:var(--muted); margin-bottom:10px;}
+
+  .btn-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
+  button{
+    font-family:'Poppins',sans-serif; font-weight:500; font-size:13px;
+    border-radius:8px; padding:11px 20px; cursor:pointer; border:none;
+    transition:transform .12s, opacity .12s;
+  }
+  button:active{transform:scale(.97);}
+  .primary{background:linear-gradient(135deg,var(--gold),#b8860b); color:#1a1200;}
+  .secondary{background:transparent; color:var(--teal); border:1px solid var(--teal);}
+  .ghost{background:transparent; color:var(--muted); border:1px solid var(--line);}
+  .danger-btn{background:transparent; color:var(--danger); border:1px solid #5a2a24;}
+
+  .output-block{position:relative; margin-bottom:16px;}
+  .output-block h3{
+    font-family:'Marcellus',serif; font-size:13px; color:var(--teal); margin:0 0 8px; letter-spacing:.05em;
+  }
+  pre{
+    background:#0a0b18; border:1px solid var(--line); border-radius:10px; padding:16px;
+    white-space:pre-wrap; word-break:break-word; font-family:'Poppins',sans-serif; font-size:12.8px;
+    line-height:1.65; color:#d8d6ec; margin:0; max-height:340px; overflow-y:auto;
+  }
+  .copy-btn{
+    position:absolute; top:0; right:0; font-size:11px; padding:6px 12px;
+    background:var(--bg-panel-2); color:var(--gold-soft); border:1px solid var(--line);
+  }
+  .copy-btn.copied{color:var(--teal); border-color:var(--teal);}
+
+  .history-list{display:flex; flex-direction:column; gap:8px;}
+  .history-item{
+    display:flex; justify-content:space-between; align-items:center;
+    background:#0d0f22; border:1px solid var(--line); border-radius:8px; padding:10px 14px;
+    font-size:12.5px;
+  }
+  .history-item .name{color:var(--gold-soft); cursor:pointer;}
+  .history-item .meta{color:var(--muted); font-size:11px;}
+  .history-item .del{color:var(--danger); cursor:pointer; font-size:11px; margin-left:10px;}
+  .empty{color:var(--muted); font-size:12.5px; font-style:italic;}
+
+  footer{text-align:center; margin-top:40px; color:var(--muted); font-size:11px; letter-spacing:.15em;}
+  footer span{color:var(--gold-soft); font-family:'Marcellus',serif;}
+
+  @media(max-width:640px){
+    h1{font-size:32px;} .panel{padding:18px;}
+  }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Lumiora Studio</div>
+    <h1>Reel Script Builder</h1>
+    <div class="sub">Ek baar structure banao, har reel mein sirf topic badlo</div>
+  </header>
+
+  <!-- SETUP -->
+  <div class="panel">
+    <h2>Setup</h2>
+    <div class="row">
+      <div class="field">
+        <label>Reel Topic / Theme</label>
+        <input type="text" id="topic" placeholder="e.g. Bhagirath ki Tapasya, Self-love quote, Sikkim travel">
+      </div>
+      <div class="field" style="max-width:160px;">
+        <label>Language</label>
+        <select id="lang">
+          <option value="hi">Hindi</option>
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+        </select>
+      </div>
+      <div class="field" style="max-width:160px;">
+        <label>Total Duration</label>
+        <select id="duration">
+          <option value="15-20 sec">15–20 sec</option>
+          <option value="20-30 sec" selected>20–30 sec</option>
+          <option value="30-45 sec">30–45 sec</option>
+          <option value="45-60 sec">45–60 sec</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>Visual Mood (for Flow / Veo 3)</label>
+        <input type="text" id="mood" placeholder="e.g. cinematic golden hour, cosmic mystical, warm documentary">
+      </div>
+      <div class="field">
+        <label>Voiceover / Music Style</label>
+        <input type="text" id="audiostyle" placeholder="e.g. deep male narrator + soft tabla, gentle piano">
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE TIMELINE -->
+  <div class="panel">
+    <h2>Scene-by-Scene Structure</h2>
+    <div class="timeline" id="timeline">
+
+      <div class="scene">
+        <div class="scene-dot">1</div>
+        <div class="scene-title">Hook</div>
+        <div class="scene-tag">0–3 sec — viewer ko rokna hai</div>
+        <textarea id="s1desc" placeholder="Kya dikhega/hoga screen par jo turant attention kheenche"></textarea>
+      </div>
+
+      <div class="scene">
+        <div class="scene-dot">2</div>
+        <div class="scene-title">Build-up</div>
+        <div class="scene-tag">Story / message ka development</div>
+        <textarea id="s2desc" placeholder="Context ya kahani aage badhती hai"></textarea>
+      </div>
+
+      <div class="scene">
+        <div class="scene-dot">3</div>
+        <div class="scene-title">Emotional Peak</div>
+        <div class="scene-tag">Sabse strong moment / turning point</div>
+        <textarea id="s3desc" placeholder="Sabse powerful visual ya dialogue moment"></textarea>
+      </div>
+
+      <div class="scene">
+        <div class="scene-dot">4</div>
+        <div class="scene-title">Quote / CTA End</div>
+        <div class="scene-tag">Message + Lumiora branding ke saath close</div>
+        <textarea id="s4desc" placeholder="Final quote text ya call-to-action"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-bottom:22px;">
+    <button class="primary" onclick="generate()">✦ Generate Prompt + Checklist</button>
+    <button class="secondary" onclick="saveTemplate()">Save as Template</button>
+    <button class="ghost" onclick="clearForm()">Clear Form</button>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="panel" id="outputPanel" style="display:none;">
+    <h2>Ready Output</h2>
+
+    <div class="output-block">
+      <h3>Google Flow / Veo 3 Prompt</h3>
+      <button class="copy-btn" onclick="copyBlock('flowOut', this)">Copy</button>
+      <pre id="flowOut"></pre>
+    </div>
+
+    <div class="output-block">
+      <h3>VN Editor Checklist</h3>
+      <button class="copy-btn" onclick="copyBlock('vnOut', this)">Copy</button>
+      <pre id="vnOut"></pre>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="panel">
+    <h2>Saved Templates</h2>
+    <div class="history-list" id="historyList"></div>
+  </div>
+
+  <footer>LUMIORA <span>✦</span> REEL SCRIPT STUDIO</footer>
+</div>
+
+<script>
+const STORAGE_KEY = 'lumiora_reel_templates';
+
+function getFormData(){
+  return {
+    topic: document.getElementById('topic').value.trim(),
+    lang: document.getElementById('lang').value,
+    duration: document.getElementById('duration').value,
+    mood: document.getElementById('mood').value.trim(),
+    audiostyle: document.getElementById('audiostyle').value.trim(),
+    s1: document.getElementById('s1desc').value.trim(),
+    s2: document.getElementById('s2desc').value.trim(),
+    s3: document.getElementById('s3desc').value.trim(),
+    s4: document.getElementById('s4desc').value.trim(),
+  };
+}
+
+function langLabel(code){
+  return {hi:'Hindi', en:'English', es:'Spanish'}[code] || code;
+}
+
+function buildFlowPrompt(d){
+  return [
+`SCENE 1 — HOOK (0–3s)`,
+`${d.s1 || '[hook description]'}`,
+`Style: ${d.mood || 'cinematic'}, vertical 9:16, sharp opening frame`,
+``,
+`SCENE 2 — BUILD-UP`,
+`${d.s2 || '[build-up description]'}`,
+`Style: ${d.mood || 'cinematic'}, smooth camera movement, consistent lighting with Scene 1`,
+``,
+`SCENE 3 — EMOTIONAL PEAK`,
+`${d.s3 || '[peak moment description]'}`,
+`Style: ${d.mood || 'cinematic'}, close-up or dramatic angle, heightened emotion`,
+``,
+`SCENE 4 — QUOTE / CTA END`,
+`${d.s4 || '[closing quote / message]'}`,
+`Style: ${d.mood || 'cinematic'}, calm settle shot, space left for text overlay + Lumiora watermark`,
+``,
+`— GLOBAL —`,
+`Total length: ${d.duration}`,
+`Language: ${langLabel(d.lang)}`,
+`Audio direction: ${d.audiostyle || 'not specified'}`,
+`Topic: ${d.topic || 'not specified'}`,
+`Consistency: same character/subject design, same color grade and lighting logic across all 4 scenes.`
+  ].join('\n');
+}
+
+function buildVNChecklist(d){
+  return [
+`1. IMPORT`,
+`   • Drop Scene 1→4 clips in order, trim dead frames at start/end`,
+``,
+`2. TRANSITIONS`,
+`   • Scene 1→2: quick cut or whip pan (keep hook energy)`,
+`   • Scene 2→3: cross dissolve or match cut (build tension)`,
+`   • Scene 3→4: gentle fade/settle (let peak breathe before CTA)`,
+``,
+`3. TEXT OVERLAY`,
+`   • Scene 1: optional hook text, top third, bold`,
+`   • Scene 4: quote text (${langLabel(d.lang)}) + "— Lumiora" watermark, bottom third`,
+`   • Keep text out of bottom 15% (FB UI overlap zone)`,
+``,
+`4. AUDIO`,
+`   • VO/style: ${d.audiostyle || 'add narration or music'}`,
+`   • Duck music -6dB under any voiceover`,
+`   • Fade out music in final 1s`,
+``,
+`5. COLOR / EXPORT`,
+`   • Match color grade across all clips (consistency check)`,
+`   • Export: 1080x1920, 9:16, 1080p, target length ${d.duration}`,
+``,
+`6. CAPTION FOR POST`,
+`   • Write FB caption in ${langLabel(d.lang)} + relevant hashtags before publishing`
+  ].join('\n');
+}
+
+function generate(){
+  const d = getFormData();
+  document.getElementById('flowOut').textContent = buildFlowPrompt(d);
+  document.getElementById('vnOut').textContent = buildVNChecklist(d);
+  document.getElementById('outputPanel').style.display = 'block';
+  document.getElementById('outputPanel').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function copyBlock(id, btn){
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function clearForm(){
+  ['topic','mood','audiostyle','s1desc','s2desc','s3desc','s4desc'].forEach(id=>{
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('outputPanel').style.display = 'none';
+}
+
+function loadTemplates(){
+  try{
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  }catch(e){ return []; }
+}
+
+function saveTemplates(list){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+function saveTemplate(){
+  const d = getFormData();
+  if(!d.topic){
+    alert('Template save karne se pehle Topic field bharo.');
+    return;
+  }
+  const list = loadTemplates();
+  list.unshift({
+    id: Date.now(),
+    name: d.topic,
+    date: new Date().toLocaleDateString('en-IN'),
+    data: d
+  });
+  saveTemplates(list);
+  renderHistory();
+}
+
+function loadTemplate(id){
+  const list = loadTemplates();
+  const item = list.find(t => t.id === id);
+  if(!item) return;
+  const d = item.data;
+  document.getElementById('topic').value = d.topic || '';
+  document.getElementById('lang').value = d.lang || 'hi';
+  document.getElementById('duration').value = d.duration || '20-30 sec';
+  document.getElementById('mood').value = d.mood || '';
+  document.getElementById('audiostyle').value = d.audiostyle || '';
+  document.getElementById('s1desc').value = d.s1 || '';
+  document.getElementById('s2desc').value = d.s2 || '';
+  document.getElementById('s3desc').value = d.s3 || '';
+  document.getElementById('s4desc').value = d.s4 || '';
+  generate();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function deleteTemplate(id, ev){
+  ev.stopPropagation();
+  const list = loadTemplates().filter(t => t.id !== id);
+  saveTemplates(list);
+  renderHistory();
+}
+
+function renderHistory(){
+  const list = loadTemplates();
+  const container = document.getElementById('historyList');
+  if(list.length === 0){
+    container.innerHTML = '<div class="empty">Abhi koi saved template nahi hai. Form bharo aur "Save as Template" dabao.</div>';
+    return;
+  }
+  container.innerHTML = list.map(t => `
+    <div class="history-item">
+      <div>
+        <span class="name" onclick="loadTemplate(${t.id})">${escapeHtml(t.name)}</span>
+        <div class="meta">${t.date} · ${langLabel(t.data.lang)}</div>
+      </div>
+      <span class="del" onclick="deleteTemplate(${t.id}, event)">Delete</span>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+renderHistory();
+</script>
+</body>
+</html>

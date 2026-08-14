@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Lumiora — Travel Quote Card Generator</title>
+<style>
+  :root{
+    --bg:#1c1410;
+    --panel:#2a201a;
+    --panel-2:#332721;
+    --accent:#e8862c;
+    --accent-2:#c8471f;
+    --text:#f3e9dd;
+    --muted:#b8a892;
+    --border:#4a382e;
+    --lumiora-gold:#d4af37;
+    --lumiora-gold-soft:#f0d796;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', 'Noto Sans Devanagari', Arial, sans-serif;
+    background:linear-gradient(160deg,#1c1410,#241a14 60%,#1c1410);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:28px 16px 60px;
+  }
+  .brandmark{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    color:var(--lumiora-gold);
+    margin-bottom:10px;
+  }
+  .brandmark .dot{ color:var(--lumiora-gold-soft); }
+  h1{
+    font-size:22px;
+    letter-spacing:.5px;
+    margin:0 0 4px;
+    color:var(--text);
+  }
+  .subtitle{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:24px;
+  }
+  .watermark-field{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:8px;
+  }
+  .watermark-field input[type=checkbox]{
+    accent-color:var(--lumiora-gold);
+    width:16px; height:16px;
+  }
+  .watermark-field label{
+    margin:0;
+    color:var(--text);
+    font-size:13px;
+  }
+  .layout{
+    display:flex;
+    gap:28px;
+    width:100%;
+    max-width:1000px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .controls{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+    width:100%;
+    max-width:340px;
+    flex-shrink:0;
+  }
+  .field{ margin-bottom:16px; }
+  label{
+    display:block;
+    font-size:12.5px;
+    color:var(--muted);
+    margin-bottom:6px;
+    letter-spacing:.3px;
+  }
+  .size-tag{
+    color:var(--accent);
+    font-weight:600;
+  }
+  input[type=text], textarea, select{
+    width:100%;
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    border-radius:8px;
+    color:var(--text);
+    padding:9px 10px;
+    font-size:14px;
+    font-family:inherit;
+    resize:vertical;
+  }
+  input[type=text]:focus, textarea:focus, select:focus{
+    outline:none;
+    border-color:var(--accent);
+  }
+  .theme-grid{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .theme-btn{
+    flex:1 1 calc(33.333% - 6px);
+    min-width:80px;
+    padding:10px 4px;
+    text-align:center;
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13px;
+    color:var(--muted);
+    transition:.15s;
+  }
+  .theme-btn.active{
+    border-color:var(--accent);
+    color:var(--accent);
+    background:#3a2c1e;
+  }
+  button.generate{
+    width:100%;
+    padding:12px;
+    background:linear-gradient(120deg,var(--accent-2),var(--accent));
+    border:none;
+    border-radius:9px;
+    color:#1c1410;
+    font-weight:700;
+    font-size:14.5px;
+    cursor:pointer;
+    margin-top:6px;
+  }
+  button.download{
+    width:100%;
+    padding:11px;
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    border-radius:9px;
+    color:var(--text);
+    font-size:14px;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  button.download:hover{ border-color:var(--accent); }
+  .preview-wrap{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  canvas{
+    width:100%;
+    max-width:340px;
+    height:auto;
+    aspect-ratio:1080/1350;
+    border-radius:6px;
+    box-shadow:0 8px 30px rgba(0,0,0,.5);
+    background:#000;
+  }
+  .preview-wrap{
+    width:100%;
+    max-width:340px;
+  }
+  .dims{
+    font-size:12px;
+    color:var(--muted);
+  }
+  .hint{
+    font-size:11.5px;
+    color:var(--muted);
+    line-height:1.5;
+    margin-top:2px;
+  }
+  @media(max-width:400px){
+    body{ padding:20px 12px 50px; }
+    .controls, .preview-wrap{ max-width:100%; }
+    h1{ font-size:19px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="brandmark"><span class="dot">✦</span> Lumiora <span class="dot">✦</span></div>
+<h1>Travel Quote Card Generator</h1>
+<div class="subtitle">Gujarat · Sikkim · Ladakh · Rajasthan &nbsp;|&nbsp; 1080×1350 px &nbsp;|&nbsp; Upper 45% plain area for quote</div>
+
+<div class="layout">
+  <div class="controls">
+
+    <div class="field">
+      <label>Theme चुनिए</label>
+      <div class="theme-grid" style="flex-wrap:wrap;">
+        <div class="theme-btn active" data-theme="gujarat">Gujarat</div>
+        <div class="theme-btn" data-theme="sikkim">Sikkim</div>
+        <div class="theme-btn" data-theme="ladakh">Ladakh</div>
+        <div class="theme-btn" data-theme="rajasthan">Rajasthan</div>
+        <div class="theme-btn" data-theme="kerala">Kerala</div>
+        <div class="theme-btn" data-theme="himachal">Himachal</div>
+        <div class="theme-btn" data-theme="varanasi">Varanasi</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>अपनी खुद की फोटो लगाएं (वैकल्पिक)</label>
+      <input type="file" id="photoInput" accept="image/*">
+      <div class="hint" style="margin-top:6px;">Photo upload karne par neeche wala illustration hatt jayega aur aapki photo background mein aa jayegi.</div>
+      <button class="download" id="clearPhotoBtn" style="margin-top:8px; display:none;">Photo हटाएं (illustration वापस लाएं)</button>
+    </div>
+
+    <div class="field" id="photoLayoutField" style="display:none;">
+      <label>Photo Layout</label>
+      <select id="photoLayout">
+        <option value="split">Split (photo neeche, upar plain panel)</option>
+        <option value="full">Full Photo (poori photo, text upar overlay)</option>
+      </select>
+    </div>
+
+    <div class="field" id="photoFitField" style="display:none;">
+      <label>Photo Fit</label>
+      <select id="photoFit">
+        <option value="fill">Fill — बड़ा दिखेगा (थोड़ा crop हो सकता है)</option>
+        <option value="fit">Fit — पूरी photo दिखेगी (थोड़ा छोटा हो सकता है)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Text Font Style</label>
+      <select id="fontStyle">
+        <option value="sans">Bold Sans (default)</option>
+        <option value="serif">Elegant Serif (premium look)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Text Effect</label>
+      <select id="textEffect">
+        <option value="shadow">Shadow (default)</option>
+        <option value="emboss">Embossed / उभरा हुआ (carved look)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Quote line 1 <span class="size-tag" id="qsizeLabel">(74px)</span></label>
+      <input type="text" id="line1" value="हार मत मानो,">
+    </div>
+
+    <div class="field">
+      <label>Quote line 2</label>
+      <input type="text" id="line2" value="मंज़िल पास ही है।">
+    </div>
+
+    <div class="field">
+      <label>Quote line 3 (वैकल्पिक)</label>
+      <input type="text" id="line3" value="">
+    </div>
+
+    <div class="field">
+      <label>Author / page name <span class="size-tag" id="asizeLabel">(36px)</span></label>
+      <select id="authorPreset" style="margin-bottom:8px;">
+        <option value="— Tekchand Jeswani">Tekchand Jeswani</option>
+        <option value="— Lumiora">Lumiora</option>
+        <option value="custom">Custom (type below)</option>
+      </select>
+      <input type="text" id="author" value="— Tekchand Jeswani">
+    </div>
+
+    <div class="field">
+      <label>आपका पूरा नाम (bottom watermark) <span class="size-tag">(30px, fixed)</span></label>
+      <input type="text" id="username" value="Tekchand Jeswani">
+      <div class="watermark-field">
+        <input type="checkbox" id="showLumioraMark" checked>
+        <label for="showLumioraMark">Lumiora gold mark दिखाएं (top corner)</label>
+      </div>
+    </div>
+
+    <button class="generate" onclick="render()">Card बनाइए</button>
+    <button class="download" onclick="download()">PNG Download</button>
+    <div class="hint">Font size हर theme के हिसाब से ऊपर fixed दिखाया गया है — जो text paste करेंगे वो हमेशा उसी size में render होगा।</div>
+  </div>
+
+  <div class="preview-wrap">
+    <canvas id="cv" width="1080" height="1350"></canvas>
+    <div class="dims">1080 × 1350 px</div>
+  </div>
+</div>
+
+<script>
+const W = 1080, H = 1350;
+const PLAIN_H = Math.round(H * 0.45);
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+
+const THEME_SIZES = {
+  gujarat: { quote: 74, author: 36 },
+  sikkim:  { quote: 64, author: 34 },
+  ladakh:  { quote: 62, author: 34 },
+  rajasthan: { quote: 70, author: 34 },
+  kerala: { quote: 66, author: 34 },
+  himachal: { quote: 64, author: 34 },
+  varanasi: { quote: 68, author: 35 }
+};
+const NAME_SIZE = 30; // always fixed
+
+// top-panel gradient + bottom strip colors reused when a custom photo is used
+const THEME_COLORS = {
+  gujarat:   { top:[140,30,40], bottom:[232,120,40], divider:[255,200,90], strip:[140,30,40] },
+  sikkim:    { top:[18,30,60],  bottom:[70,60,110],  divider:[255,210,130], strip:[30,45,40] },
+  ladakh:    { top:[20,70,140], bottom:[110,160,200],divider:[255,210,130], strip:[30,45,55] },
+  rajasthan: { top:[120,35,55], bottom:[225,110,90], divider:[255,205,110], strip:[120,35,55] },
+  kerala:    { top:[20,60,55],  bottom:[230,150,60], divider:[255,210,120], strip:[20,55,45] },
+  himachal:  { top:[25,35,70],  bottom:[140,120,170],divider:[225,215,240], strip:[35,45,42] },
+  varanasi:  { top:[90,30,60],  bottom:[255,150,90], divider:[255,210,130], strip:[75,38,30] }
+};
+
+let uploadedImg = null;
+
+const photoInput = document.getElementById('photoInput');
+const clearPhotoBtn = document.getElementById('clearPhotoBtn');
+const photoLayoutField = document.getElementById('photoLayoutField');
+const photoFitField = document.getElementById('photoFitField');
+
+photoInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      uploadedImg = img;
+      clearPhotoBtn.style.display = 'block';
+      photoLayoutField.style.display = 'block';
+      photoFitField.style.display = 'block';
+      render();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+clearPhotoBtn.addEventListener('click', () => {
+  uploadedImg = null;
+  photoInput.value = '';
+  clearPhotoBtn.style.display = 'none';
+  photoLayoutField.style.display = 'none';
+  photoFitField.style.display = 'none';
+  render();
+});
+
+document.getElementById('photoLayout').addEventListener('change', render);
+document.getElementById('photoFit').addEventListener('change', render);
+document.getElementById('fontStyle').addEventListener('change', render);
+document.getElementById('textEffect').addEventListener('change', render);
+
+const authorPreset = document.getElementById('authorPreset');
+const authorInput = document.getElementById('author');
+authorPreset.addEventListener('change', () => {
+  if(authorPreset.value !== 'custom'){
+    authorInput.value = authorPreset.value;
+    render();
+  }
+});
+
+function drawImageCover(img, x, y, w, h){
+  const imgRatio = img.width / img.height;
+  const boxRatio = w / h;
+  let sx, sy, sw, sh;
+  if(imgRatio > boxRatio){
+    sh = img.height;
+    sw = sh * boxRatio;
+    sx = (img.width - sw) / 2;
+    sy = 0;
+  } else {
+    sw = img.width;
+    sh = sw / boxRatio;
+    sx = 0;
+    sy = (img.height - sh) / 2;
+  }
+  ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+}
+
+// Draws the FULL image with nothing cropped, centered inside the box.
+// Fills any leftover space with a softly blurred, cover-fit copy of the
+// same image so there's no empty letterbox bars.
+function drawImageContain(img, x, y, w, h){
+  // blurred cover-fit backdrop to fill the box completely
+  ctx.save();
+  ctx.filter = 'blur(24px) brightness(0.75)';
+  drawImageCover(img, x-10, y-10, w+20, h+20);
+  ctx.restore();
+
+  // sharp, uncropped image centered on top
+  const imgRatio = img.width / img.height;
+  const boxRatio = w / h;
+  let dw, dh, dx, dy;
+  if(imgRatio > boxRatio){
+    dw = w;
+    dh = w / imgRatio;
+  } else {
+    dh = h;
+    dw = h * imgRatio;
+  }
+  dx = x + (w - dw) / 2;
+  dy = y + (h - dh) / 2;
+  ctx.drawImage(img, 0, 0, img.width, img.height, dx, dy, dw, dh);
+}
+
+function drawPhotoBackground(){
+  const c = THEME_COLORS[currentTheme];
+  const fit = document.getElementById('photoFit').value;
+  // upper 45% plain gradient panel, matching the chosen theme's palette
+  vGradient(0, PLAIN_H, c.top, c.bottom);
+  ctx.fillStyle = rgb(c.divider);
+  ctx.fillRect(0, PLAIN_H-4, W, 4);
+
+  // lower 55% : user's own photo — Fill (cover, may crop) or Fit (full photo, no crop)
+  if(fit === 'fit'){
+    drawImageContain(uploadedImg, 0, PLAIN_H, W, H-PLAIN_H);
+  } else {
+    drawImageCover(uploadedImg, 0, PLAIN_H, W, H-PLAIN_H);
+  }
+
+  // bottom decorative strip, same as the theme, for a consistent finish
+  const strip_h = 26;
+  ctx.fillStyle = rgb(c.strip);
+  ctx.fillRect(0, H-strip_h, W, strip_h);
+}
+
+function drawFullPhotoBackground(){
+  const fit = document.getElementById('photoFit').value;
+  // photo across the entire 1080x1350 card — Fill (cover, may crop) or Fit (full photo, no crop)
+  if(fit === 'fit'){
+    drawImageContain(uploadedImg, 0, 0, W, H);
+  } else {
+    drawImageCover(uploadedImg, 0, 0, W, H);
+  }
+  // soft dark gradient at the top so text stays readable on any photo
+  const overlay = ctx.createLinearGradient(0,0,0,PLAIN_H+80);
+  overlay.addColorStop(0, 'rgba(0,0,0,0.55)');
+  overlay.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = overlay;
+  ctx.fillRect(0,0,W,PLAIN_H+80);
+  // gentle darkening strip at the very bottom for the name watermark
+  const bOverlay = ctx.createLinearGradient(0,H-160,0,H);
+  bOverlay.addColorStop(0,'rgba(0,0,0,0)');
+  bOverlay.addColorStop(1,'rgba(0,0,0,0.45)');
+  ctx.fillStyle = bOverlay;
+  ctx.fillRect(0,H-160,W,160);
+}
+
+
+let currentTheme = 'gujarat';
+
+document.querySelectorAll('.theme-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTheme = btn.dataset.theme;
+    updateSizeLabels();
+    render();
+  });
+});
+
+function updateSizeLabels(){
+  const s = THEME_SIZES[currentTheme];
+  document.getElementById('qsizeLabel').textContent = `(${s.quote}px)`;
+  document.getElementById('asizeLabel').textContent = `(${s.author}px)`;
+}
+
+function lerp(a,b,t){ return [0,1,2].map(i => Math.round(a[i]+(b[i]-a[i])*t)); }
+function rgb(c){ return `rgb(${c[0]},${c[1]},${c[2]})`; }
+
+function vGradient(y0,y1,c0,c1){
+  for(let y=y0;y<y1;y++){
+    const t=(y-y0)/(y1-y0);
+    ctx.fillStyle = rgb(lerp(c0,c1,t));
+    ctx.fillRect(0,y,W,1);
+  }
+}
+
+function drawStars(n, maxY, seedFn){
+  for(let i=0;i<n;i++){
+    const x = seedFn()*W, y = seedFn()*maxY;
+    const b = 160+Math.floor(seedFn()*95);
+    ctx.fillStyle = `rgb(${b},${b},${b})`;
+    ctx.beginPath(); ctx.arc(x,y,seedFn()>0.7?2:1,0,7); ctx.fill();
+  }
+}
+
+function mulberry32(seed){
+  return function(){
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+
+function jaggedPeaks(baseY, amplitude, nPeaks, color, seed){
+  const rnd = mulberry32(seed);
+  ctx.fillStyle = rgb(color);
+  ctx.beginPath();
+  ctx.moveTo(0, baseY);
+  const step = W/nPeaks;
+  for(let i=0;i<=nPeaks;i++){
+    const x = i*step;
+    const h = amplitude*0.35 + rnd()*amplitude*0.65;
+    ctx.lineTo(x, baseY-h);
+  }
+  ctx.lineTo(W, baseY);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawPrayerFlags(x1,y1,x2,y2,n,colors){
+  ctx.strokeStyle = 'rgba(230,220,200,0.9)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for(let i=0;i<=40;i++){
+    const t=i/40;
+    const fx=x1+(x2-x1)*t, fy=y1+(y2-y1)*t+10*Math.sin(t*Math.PI);
+    if(i===0) ctx.moveTo(fx,fy); else ctx.lineTo(fx,fy);
+  }
+  ctx.stroke();
+  for(let i=0;i<n;i++){
+    const t=i/(n-1);
+    const fx=x1+(x2-x1)*t, fy=y1+(y2-y1)*t+10*Math.sin(t*Math.PI);
+    const col = colors[i%colors.length];
+    const w=22,h=16;
+    ctx.fillStyle = rgb(col);
+    ctx.beginPath();
+    ctx.moveTo(fx,fy); ctx.lineTo(fx+w,fy); ctx.lineTo(fx+w/2,fy+h);
+    ctx.closePath(); ctx.fill();
+  }
+}
+
+function drawChorten(cx,baseY,s){
+  ctx.fillStyle = 'rgb(245,242,235)';
+  ctx.fillRect(cx-s, baseY-s*0.3, s*2, s*0.3);
+  ctx.beginPath();
+  ctx.moveTo(cx-s*0.8, baseY-s*0.3);
+  ctx.lineTo(cx+s*0.8, baseY-s*0.3);
+  ctx.lineTo(cx, baseY-s*1.4);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = 'rgb(210,170,90)'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(cx, baseY-s*1.4); ctx.lineTo(cx, baseY-s*1.9); ctx.stroke();
+  ctx.fillStyle='rgb(210,170,90)';
+  ctx.beginPath();
+  ctx.moveTo(cx, baseY-s*1.9); ctx.lineTo(cx+s*0.35, baseY-s*1.75); ctx.lineTo(cx, baseY-s*1.6);
+  ctx.closePath(); ctx.fill();
+}
+
+function drawPine(cx,baseY,h,w,color){
+  ctx.fillStyle = rgb(color);
+  const layers=3;
+  for(let i=0;i<layers;i++){
+    const t=i/layers;
+    const ly=baseY-h*(1-t);
+    const lw=w*(1-t*0.55);
+    ctx.beginPath();
+    ctx.moveTo(cx-lw/2, ly); ctx.lineTo(cx+lw/2, ly); ctx.lineTo(cx, ly-h/layers*1.3);
+    ctx.closePath(); ctx.fill();
+  }
+  ctx.fillStyle='rgb(40,30,30)';
+  ctx.fillRect(cx-4, baseY-6, 8, 12);
+}
+
+function centeredText(text, y, size, weight, color, opts={}){
+  const fontStyle = document.getElementById('fontStyle').value;
+  const effect = document.getElementById('textEffect').value;
+  const fontFamily = fontStyle === 'serif'
+    ? `'Georgia','Noto Serif Devanagari','Times New Roman',serif`
+    : `'Segoe UI','Noto Sans Devanagari',Arial,sans-serif`;
+  const fw = fontStyle === 'serif' ? (weight >= 700 ? 700 : 400) : weight;
+  ctx.font = `${fw} ${size}px ${fontFamily}`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+
+  if(effect === 'emboss'){
+    // dark shadow (lower-right) for depth
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillText(text, W/2+3, y+4);
+    // soft highlight (upper-left) for the raised edge
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.fillText(text, W/2-2, y-2);
+    // main fill
+    ctx.fillStyle = color;
+    ctx.fillText(text, W/2, y);
+    return;
+  }
+
+  if(opts.shadow){
+    ctx.fillStyle = opts.shadowColor || 'rgba(0,0,0,0.55)';
+    ctx.fillText(text, W/2+3, y+3);
+  }
+  ctx.fillStyle = color;
+  ctx.fillText(text, W/2, y);
+}
+
+function drawCamel(cx,baseY,scale,color){
+  ctx.fillStyle=rgb(color);
+  ctx.beginPath(); ctx.ellipse(cx-2*scale, baseY-20*scale, 32*scale,14*scale,0,0,7); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+5*scale, baseY-37*scale, 11*scale,9*scale,0,0,7); ctx.fill();
+  ctx.strokeStyle=rgb(color); ctx.lineWidth=7*scale;
+  ctx.beginPath(); ctx.moveTo(cx+24*scale, baseY-30*scale); ctx.lineTo(cx+40*scale, baseY-54*scale); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(cx+42*scale, baseY-56*scale, 8*scale,6*scale,0,0,7); ctx.fill();
+  for(const lx of [-26,-10,8,22]){
+    ctx.lineWidth=5*scale;
+    ctx.beginPath(); ctx.moveTo(cx+lx*scale, baseY-8*scale); ctx.lineTo(cx+lx*scale, baseY+22*scale); ctx.stroke();
+  }
+}
+
+function drawGujarat(){
+  vGradient(0, PLAIN_H, [140,30,40], [232,120,40]);
+  const rnd = mulberry32(7);
+  ctx.fillStyle='rgba(255,255,255,0.22)';
+  for(let y=20;y<PLAIN_H-20;y+=46){
+    for(let x=20;x<W-20;x+=46){
+      if(x<140||x>W-140||y<90){
+        ctx.beginPath(); ctx.arc(x,y,3,0,7); ctx.fill();
+      }
+    }
+  }
+  ctx.fillStyle='rgb(255,200,90)';
+  ctx.fillRect(0,PLAIN_H-4,W,4);
+
+  const sceneTop = PLAIN_H, sceneH = H-PLAIN_H;
+  const horizonY = sceneTop + Math.round(sceneH*0.42);
+  vGradient(sceneTop, horizonY, [232,120,40], [255,205,120]);
+
+  ctx.fillStyle='rgb(255,235,190)';
+  ctx.beginPath(); ctx.arc(W/2, sceneTop+sceneH*0.20, 90, 0, 7); ctx.fill();
+
+  function kite(cx,cy,s,color){
+    ctx.fillStyle=rgb(color);
+    ctx.beginPath();
+    ctx.moveTo(cx,cy-s); ctx.lineTo(cx+s*0.7,cy); ctx.lineTo(cx,cy+s); ctx.lineTo(cx-s*0.7,cy);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='white'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(cx-s*0.7,cy); ctx.lineTo(cx+s*0.7,cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,cy-s); ctx.lineTo(cx,cy+s); ctx.stroke();
+  }
+  kite(220, sceneTop+60, 26, [140,30,40]);
+  kite(830, sceneTop+100, 22, [30,90,110]);
+  kite(650, sceneTop+40, 18, [255,235,190]);
+  kite(380, sceneTop+130, 16, [200,60,40]);
+
+  // desert
+  vGradient(horizonY, H, [255,214,158],[240,178,120]);
+
+  // temple
+  const templeCx = Math.round(W*0.68), templeBase = horizonY+6;
+  function shikhara(cx,baseY,height,width,color){
+    ctx.fillStyle = rgb(color);
+    ctx.beginPath();
+    for(let i=0;i<=10;i++){
+      const t=i/10, y=baseY-height*t, w=width*Math.pow(1-t,0.85);
+      if(i===0) ctx.moveTo(cx-w/2,y); else ctx.lineTo(cx-w/2,y);
+    }
+    for(let i=10;i>=0;i--){
+      const t=i/10, y=baseY-height*t, w=width*Math.pow(1-t,0.85);
+      ctx.lineTo(cx+w/2,y);
+    }
+    ctx.closePath(); ctx.fill();
+    const topY = baseY-height;
+    ctx.beginPath(); ctx.ellipse(cx, topY-3, width*0.16, 7, 0,0,7); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx, topY-15, 5, 7, 0,0,7); ctx.fill();
+    ctx.strokeStyle=rgb(color); ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(cx,topY-22); ctx.lineTo(cx,topY-46); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,topY-46); ctx.lineTo(cx+16,topY-40); ctx.lineTo(cx,topY-34);
+    ctx.closePath(); ctx.fill();
+  }
+  const tCol=[110,32,34];
+  shikhara(templeCx, templeBase, 150, 96, tCol);
+  shikhara(templeCx-70, templeBase, 92, 62, tCol);
+  shikhara(templeCx+70, templeBase, 92, 62, tCol);
+  ctx.fillStyle=rgb(tCol);
+  ctx.fillRect(templeCx-118, templeBase-26, 236, 30);
+  ctx.fillStyle='rgb(250,248,242)';
+  ctx.beginPath();
+  ctx.moveTo(templeCx-14, templeBase+4); ctx.lineTo(templeCx-14, templeBase-20);
+  ctx.lineTo(templeCx, templeBase-30); ctx.lineTo(templeCx+14, templeBase-20); ctx.lineTo(templeCx+14, templeBase+4);
+  ctx.closePath(); ctx.fill();
+
+  drawCamel(300, H-90, 1.0, [90,25,30]);
+  drawCamel(400, H-70, 0.8, [90,25,30]);
+  drawCamel(480, H-55, 0.6, [90,25,30]);
+
+  ctx.fillStyle='rgb(140,30,40)';
+  ctx.fillRect(0,H-26,W,26);
+  ctx.fillStyle='rgb(255,200,90)';
+  for(let x=20;x<W;x+=40){
+    ctx.beginPath(); ctx.arc(x, H-13, 4,0,7); ctx.fill();
+  }
+}
+
+function drawSikkim(){
+  vGradient(0, PLAIN_H, [18,30,60],[70,60,110]);
+  const rnd = mulberry32(21);
+  drawStars(90, Math.round(PLAIN_H*0.55), rnd);
+  ctx.fillStyle='rgb(255,210,130)';
+  ctx.fillRect(0,PLAIN_H-4,W,4);
+
+  const sceneTop=PLAIN_H, sceneH=H-sceneTop;
+  const horizonY = sceneTop + Math.round(sceneH*0.30);
+  vGradient(sceneTop, horizonY, [70,60,110],[220,170,150]);
+
+  ctx.fillStyle='rgb(255,248,225)';
+  ctx.beginPath(); ctx.arc(W*0.78, sceneTop+55, 46,0,7); ctx.fill();
+
+  jaggedPeaks(horizonY+40, 140, 6, [150,150,175], 5);
+  jaggedPeaks(horizonY+70, 190, 5, [110,110,150], 9);
+
+  const rnd2 = mulberry32(9);
+  for(let i=0;i<=5;i++){
+    const x = W*i/5;
+    const h = 190*0.4 + rnd2()*190*0.6;
+    const peakY = horizonY+70-h;
+    ctx.fillStyle='rgb(245,248,255)';
+    ctx.beginPath();
+    ctx.moveTo(x-22, peakY+30); ctx.lineTo(x, peakY); ctx.lineTo(x+22, peakY+30);
+    ctx.closePath(); ctx.fill();
+  }
+
+  const ridgeBaseY = horizonY+110;
+  jaggedPeaks(ridgeBaseY, 150, 4, [55,48,70], 3);
+
+  const flagColors=[[60,100,190],[250,250,250],[210,60,50],[60,150,90],[240,190,60]];
+  drawPrayerFlags(20, sceneTop+90, 380, sceneTop+40, 9, flagColors);
+  drawPrayerFlags(650, sceneTop+30, 1060, sceneTop+100, 9, flagColors);
+
+  // monastery
+  const monoColor=[48,40,58], monoCx=Math.round(W*0.30), monoBase=horizonY+100;
+  ctx.fillStyle=rgb(monoColor);
+  ctx.fillRect(monoCx-90, monoBase-70, 180, 70);
+  ctx.fillStyle='rgb(200,150,60)';
+  ctx.beginPath(); ctx.moveTo(monoCx-105,monoBase-70); ctx.lineTo(monoCx,monoBase-130); ctx.lineTo(monoCx+105,monoBase-70);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle=rgb(monoColor);
+  ctx.beginPath();
+  ctx.moveTo(monoCx-105,monoBase-70); ctx.lineTo(monoCx,monoBase-130); ctx.lineTo(monoCx+105,monoBase-70);
+  ctx.lineTo(monoCx+95,monoBase-68); ctx.lineTo(monoCx,monoBase-118); ctx.lineTo(monoCx-95,monoBase-68);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle='rgb(220,180,90)';
+  ctx.beginPath(); ctx.ellipse(monoCx, monoBase-142, 6,6,0,0,7); ctx.fill();
+  ctx.strokeStyle='rgb(220,180,90)'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(monoCx,monoBase-136); ctx.lineTo(monoCx,monoBase-130); ctx.stroke();
+  ctx.fillStyle='rgb(255,200,120)';
+  for(const wx of [monoCx-55,monoCx-15,monoCx+25,monoCx+60]){
+    ctx.fillRect(wx-8, monoBase-45, 16,25);
+  }
+
+  const rnd3 = mulberry32(15);
+  for(let i=0;i<14;i++){
+    const px = rnd3()*W;
+    const py = monoBase + (rnd3()*30-10);
+    const ph = 50+rnd3()*40;
+    drawPine(px,py,ph, ph*0.55, [35,55,45]);
+  }
+
+  // valley
+  const valleyTop = ridgeBaseY-10;
+  vGradient(valleyTop, H, [60,95,70],[35,65,48]);
+  ctx.strokeStyle='rgba(120,150,110,0.5)'; ctx.lineWidth=3;
+  for(let i=0;i<11;i++){
+    const y=valleyTop+20+i*24;
+    if(y>H-10) break;
+    ctx.beginPath();
+    for(let x=0;x<=W;x+=40){
+      const wob=8*Math.sin(x/90+i);
+      if(x===0) ctx.moveTo(x,y+wob); else ctx.lineTo(x,y+wob);
+    }
+    ctx.stroke();
+  }
+  ctx.strokeStyle='rgb(150,120,90)'; ctx.lineWidth=14; ctx.lineJoin='round';
+  ctx.beginPath();
+  ctx.moveTo(W*0.15,H); ctx.lineTo(W*0.30,H-90); ctx.lineTo(W*0.20,H-180); ctx.lineTo(W*0.35,H-260); ctx.lineTo(W*0.25, valleyTop+30);
+  ctx.stroke();
+
+  ctx.fillStyle='rgb(30,45,40)';
+  ctx.fillRect(0,H-26,W,26);
+  const bw = W/flagColors.length/4;
+  let x=0, ci=0;
+  while(x<W){ ctx.fillStyle=rgb(flagColors[ci%flagColors.length]); ctx.fillRect(x,H-26,bw,26); x+=bw; ci++; }
+}
+
+function drawLadakh(){
+  vGradient(0, PLAIN_H, [20,70,140],[110,160,200]);
+  ctx.fillStyle='rgba(255,255,255,0.16)';
+  for(const [cx,cy,s] of [[150,90,65],[850,110,70],[120,260,50],[930,300,55]]){
+    for(let i=0;i<4;i++){
+      const ex = cx+i*s*0.5-s;
+      ctx.beginPath(); ctx.ellipse(ex, cy, s/2, s*0.25/2, 0,0,7); ctx.fill();
+    }
+  }
+  ctx.fillStyle='rgb(255,210,130)';
+  ctx.fillRect(0,PLAIN_H-4,W,4);
+
+  const sceneTop=PLAIN_H, sceneH=H-sceneTop;
+  const horizonY = sceneTop + Math.round(sceneH*0.28);
+  vGradient(sceneTop, horizonY, [110,160,200],[225,205,180]);
+
+  ctx.fillStyle='rgb(255,250,230)';
+  ctx.beginPath(); ctx.arc(W*0.20, sceneTop+60, 50,0,7); ctx.fill();
+
+  jaggedPeaks(horizonY+30, 130, 7, [190,165,150], 5);
+  jaggedPeaks(horizonY+60, 170, 6, [165,130,105], 12);
+
+  const rnd = mulberry32(12);
+  for(let i=0;i<=6;i++){
+    const x=W*i/6;
+    const h=170*0.35+rnd()*170*0.65;
+    const peakY = horizonY+60-h;
+    ctx.fillStyle='rgb(250,250,252)';
+    ctx.beginPath();
+    ctx.moveTo(x-18,peakY+24); ctx.lineTo(x,peakY); ctx.lineTo(x+18,peakY+24);
+    ctx.closePath(); ctx.fill();
+  }
+
+  const ridgeBaseY = horizonY+105;
+  jaggedPeaks(ridgeBaseY, 140, 5, [95,65,55], 3);
+
+  const flagColors=[[60,100,190],[250,250,250],[210,60,50],[60,150,90],[240,190,60]];
+  drawPrayerFlags(640, sceneTop+25, 1060, sceneTop+90, 9, flagColors);
+
+  // monastery
+  const monoColor=[235,228,210], monoDark=[150,90,50];
+  const monoCx=Math.round(W*0.72);
+  let curBase = horizonY+90;
+  const tiers=[[150,60],[110,46],[78,36],[48,28]];
+  for(const [tw,th] of tiers){
+    ctx.fillStyle=rgb(monoColor);
+    ctx.fillRect(monoCx-tw/2, curBase-th, tw, th);
+    ctx.fillStyle=rgb(monoDark);
+    ctx.fillRect(monoCx-tw/2, curBase-th, tw, 8);
+    ctx.fillStyle='rgb(80,50,40)';
+    for(let wx=monoCx-tw/2+12; wx<monoCx+tw/2-10; wx+=22){
+      ctx.fillRect(wx, curBase-th+16, 8,10);
+    }
+    curBase -= th;
+  }
+  ctx.fillStyle='rgb(220,180,90)';
+  ctx.beginPath(); ctx.ellipse(monoCx, curBase-16, 6,6,0,0,7); ctx.fill();
+  ctx.strokeStyle='rgb(220,180,90)'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(monoCx,curBase-10); ctx.lineTo(monoCx,curBase); ctx.stroke();
+
+  ctx.fillStyle='rgb(150,110,85)';
+  ctx.beginPath();
+  ctx.moveTo(monoCx-180, horizonY+90); ctx.lineTo(monoCx-90, horizonY+60); ctx.lineTo(monoCx+90, horizonY+60);
+  ctx.lineTo(monoCx+180, horizonY+90); ctx.lineTo(monoCx+180, ridgeBaseY); ctx.lineTo(monoCx-180, ridgeBaseY);
+  ctx.closePath(); ctx.fill();
+
+  drawChorten(160, ridgeBaseY-8, 22);
+  drawChorten(215, ridgeBaseY-4, 16);
+  drawChorten(900, ridgeBaseY-6, 18);
+
+  // lake
+  const lakeTop = ridgeBaseY-10;
+  vGradient(lakeTop, H, [70,160,175],[20,90,120]);
+  ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=2;
+  for(let i=0;i<14;i++){
+    const y=lakeTop+20+i*30;
+    if(y>H-10) break;
+    ctx.beginPath();
+    for(let x=0;x<=W;x+=50){
+      const wob=5*Math.sin(x/70+i*0.7);
+      if(x===0) ctx.moveTo(x,y+wob); else ctx.lineTo(x,y+wob);
+    }
+    ctx.stroke();
+  }
+
+  ctx.fillStyle='rgb(30,45,55)';
+  ctx.fillRect(0,H-26,W,26);
+  const bw = W/flagColors.length/4;
+  let x=0, ci=0;
+  while(x<W){ ctx.fillStyle=rgb(flagColors[ci%flagColors.length]); ctx.fillRect(x,H-26,bw,26); x+=bw; ci++; }
+}
+
+function drawRajasthan(){
+  // ---------- upper 45% : Jaipur pink-city dusk gradient ----------
+  vGradient(0, PLAIN_H, [120,35,55], [225,110,90]);
+
+  // subtle jaali (lattice) dot pattern near edges, like a jharokha screen
+  ctx.fillStyle='rgba(255,230,210,0.18)';
+  for(let y=20;y<PLAIN_H-20;y+=42){
+    for(let x=20;x<W-20;x+=42){
+      if(x<150||x>W-150||y<90){
+        ctx.beginPath(); ctx.arc(x,y,3,0,7); ctx.fill();
+      }
+    }
+  }
+  ctx.fillStyle='rgb(255,205,110)';
+  ctx.fillRect(0,PLAIN_H-4,W,4);
+
+  const sceneTop=PLAIN_H, sceneH=H-sceneTop;
+  const horizonY = sceneTop + Math.round(sceneH*0.40);
+  vGradient(sceneTop, horizonY, [225,110,90], [255,190,130]);
+
+  // sun
+  ctx.fillStyle='rgb(255,235,190)';
+  ctx.beginPath(); ctx.arc(W*0.78, sceneTop+70, 68, 0, 7); ctx.fill();
+
+  // ---------- Hawa Mahal style facade on the ridge ----------
+  const hmColor = [214,120,105];      // pink sandstone
+  const hmDark  = [170,80,70];
+  const hmCx = Math.round(W*0.30);
+  const hmBase = horizonY + 10;
+  const hmW = 340, hmH = 210;
+
+  // main tapering facade (5 tiers, narrower going up, honeycomb of jharokhas)
+  const tierCount = 5;
+  let curW = hmW, curBase = hmBase;
+  for(let i=0;i<tierCount;i++){
+    const th = hmH/tierCount * (1 - i*0.03);
+    ctx.fillStyle = rgb(i%2===0?hmColor:hmDark);
+    ctx.fillRect(hmCx-curW/2, curBase-th, curW, th);
+    // row of small arched jharokha windows
+    const nWin = Math.max(2, Math.round(curW/34));
+    const winW = curW/nWin;
+    ctx.fillStyle='rgb(255,225,190)';
+    for(let w=0; w<nWin; w++){
+      const wx = hmCx-curW/2 + w*winW + winW*0.5;
+      const wy = curBase-th+th*0.35;
+      ctx.beginPath();
+      ctx.arc(wx, wy, winW*0.28, Math.PI, 0);
+      ctx.lineTo(wx+winW*0.28, wy+th*0.4);
+      ctx.lineTo(wx-winW*0.28, wy+th*0.4);
+      ctx.closePath();
+      ctx.fill();
+    }
+    curBase -= th;
+    curW *= 0.78;
+  }
+  // small domed chhatris on top
+  for(const dx of [-hmW*0.3, 0, hmW*0.3]){
+    const dcx = hmCx+dx*0.35;
+    ctx.fillStyle=rgb(hmColor);
+    ctx.beginPath(); ctx.arc(dcx, curBase-10, 14, Math.PI, 0); ctx.fill();
+    ctx.fillRect(dcx-14, curBase-10, 28, 6);
+    ctx.beginPath(); ctx.moveTo(dcx,curBase-24); ctx.lineTo(dcx,curBase-34); ctx.strokeStyle=rgb(hmColor); ctx.lineWidth=2; ctx.stroke();
+  }
+
+  // ---------- distant dune silhouette ----------
+  jaggedPeaks(horizonY+18, 40, 10, [235,175,120], 6);
+
+  // ---------- Thar desert sand dunes (warm golden gradient) ----------
+  vGradient(horizonY, H, [255,214,150], [222,158,95]);
+
+  // wind-ripple texture on sand
+  const rnd = mulberry32(8);
+  ctx.strokeStyle='rgba(180,120,70,0.35)';
+  ctx.lineWidth=1;
+  for(let i=0;i<120;i++){
+    const x=rnd()*W, y=horizonY+10+rnd()*(H-horizonY-20);
+    const len=20+rnd()*60, ang=rnd()*Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(x+len*Math.cos(ang), y+len*Math.sin(ang)*0.25);
+    ctx.stroke();
+  }
+
+  // dune ridge line near horizon
+  ctx.fillStyle='rgb(196,132,80)';
+  ctx.beginPath();
+  ctx.moveTo(0,horizonY);
+  for(let x=0;x<=W;x+=90){
+    ctx.lineTo(x, horizonY + 10*Math.sin(x/140));
+  }
+  ctx.lineTo(W,horizonY+20); ctx.lineTo(0,horizonY+20);
+  ctx.closePath(); ctx.fill();
+
+  // camel caravan walking across dunes (Rajasthan icon)
+  drawCamel(260, H-100, 1.1, [110,55,35]);
+  drawCamel(360, H-75, 0.85, [110,55,35]);
+  drawCamel(440, H-55, 0.6, [110,55,35]);
+  drawCamel(760, H-130, 0.9, [110,55,35]);
+
+  // bottom decorative strip (leheriya-style stripes: pink/yellow/orange)
+  const strip_h=26;
+  const stripeColors=[[214,60,90],[240,190,60],[225,110,60],[120,35,55]];
+  const bw2 = W/stripeColors.length/3;
+  let x2=0, ci2=0;
+  while(x2<W){ ctx.fillStyle=rgb(stripeColors[ci2%stripeColors.length]); ctx.fillRect(x2,H-strip_h,bw2,strip_h); x2+=bw2; ci2++; }
+}
+
+function drawKerala(){
+  // dusk over the backwaters
+  vGradient(0, PLAIN_H, [18,60,55], [232,150,60]);
+  ctx.fillStyle='rgba(255,255,255,0.18)';
+  for(let y=20;y<PLAIN_H-20;y+=48){
+    for(let x=20;x<W-20;x+=48){
+      if(x<130||x>W-130||y<80){
+        ctx.beginPath(); ctx.arc(x,y,3,0,7); ctx.fill();
+      }
+    }
+  }
+  ctx.fillStyle='rgb(255,210,120)';
+  ctx.fillRect(0,PLAIN_H-4,W,4);
+
+  const sceneTop=PLAIN_H, sceneH=H-sceneTop;
+  const horizonY = sceneTop + Math.round(sceneH*0.34);
+  vGradient(sceneTop, horizonY, [232,150,60],[255,205,140]);
+
+  ctx.fillStyle='rgb(255,235,190)';
+  ctx.beginPath(); ctx.arc(W*0.72, sceneTop+60, 62,0,7); ctx.fill();
+
+  function palm(cx,baseY,scale,color){
+    ctx.strokeStyle=rgb(color); ctx.lineWidth=8*scale;
+    ctx.beginPath();
+    ctx.moveTo(cx,baseY);
+    ctx.quadraticCurveTo(cx+10*scale, baseY-70*scale, cx+4*scale, baseY-130*scale);
+    ctx.stroke();
+    const topX=cx+4*scale, topY=baseY-130*scale;
+    ctx.fillStyle=rgb(color);
+    for(let i=0;i<6;i++){
+      const ang = (i/6)*Math.PI*2;
+      ctx.beginPath();
+      ctx.moveTo(topX,topY);
+      ctx.quadraticCurveTo(topX+Math.cos(ang)*30*scale, topY+Math.sin(ang)*14*scale-10*scale,
+                            topX+Math.cos(ang)*46*scale, topY+Math.sin(ang)*22*scale);
+      ctx.quadraticCurveTo(topX+Math.cos(ang)*24*scale, topY+Math.sin(ang)*10*scale,
+                            topX, topY);
+      ctx.closePath(); ctx.fill();
+    }
+  }
+  palm(140, horizonY+10, 1.0, [40,70,35]);
+  palm(210, horizonY+30, 0.75, [45,80,40]);
+  palm(930, horizonY+15, 0.95, [40,70,35]);
+  palm(990, horizonY+50, 0.7, [45,80,40]);
+
+  // paddy fields strip just above waterline
+  vGradient(horizonY, horizonY+50, [120,170,70],[90,145,55]);
+
+  // backwater
+  vGradient(horizonY+50, H, [40,110,110],[15,60,70]);
+  ctx.strokeStyle='rgba(255,255,255,0.18)'; ctx.lineWidth=2;
+  for(let i=0;i<12;i++){
+    const y=horizonY+70+i*26;
+    if(y>H-15) break;
+    ctx.beginPath();
+    for(let x=0;x<=W;x+=50){
+      const wob=5*Math.sin(x/70+i*0.6);
+      if(x===0) ctx.moveTo(x,y+wob); else ctx.lineTo(x,y+wob);
+    }
+    ctx.stroke();
+  }
+
+  // houseboat
+  const hbCx=Math.round(W*0.48), hbBase=H-160;
+  ctx.fillStyle='rgb(70,45,30)';
+  ctx.beginPath();
+  ctx.moveTo(hbCx-140,hbBase); ctx.lineTo(hbCx+150,hbBase);
+  ctx.lineTo(hbCx+130,hbBase+22); ctx.lineTo(hbCx-120,hbBase+22);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle='rgb(210,175,110)';
+  ctx.beginPath();
+  ctx.moveTo(hbCx-110,hbBase); 
+  for(let i=0;i<=8;i++){
+    const t=i/8, x=hbCx-110+t*210;
+    ctx.lineTo(x, hbBase-60-14*Math.sin(t*Math.PI));
+  }
+  ctx.lineTo(hbCx+100,hbBase); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='rgb(120,90,60)'; ctx.lineWidth=2;
+  for(let x=hbCx-100;x<hbCx+100;x+=22){
+    ctx.beginPath(); ctx.moveTo(x,hbBase-6); ctx.lineTo(x,hbBase-58); ctx.stroke();
+  }
+
+  ctx.fillStyle='rgb(20,55,45)';
+  ctx.fillRect(0,H-26,W,26);
+  ctx.fillStyle='rgb(255,210,120)';
+  for(let x=20;x<W;x+=40){
+    ctx.beginPath(); ctx.arc(x, H-13, 4,0,7); ctx.fill();
+  }
+}
+
+function drawHimachal(){
+  vGradient(0, PLAIN_H, [22,32,68],[150,130,175]);
+  const rnd = mulberry32(31);
+  drawStars(70, Math.round(PLAIN_H*0.5), rnd);
+  ctx.fillStyle='rgb(225,215,240)';
+  ctx.fillRect(0,PLAIN_H-4,W,4);
+
+  const sceneTop=PLAIN_H, sceneH=H-sceneTop;
+  const horizonY = sceneTop + Math.round(sceneH*0.30);
+  vGradient(sceneTop, horizonY, [150,130,175],[235,205,205]);
+
+  ctx.fillStyle='rgb(255,248,230)';
+  ctx.beginPath(); ctx.arc(W*0.25, sceneTop+55, 48,0,7); ctx.fill();
+
+  // snow peaks
+  jaggedPeaks(horizonY+30, 150, 6, [200,195,215], 4);
+  const rnd2 = mulberry32(11);
+  for(let i=0;i<=6;i++){
+    const x=W*i/6;
+    const h=150*0.4+rnd2()*150*0.6;
+    const peakY=horizonY+30-h;
+    ctx.fillStyle='rgb(250,250,255)';
+    ctx.beginPath();
+    ctx.moveTo(x-20,peakY+26); ctx.lineTo(x,peakY); ctx.lineTo(x+20,peakY+26);
+    ctx.closePath(); ctx.fill();
+  }
+
+  const ridgeBaseY = horizonY+95;
+  jaggedPeaks(ridgeBaseY, 120, 5, [70,80,65], 3);
+
+  // pine forest
+  const rnd3 = mulberry32(17);
+  for(let i=0;i<16;i++){
+    const px = rnd3()*W;
+    const py = ridgeBaseY + (rnd3()*24-8);
+    const ph = 55+rnd3()*45;
+    drawPine(px,py,ph, ph*0.5, [30,60,42]);
+  }
+
+  // wooden sloped-roof hut
+  const hutCx=Math.round(W*0.62), hutBase=ridgeBaseY+18;
+  ctx.fillStyle='rgb(90,60,40)';
+  ctx.fillRect(hutCx-55, hutBase-55, 110, 55);
+  ctx.fillStyle='rgb(150,40,40)';
+  ctx.beginPath();
+  ctx.moveTo(hutCx-70,hutBase-55); ctx.lineTo(hutCx,hutBase-95); ctx.lineTo(hutCx+70,hutBase-55);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle='rgb(255,210,120)';
+  ctx.fillRect(hutCx-14,hutBase-30,28,30);
+
+  // valley slope
+  const valleyTop = ridgeBaseY+30;
+  vGradient(valleyTop, H, [70,110,80],[40,70,50]);
+  ctx.strokeStyle='rgba(150,170,120,0.45)'; ctx.lineWidth=3;
+  for(let i=0;i<10;i++){
+    const y=valleyTop+22+i*26;
+    if(y>H-10) break;
+    ctx.beginPath();
+    for(let x=0;x<=W;x+=45){
+      const wob=8*Math.sin(x/95+i);
+      if(x===0) ctx.moveTo(x,y+wob); else ctx.lineTo(x,y+wob);
+    }
+    ctx.stroke();
+  }
+
+  ctx.fillStyle='rgb(35,45,42)';
+  ctx.fillRect(0,H-26,W,26);
+  ctx.fillStyle='rgb(225,215,240)';
+  for(let x=20;x<W;x+=40){
+    ctx.beginPath(); ctx.arc(x, H-13, 4,0,7); ctx.fill();
+  }
+}
+
+function drawVaranasi(){
+  vGradient(0, PLAIN_H, [85,28,58],[255,150,90]);
+  ctx.fillStyle='rgba(255,255,255,0.16)';
+  for(let y=20;y<PLAIN_H-20;y+=46){
+    for(let x=20;x<W-20;x+=46){
+      if(x<130||x>W-130||y<85){
+        ctx.beginPath(); ctx.arc(x,y,3,0,7); ctx.fill();
+      }
+    }
+  }
+  ctx.fillStyle='rgb(255,210,130)';
+  ctx.fillRect(0,PLAIN_H-4,W,4);
+
+  const sceneTop=PLAIN_H, sceneH=H-sceneTop;
+  const horizonY = sceneTop + Math.round(sceneH*0.36);
+  vGradient(sceneTop, horizonY, [255,150,90],[255,200,150]);
+
+  ctx.fillStyle='rgb(255,235,190)';
+  ctx.beginPath(); ctx.arc(W*0.5, sceneTop+50, 58,0,7); ctx.fill();
+
+  // temple spire cluster along the ghat skyline
+  function spire(cx,baseY,height,width,color){
+    ctx.fillStyle=rgb(color);
+    ctx.beginPath();
+    ctx.moveTo(cx-width/2,baseY); ctx.lineTo(cx,baseY-height); ctx.lineTo(cx+width/2,baseY);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle='rgb(220,175,90)';
+    ctx.beginPath(); ctx.arc(cx,baseY-height,5,0,7); ctx.fill();
+  }
+  const tCol=[150,60,50];
+  spire(W*0.30, horizonY+10, 110, 60, tCol);
+  spire(W*0.36, horizonY+10, 80, 46, [180,90,70]);
+  spire(W*0.66, horizonY+10, 95, 52, tCol);
+  spire(W*0.74, horizonY+10, 70, 40, [180,90,70]);
+  ctx.fillStyle='rgb(120,50,45)';
+  ctx.fillRect(0, horizonY, W, 12);
+
+  // ghat steps
+  const stepsTop = horizonY+12, stepsH = 90;
+  const steps=6;
+  for(let i=0;i<steps;i++){
+    const t=i/steps;
+    ctx.fillStyle = rgb(lerp([210,175,140],[160,125,100],t));
+    ctx.fillRect(0, stepsTop+t*stepsH, W, stepsH/steps+1);
+  }
+
+  // river
+  const riverTop = stepsTop+stepsH;
+  vGradient(riverTop, H, [255,170,110],[60,40,60]);
+  ctx.strokeStyle='rgba(255,255,255,0.18)'; ctx.lineWidth=2;
+  for(let i=0;i<12;i++){
+    const y=riverTop+18+i*24;
+    if(y>H-15) break;
+    ctx.beginPath();
+    for(let x=0;x<=W;x+=50){
+      const wob=5*Math.sin(x/70+i*0.6);
+      if(x===0) ctx.moveTo(x,y+wob); else ctx.lineTo(x,y+wob);
+    }
+    ctx.stroke();
+  }
+
+  // floating diyas
+  const rnd = mulberry32(23);
+  for(let i=0;i<16;i++){
+    const dx = rnd()*W, dy = riverTop+20+rnd()*(H-riverTop-40);
+    ctx.fillStyle='rgb(255,190,90)';
+    ctx.beginPath(); ctx.arc(dx,dy,4,0,7); ctx.fill();
+    ctx.fillStyle='rgba(255,190,90,0.35)';
+    ctx.beginPath(); ctx.arc(dx,dy,9,0,7); ctx.fill();
+  }
+
+  // small boat
+  ctx.fillStyle='rgb(60,40,30)';
+  ctx.beginPath();
+  ctx.moveTo(W*0.58,H-100); ctx.quadraticCurveTo(W*0.66,H-118,W*0.78,H-100);
+  ctx.quadraticCurveTo(W*0.66,H-92,W*0.58,H-100);
+  ctx.closePath(); ctx.fill();
+
+  ctx.fillStyle='rgb(75,38,30)';
+  ctx.fillRect(0,H-26,W,26);
+  ctx.fillStyle='rgb(255,210,130)';
+  for(let x=20;x<W;x+=40){
+    ctx.beginPath(); ctx.arc(x, H-13, 4,0,7); ctx.fill();
+  }
+}
+
+function drawLumioraMark(){
+  const label = '✦ LUMIORA';
+  ctx.font = `600 26px 'Segoe UI', Arial, sans-serif`;
+  ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+  const tw = ctx.measureText(label).width;
+  const padX = 16, padY = 8;
+  const mx = W - 28, my = 28;
+  ctx.fillStyle = 'rgba(10,10,10,0.32)';
+  roundRect(mx - tw - padX*2, my - padY, tw + padX*2, 26 + padY*2, 14);
+  ctx.fill();
+  ctx.fillStyle = 'rgb(212,175,55)';
+  ctx.fillText(label, mx - padX, my);
+}
+
+function render(){
+  ctx.clearRect(0,0,W,H);
+  const photoLayout = uploadedImg ? document.getElementById('photoLayout').value : 'split';
+  const isFullPhoto = uploadedImg && photoLayout === 'full';
+
+  if(isFullPhoto){
+    drawFullPhotoBackground();
+  } else if(uploadedImg){
+    drawPhotoBackground();
+  } else if(currentTheme==='gujarat') drawGujarat();
+  else if(currentTheme==='sikkim') drawSikkim();
+  else if(currentTheme==='ladakh') drawLadakh();
+  else if(currentTheme==='rajasthan') drawRajasthan();
+  else if(currentTheme==='kerala') drawKerala();
+  else if(currentTheme==='himachal') drawHimachal();
+  else drawVaranasi();
+
+  const sizes = THEME_SIZES[currentTheme];
+  const line1 = document.getElementById('line1').value;
+  const line2 = document.getElementById('line2').value;
+  const line3 = document.getElementById('line3').value;
+  const author = document.getElementById('author').value;
+  const username = document.getElementById('username').value;
+
+  const lines = [line1, line2, line3].filter(l => l.trim().length > 0);
+  const lineGap = Math.round(sizes.quote*1.4);
+  const totalH = lineGap*lines.length;
+  // in full-photo mode the quote sits near the top third instead of a fixed plain panel
+  const startY = isFullPhoto
+    ? Math.round(H*0.14)
+    : Math.round((PLAIN_H-totalH)/2)-10;
+
+  lines.forEach((line, i) => {
+    centeredText(line, startY+lineGap*i, sizes.quote, 700, 'rgb(255,250,240)', {shadow:true});
+  });
+  centeredText(author, startY+lineGap*lines.length+18, sizes.author, 400, 'rgb(235,220,255)');
+
+  if(document.getElementById('showLumioraMark').checked){
+    drawLumioraMark();
+  }
+
+  // name watermark, fixed 30px, near bottom
+  if(username.trim().length>0){
+    ctx.font = `400 ${NAME_SIZE}px 'Noto Sans Devanagari','Segoe UI',Arial,sans-serif`;
+    ctx.textAlign='center'; ctx.textBaseline='top';
+    const tw = ctx.measureText(username).width;
+    const nameY = H-26-50;
+    const padX=22, padY=10;
+    ctx.fillStyle='rgba(10,20,30,0.35)';
+    roundRect(W/2-tw/2-padX, nameY-padY, tw+padX*2, NAME_SIZE+padY*2, 18);
+    ctx.fill();
+    ctx.fillStyle='rgb(255,225,160)';
+    ctx.fillText(username, W/2, nameY);
+  }
+}
+
+function roundRect(x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+function download(){
+  const link = document.createElement('a');
+  link.download = `${currentTheme}_quote_card.png`;
+  link.href = cv.toDataURL('image/png');
+  link.click();
+}
+
+updateSizeLabels();
+render();
+
+// live update as user types
+['line1','line2','line3','author','username'].forEach(id => {
+  document.getElementById(id).addEventListener('input', render);
+});
+document.getElementById('showLumioraMark').addEventListener('change', render);
+
+</script>
+</body>
+</html>

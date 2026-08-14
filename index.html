@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Lumiora — Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Marcellus&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0a0c16;
+    --bg-panel:#12142a;
+    --bg-panel-2:#171a35;
+    --line:#2a2d52;
+    --gold:#d4af37;
+    --gold-soft:#f0d796;
+    --teal:#3fd0c9;
+    --text:#eae8f5;
+    --muted:#8d8ba8;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, #221b3d 0%, transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 0%, #0f2a2c 0%, transparent 55%),
+      var(--bg-deep);
+    color:var(--text);
+    font-family:'Poppins',sans-serif;
+    min-height:100vh;
+    padding:48px 20px 70px;
+  }
+  .stars{
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, #fff8 40%, transparent),
+      radial-gradient(1px 1px at 75% 15%, #fff6 40%, transparent),
+      radial-gradient(1px 1px at 50% 70%, #fff5 40%, transparent),
+      radial-gradient(1.5px 1.5px at 90% 60%, #fff7 40%, transparent),
+      radial-gradient(1px 1px at 30% 85%, #fff5 40%, transparent),
+      radial-gradient(1.5px 1.5px at 10% 55%, #fff6 40%, transparent);
+    background-size:600px 600px;
+    opacity:.7;
+  }
+  .wrap{max-width:760px; margin:0 auto; position:relative; z-index:1;}
+  header{text-align:center; margin-bottom:46px;}
+  .eyebrow{
+    font-family:'Marcellus',serif; letter-spacing:.4em; text-transform:uppercase;
+    font-size:11px; color:var(--teal); margin-bottom:12px;
+  }
+  h1{
+    font-family:'Cormorant Garamond',serif; font-weight:600; font-style:italic;
+    font-size:46px; margin:0 0 8px; color:var(--gold-soft);
+    text-shadow:0 0 30px rgba(212,175,55,.25);
+  }
+  .sub{color:var(--muted); font-size:14px; font-weight:300;}
+
+  .grid{display:flex; flex-direction:column; gap:16px;}
+  a.card{
+    display:flex; align-items:center; gap:18px;
+    background:linear-gradient(160deg,var(--bg-panel),var(--bg-panel-2));
+    border:1px solid var(--line); border-radius:14px;
+    padding:20px 22px; text-decoration:none; color:var(--text);
+    box-shadow:0 10px 30px -12px #000a;
+    transition:transform .15s, border-color .15s;
+  }
+  a.card:hover{ transform:translateY(-2px); border-color:var(--gold); }
+  .icon{
+    flex-shrink:0; width:48px; height:48px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px; background:#0d0f22; border:1px solid var(--line); color:var(--gold-soft);
+  }
+  .card-text h2{
+    font-family:'Marcellus',serif; font-size:16px; margin:0 0 4px; color:var(--gold-soft); font-weight:400;
+  }
+  .card-text p{ margin:0; font-size:12.5px; color:var(--muted); line-height:1.5; }
+  .arrow{ margin-left:auto; color:var(--muted); font-size:18px; flex-shrink:0; }
+
+  footer{text-align:center; margin-top:44px; color:var(--muted); font-size:11px; letter-spacing:.15em;}
+  footer span{color:var(--gold-soft); font-family:'Marcellus',serif;}
+
+  @media(max-width:480px){
+    h1{font-size:32px;}
+    a.card{padding:16px;}
+  }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Lumiora</div>
+    <h1>Content Studio</h1>
+    <div class="sub">Sabhi tools ek hi jagah se</div>
+  </header>
+
+  <div class="grid">
+
+    <a class="card" href="CosmicQuoteTool.html">
+      <div class="icon">✦</div>
+      <div class="card-text">
+        <h2>Cosmic Quote Tool</h2>
+        <p>Motivational quote cards — cosmic backgrounds, Hindi/English/Spanish, golden text style</p>
+      </div>
+      <div class="arrow">→</div>
+    </a>
+
+    <a class="card" href="TekchandTravelQuoteTool.html">
+      <div class="icon">🏔️</div>
+      <div class="card-text">
+        <h2>Travel Quote Tool</h2>
+        <p>Gujarat · Sikkim · Ladakh · Rajasthan · Kerala · Himachal · Varanasi themed quote cards</p>
+      </div>
+      <div class="arrow">→</div>
+    </a>
+
+    <a class="card" href="LumioraReelScriptTool.html">
+      <div class="icon">🎬</div>
+      <div class="card-text">
+        <h2>Reel Script Studio</h2>
+        <p>Scene-by-scene reel builder — Flow/Veo 3 prompt + VN editing checklist, reusable template</p>
+      </div>
+      <div class="arrow">→</div>
+    </a>
+
+  </div>
+
+  <footer>LUMIORA <span>✦</span> CONTENT STUDIO</footer>
+</div>
+</body>
+</html>
