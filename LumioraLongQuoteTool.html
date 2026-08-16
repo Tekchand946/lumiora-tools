@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Lumiora — Long Quote Card Maker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#141010;
@@ -290,7 +293,7 @@ function render(){
   // shrink font until it fits within a safe vertical area
   const maxTextAreaHeight = H * 0.62;
   while(fontSize > 24){
-    const font = `700 ${fontSize}px -apple-system, Arial, sans-serif`;
+    const font = `700 ${fontSize}px 'Noto Sans Devanagari', -apple-system, Arial, sans-serif`;
     lines = wrapText(text, maxWidth, font);
     lineHeight = fontSize * 1.28;
     const totalH = lines.length * lineHeight;
@@ -298,7 +301,7 @@ function render(){
     fontSize -= 2;
   }
 
-  const font = `700 ${fontSize}px -apple-system, Arial, sans-serif`;
+  const font = `700 ${fontSize}px 'Noto Sans Devanagari', -apple-system, Arial, sans-serif`;
   const lineHeightFinal = fontSize * 1.28;
   const totalTextHeight = lines.length * lineHeightFinal;
 
@@ -344,7 +347,7 @@ function render(){
 
   // watermark
   if(watermark){
-    ctx.font = '600 30px -apple-system, Arial, sans-serif';
+    ctx.font = `600 30px 'Noto Sans Devanagari', -apple-system, Arial, sans-serif`;
     ctx.fillStyle = color === '#ffffff' ? 'rgba(255,255,255,0.85)' : 'rgba(10,10,10,0.85)';
     ctx.fillText(watermark, W/2, H - 50);
   }
@@ -358,7 +361,18 @@ function downloadCard(){
   link.click();
 }
 
-render();
+// Ensure the Devanagari font is fully loaded before measuring/drawing text.
+// Without this, mobile browsers can measure text width using a fallback font
+// (different from what actually gets painted), causing lines to overflow
+// past the right edge instead of wrapping correctly.
+render(); // immediate draw so canvas isn't blank while fonts load
+if(document.fonts && document.fonts.load){
+  Promise.all([
+    document.fonts.load("700 60px 'Noto Sans Devanagari'"),
+    document.fonts.load("400 60px 'Noto Sans Devanagari'")
+  ]).then(render).catch(render);
+  document.fonts.ready.then(render);
+}
 </script>
 </body>
 </html>
