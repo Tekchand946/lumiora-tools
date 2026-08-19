@@ -2,8 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Lumiora — Travel Quote Card Generator</title>
+<title>Tekchand Travel Quote Card Generator</title>
 <style>
   :root{
     --bg:#1c1410;
@@ -14,8 +13,6 @@
     --text:#f3e9dd;
     --muted:#b8a892;
     --border:#4a382e;
-    --lumiora-gold:#d4af37;
-    --lumiora-gold-soft:#f0d796;
   }
   *{box-sizing:border-box;}
   body{
@@ -29,17 +26,6 @@
     align-items:center;
     padding:28px 16px 60px;
   }
-  .brandmark{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-size:12px;
-    letter-spacing:.35em;
-    text-transform:uppercase;
-    color:var(--lumiora-gold);
-    margin-bottom:10px;
-  }
-  .brandmark .dot{ color:var(--lumiora-gold-soft); }
   h1{
     font-size:22px;
     letter-spacing:.5px;
@@ -50,21 +36,6 @@
     color:var(--muted);
     font-size:13px;
     margin-bottom:24px;
-  }
-  .watermark-field{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    margin-top:8px;
-  }
-  .watermark-field input[type=checkbox]{
-    accent-color:var(--lumiora-gold);
-    width:16px; height:16px;
-  }
-  .watermark-field label{
-    margin:0;
-    color:var(--text);
-    font-size:13px;
   }
   .layout{
     display:flex;
@@ -80,8 +51,7 @@
     border:1px solid var(--border);
     border-radius:14px;
     padding:20px;
-    width:100%;
-    max-width:340px;
+    width:320px;
     flex-shrink:0;
   }
   .field{ margin-bottom:16px; }
@@ -114,11 +84,9 @@
   .theme-grid{
     display:flex;
     gap:8px;
-    flex-wrap:wrap;
   }
   .theme-btn{
-    flex:1 1 calc(33.333% - 6px);
-    min-width:80px;
+    flex:1;
     padding:10px 4px;
     text-align:center;
     background:var(--panel-2);
@@ -134,6 +102,16 @@
     color:var(--accent);
     background:#3a2c1e;
   }
+  input[type=range]{
+    width:100%;
+    accent-color:var(--accent);
+  }
+  .color-btn.golden{ color:#f0c96a; }
+  .color-btn.white{ color:#f5f0e8; }
+  .color-btn.black{ color:#8a8580; }
+  .color-btn.active.golden{ background:#3a2c1e; }
+  .color-btn.active.white{ background:#33332e; }
+  .color-btn.active.black{ background:#25211e; }
   button.generate{
     width:100%;
     padding:12px;
@@ -169,17 +147,11 @@
     gap:10px;
   }
   canvas{
-    width:100%;
-    max-width:340px;
-    height:auto;
-    aspect-ratio:1080/1350;
+    width:340px;
+    height:425px;
     border-radius:6px;
     box-shadow:0 8px 30px rgba(0,0,0,.5);
     background:#000;
-  }
-  .preview-wrap{
-    width:100%;
-    max-width:340px;
   }
   .dims{
     font-size:12px;
@@ -191,32 +163,32 @@
     line-height:1.5;
     margin-top:2px;
   }
-  @media(max-width:400px){
-    body{ padding:20px 12px 50px; }
-    .controls, .preview-wrap{ max-width:100%; }
-    h1{ font-size:19px; }
+  .hub-back {
+    display:inline-block;
+    margin-bottom:12px;
+    color:var(--muted);
+    text-decoration:none;
+    font-size:13px;
   }
+  .hub-back:hover{ color:var(--accent); }
 </style>
 </head>
 <body>
 
-<div class="brandmark"><span class="dot">✦</span> Lumiora <span class="dot">✦</span></div>
-<h1>Travel Quote Card Generator</h1>
-<div class="subtitle">Gujarat · Sikkim · Ladakh · Rajasthan &nbsp;|&nbsp; 1080×1350 px &nbsp;|&nbsp; Upper 45% plain area for quote</div>
+<a class="hub-back" href="index.html">&#8592; Hub par wapas</a>
+<h1>Tekchand Travel Quote Card Generator</h1>
+<div class="subtitle">Gujarat · Sikkim · Ladakh &nbsp;|&nbsp; 1080×1350 px &nbsp;|&nbsp; Upper 45% plain area for quote</div>
 
 <div class="layout">
   <div class="controls">
 
     <div class="field">
       <label>Theme चुनिए</label>
-      <div class="theme-grid" style="flex-wrap:wrap;">
+      <div class="theme-grid">
         <div class="theme-btn active" data-theme="gujarat">Gujarat</div>
         <div class="theme-btn" data-theme="sikkim">Sikkim</div>
         <div class="theme-btn" data-theme="ladakh">Ladakh</div>
         <div class="theme-btn" data-theme="rajasthan">Rajasthan</div>
-        <div class="theme-btn" data-theme="kerala">Kerala</div>
-        <div class="theme-btn" data-theme="himachal">Himachal</div>
-        <div class="theme-btn" data-theme="varanasi">Varanasi</div>
       </div>
     </div>
 
@@ -260,18 +232,23 @@
     </div>
 
     <div class="field">
-      <label>Quote line 1 <span class="size-tag" id="qsizeLabel">(74px)</span></label>
-      <input type="text" id="line1" value="हार मत मानो,">
+      <label>Quote Text <span class="hint" style="display:inline;">(Enter दबाकर नई line शुरू करें)</span></label>
+      <textarea id="quoteText" rows="4">हार मत मानो,
+मंज़िल पास ही है।</textarea>
     </div>
 
     <div class="field">
-      <label>Quote line 2</label>
-      <input type="text" id="line2" value="मंज़िल पास ही है।">
+      <label>Quote Font Size <span class="size-tag" id="qsizeLabel">(74px)</span></label>
+      <input type="range" id="quoteSizeSlider" min="30" max="110" value="74">
     </div>
 
     <div class="field">
-      <label>Quote line 3 (वैकल्पिक)</label>
-      <input type="text" id="line3" value="">
+      <label>Quote Text Color</label>
+      <div class="theme-grid">
+        <div class="theme-btn color-btn golden active" data-color="golden">Golden</div>
+        <div class="theme-btn color-btn white" data-color="white">White</div>
+        <div class="theme-btn color-btn black" data-color="black">Black</div>
+      </div>
     </div>
 
     <div class="field">
@@ -287,10 +264,6 @@
     <div class="field">
       <label>आपका पूरा नाम (bottom watermark) <span class="size-tag">(30px, fixed)</span></label>
       <input type="text" id="username" value="Tekchand Jeswani">
-      <div class="watermark-field">
-        <input type="checkbox" id="showLumioraMark" checked>
-        <label for="showLumioraMark">Lumiora gold mark दिखाएं (top corner)</label>
-      </div>
     </div>
 
     <button class="generate" onclick="render()">Card बनाइए</button>
@@ -314,10 +287,7 @@ const THEME_SIZES = {
   gujarat: { quote: 74, author: 36 },
   sikkim:  { quote: 64, author: 34 },
   ladakh:  { quote: 62, author: 34 },
-  rajasthan: { quote: 70, author: 34 },
-  kerala: { quote: 66, author: 34 },
-  himachal: { quote: 64, author: 34 },
-  varanasi: { quote: 68, author: 35 }
+  rajasthan: { quote: 70, author: 34 }
 };
 const NAME_SIZE = 30; // always fixed
 
@@ -326,13 +296,31 @@ const THEME_COLORS = {
   gujarat:   { top:[140,30,40], bottom:[232,120,40], divider:[255,200,90], strip:[140,30,40] },
   sikkim:    { top:[18,30,60],  bottom:[70,60,110],  divider:[255,210,130], strip:[30,45,40] },
   ladakh:    { top:[20,70,140], bottom:[110,160,200],divider:[255,210,130], strip:[30,45,55] },
-  rajasthan: { top:[120,35,55], bottom:[225,110,90], divider:[255,205,110], strip:[120,35,55] },
-  kerala:    { top:[20,60,55],  bottom:[230,150,60], divider:[255,210,120], strip:[20,55,45] },
-  himachal:  { top:[25,35,70],  bottom:[140,120,170],divider:[225,215,240], strip:[35,45,42] },
-  varanasi:  { top:[90,30,60],  bottom:[255,150,90], divider:[255,210,130], strip:[75,38,30] }
+  rajasthan: { top:[120,35,55], bottom:[225,110,90], divider:[255,205,110], strip:[120,35,55] }
 };
 
 let uploadedImg = null;
+let currentQuoteColor = 'golden';
+const QUOTE_COLORS = {
+  golden: 'rgb(255,215,130)',
+  white:  'rgb(255,250,240)',
+  black:  'rgb(25,20,15)'
+};
+
+document.querySelectorAll('.color-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentQuoteColor = btn.dataset.color;
+    render();
+  });
+});
+
+const quoteSizeSlider = document.getElementById('quoteSizeSlider');
+quoteSizeSlider.addEventListener('input', () => {
+  document.getElementById('qsizeLabel').textContent = `(${quoteSizeSlider.value}px)`;
+  render();
+});
 
 const photoInput = document.getElementById('photoInput');
 const clearPhotoBtn = document.getElementById('clearPhotoBtn');
@@ -475,6 +463,7 @@ document.querySelectorAll('.theme-btn').forEach(btn => {
     document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentTheme = btn.dataset.theme;
+    quoteSizeSlider.value = THEME_SIZES[currentTheme].quote;
     updateSizeLabels();
     render();
   });
@@ -482,7 +471,7 @@ document.querySelectorAll('.theme-btn').forEach(btn => {
 
 function updateSizeLabels(){
   const s = THEME_SIZES[currentTheme];
-  document.getElementById('qsizeLabel').textContent = `(${s.quote}px)`;
+  document.getElementById('qsizeLabel').textContent = `(${quoteSizeSlider.value}px)`;
   document.getElementById('asizeLabel').textContent = `(${s.author}px)`;
 }
 
@@ -584,6 +573,24 @@ function drawPine(cx,baseY,h,w,color){
   ctx.fillRect(cx-4, baseY-6, 8, 12);
 }
 
+function wrapLine(text, maxWidth, font){
+  ctx.font = font;
+  const words = text.split(/\s+/).filter(Boolean);
+  const out = [];
+  let cur = '';
+  for(const word of words){
+    const test = cur ? cur + ' ' + word : word;
+    if(cur && ctx.measureText(test).width > maxWidth){
+      out.push(cur);
+      cur = word;
+    } else {
+      cur = test;
+    }
+  }
+  if(cur) out.push(cur);
+  return out.length ? out : [''];
+}
+
 function centeredText(text, y, size, weight, color, opts={}){
   const fontStyle = document.getElementById('fontStyle').value;
   const effect = document.getElementById('textEffect').value;
@@ -596,11 +603,15 @@ function centeredText(text, y, size, weight, color, opts={}){
   ctx.textBaseline = 'top';
 
   if(effect === 'emboss'){
-    // dark shadow (lower-right) for depth
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    // deeper dark shadow (lower-right) for stronger carved depth
+    ctx.fillStyle = 'rgba(0,0,0,0.65)';
+    ctx.fillText(text, W/2+5, y+6);
+    ctx.fillStyle = 'rgba(0,0,0,0.35)';
     ctx.fillText(text, W/2+3, y+4);
-    // soft highlight (upper-left) for the raised edge
-    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    // brighter highlight (upper-left) for the raised edge
+    ctx.fillStyle = 'rgba(255,255,255,0.65)';
+    ctx.fillText(text, W/2-4, y-4);
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
     ctx.fillText(text, W/2-2, y-2);
     // main fill
     ctx.fillStyle = color;
@@ -1002,269 +1013,6 @@ function drawRajasthan(){
   while(x2<W){ ctx.fillStyle=rgb(stripeColors[ci2%stripeColors.length]); ctx.fillRect(x2,H-strip_h,bw2,strip_h); x2+=bw2; ci2++; }
 }
 
-function drawKerala(){
-  // dusk over the backwaters
-  vGradient(0, PLAIN_H, [18,60,55], [232,150,60]);
-  ctx.fillStyle='rgba(255,255,255,0.18)';
-  for(let y=20;y<PLAIN_H-20;y+=48){
-    for(let x=20;x<W-20;x+=48){
-      if(x<130||x>W-130||y<80){
-        ctx.beginPath(); ctx.arc(x,y,3,0,7); ctx.fill();
-      }
-    }
-  }
-  ctx.fillStyle='rgb(255,210,120)';
-  ctx.fillRect(0,PLAIN_H-4,W,4);
-
-  const sceneTop=PLAIN_H, sceneH=H-sceneTop;
-  const horizonY = sceneTop + Math.round(sceneH*0.34);
-  vGradient(sceneTop, horizonY, [232,150,60],[255,205,140]);
-
-  ctx.fillStyle='rgb(255,235,190)';
-  ctx.beginPath(); ctx.arc(W*0.72, sceneTop+60, 62,0,7); ctx.fill();
-
-  function palm(cx,baseY,scale,color){
-    ctx.strokeStyle=rgb(color); ctx.lineWidth=8*scale;
-    ctx.beginPath();
-    ctx.moveTo(cx,baseY);
-    ctx.quadraticCurveTo(cx+10*scale, baseY-70*scale, cx+4*scale, baseY-130*scale);
-    ctx.stroke();
-    const topX=cx+4*scale, topY=baseY-130*scale;
-    ctx.fillStyle=rgb(color);
-    for(let i=0;i<6;i++){
-      const ang = (i/6)*Math.PI*2;
-      ctx.beginPath();
-      ctx.moveTo(topX,topY);
-      ctx.quadraticCurveTo(topX+Math.cos(ang)*30*scale, topY+Math.sin(ang)*14*scale-10*scale,
-                            topX+Math.cos(ang)*46*scale, topY+Math.sin(ang)*22*scale);
-      ctx.quadraticCurveTo(topX+Math.cos(ang)*24*scale, topY+Math.sin(ang)*10*scale,
-                            topX, topY);
-      ctx.closePath(); ctx.fill();
-    }
-  }
-  palm(140, horizonY+10, 1.0, [40,70,35]);
-  palm(210, horizonY+30, 0.75, [45,80,40]);
-  palm(930, horizonY+15, 0.95, [40,70,35]);
-  palm(990, horizonY+50, 0.7, [45,80,40]);
-
-  // paddy fields strip just above waterline
-  vGradient(horizonY, horizonY+50, [120,170,70],[90,145,55]);
-
-  // backwater
-  vGradient(horizonY+50, H, [40,110,110],[15,60,70]);
-  ctx.strokeStyle='rgba(255,255,255,0.18)'; ctx.lineWidth=2;
-  for(let i=0;i<12;i++){
-    const y=horizonY+70+i*26;
-    if(y>H-15) break;
-    ctx.beginPath();
-    for(let x=0;x<=W;x+=50){
-      const wob=5*Math.sin(x/70+i*0.6);
-      if(x===0) ctx.moveTo(x,y+wob); else ctx.lineTo(x,y+wob);
-    }
-    ctx.stroke();
-  }
-
-  // houseboat
-  const hbCx=Math.round(W*0.48), hbBase=H-160;
-  ctx.fillStyle='rgb(70,45,30)';
-  ctx.beginPath();
-  ctx.moveTo(hbCx-140,hbBase); ctx.lineTo(hbCx+150,hbBase);
-  ctx.lineTo(hbCx+130,hbBase+22); ctx.lineTo(hbCx-120,hbBase+22);
-  ctx.closePath(); ctx.fill();
-  ctx.fillStyle='rgb(210,175,110)';
-  ctx.beginPath();
-  ctx.moveTo(hbCx-110,hbBase); 
-  for(let i=0;i<=8;i++){
-    const t=i/8, x=hbCx-110+t*210;
-    ctx.lineTo(x, hbBase-60-14*Math.sin(t*Math.PI));
-  }
-  ctx.lineTo(hbCx+100,hbBase); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle='rgb(120,90,60)'; ctx.lineWidth=2;
-  for(let x=hbCx-100;x<hbCx+100;x+=22){
-    ctx.beginPath(); ctx.moveTo(x,hbBase-6); ctx.lineTo(x,hbBase-58); ctx.stroke();
-  }
-
-  ctx.fillStyle='rgb(20,55,45)';
-  ctx.fillRect(0,H-26,W,26);
-  ctx.fillStyle='rgb(255,210,120)';
-  for(let x=20;x<W;x+=40){
-    ctx.beginPath(); ctx.arc(x, H-13, 4,0,7); ctx.fill();
-  }
-}
-
-function drawHimachal(){
-  vGradient(0, PLAIN_H, [22,32,68],[150,130,175]);
-  const rnd = mulberry32(31);
-  drawStars(70, Math.round(PLAIN_H*0.5), rnd);
-  ctx.fillStyle='rgb(225,215,240)';
-  ctx.fillRect(0,PLAIN_H-4,W,4);
-
-  const sceneTop=PLAIN_H, sceneH=H-sceneTop;
-  const horizonY = sceneTop + Math.round(sceneH*0.30);
-  vGradient(sceneTop, horizonY, [150,130,175],[235,205,205]);
-
-  ctx.fillStyle='rgb(255,248,230)';
-  ctx.beginPath(); ctx.arc(W*0.25, sceneTop+55, 48,0,7); ctx.fill();
-
-  // snow peaks
-  jaggedPeaks(horizonY+30, 150, 6, [200,195,215], 4);
-  const rnd2 = mulberry32(11);
-  for(let i=0;i<=6;i++){
-    const x=W*i/6;
-    const h=150*0.4+rnd2()*150*0.6;
-    const peakY=horizonY+30-h;
-    ctx.fillStyle='rgb(250,250,255)';
-    ctx.beginPath();
-    ctx.moveTo(x-20,peakY+26); ctx.lineTo(x,peakY); ctx.lineTo(x+20,peakY+26);
-    ctx.closePath(); ctx.fill();
-  }
-
-  const ridgeBaseY = horizonY+95;
-  jaggedPeaks(ridgeBaseY, 120, 5, [70,80,65], 3);
-
-  // pine forest
-  const rnd3 = mulberry32(17);
-  for(let i=0;i<16;i++){
-    const px = rnd3()*W;
-    const py = ridgeBaseY + (rnd3()*24-8);
-    const ph = 55+rnd3()*45;
-    drawPine(px,py,ph, ph*0.5, [30,60,42]);
-  }
-
-  // wooden sloped-roof hut
-  const hutCx=Math.round(W*0.62), hutBase=ridgeBaseY+18;
-  ctx.fillStyle='rgb(90,60,40)';
-  ctx.fillRect(hutCx-55, hutBase-55, 110, 55);
-  ctx.fillStyle='rgb(150,40,40)';
-  ctx.beginPath();
-  ctx.moveTo(hutCx-70,hutBase-55); ctx.lineTo(hutCx,hutBase-95); ctx.lineTo(hutCx+70,hutBase-55);
-  ctx.closePath(); ctx.fill();
-  ctx.fillStyle='rgb(255,210,120)';
-  ctx.fillRect(hutCx-14,hutBase-30,28,30);
-
-  // valley slope
-  const valleyTop = ridgeBaseY+30;
-  vGradient(valleyTop, H, [70,110,80],[40,70,50]);
-  ctx.strokeStyle='rgba(150,170,120,0.45)'; ctx.lineWidth=3;
-  for(let i=0;i<10;i++){
-    const y=valleyTop+22+i*26;
-    if(y>H-10) break;
-    ctx.beginPath();
-    for(let x=0;x<=W;x+=45){
-      const wob=8*Math.sin(x/95+i);
-      if(x===0) ctx.moveTo(x,y+wob); else ctx.lineTo(x,y+wob);
-    }
-    ctx.stroke();
-  }
-
-  ctx.fillStyle='rgb(35,45,42)';
-  ctx.fillRect(0,H-26,W,26);
-  ctx.fillStyle='rgb(225,215,240)';
-  for(let x=20;x<W;x+=40){
-    ctx.beginPath(); ctx.arc(x, H-13, 4,0,7); ctx.fill();
-  }
-}
-
-function drawVaranasi(){
-  vGradient(0, PLAIN_H, [85,28,58],[255,150,90]);
-  ctx.fillStyle='rgba(255,255,255,0.16)';
-  for(let y=20;y<PLAIN_H-20;y+=46){
-    for(let x=20;x<W-20;x+=46){
-      if(x<130||x>W-130||y<85){
-        ctx.beginPath(); ctx.arc(x,y,3,0,7); ctx.fill();
-      }
-    }
-  }
-  ctx.fillStyle='rgb(255,210,130)';
-  ctx.fillRect(0,PLAIN_H-4,W,4);
-
-  const sceneTop=PLAIN_H, sceneH=H-sceneTop;
-  const horizonY = sceneTop + Math.round(sceneH*0.36);
-  vGradient(sceneTop, horizonY, [255,150,90],[255,200,150]);
-
-  ctx.fillStyle='rgb(255,235,190)';
-  ctx.beginPath(); ctx.arc(W*0.5, sceneTop+50, 58,0,7); ctx.fill();
-
-  // temple spire cluster along the ghat skyline
-  function spire(cx,baseY,height,width,color){
-    ctx.fillStyle=rgb(color);
-    ctx.beginPath();
-    ctx.moveTo(cx-width/2,baseY); ctx.lineTo(cx,baseY-height); ctx.lineTo(cx+width/2,baseY);
-    ctx.closePath(); ctx.fill();
-    ctx.fillStyle='rgb(220,175,90)';
-    ctx.beginPath(); ctx.arc(cx,baseY-height,5,0,7); ctx.fill();
-  }
-  const tCol=[150,60,50];
-  spire(W*0.30, horizonY+10, 110, 60, tCol);
-  spire(W*0.36, horizonY+10, 80, 46, [180,90,70]);
-  spire(W*0.66, horizonY+10, 95, 52, tCol);
-  spire(W*0.74, horizonY+10, 70, 40, [180,90,70]);
-  ctx.fillStyle='rgb(120,50,45)';
-  ctx.fillRect(0, horizonY, W, 12);
-
-  // ghat steps
-  const stepsTop = horizonY+12, stepsH = 90;
-  const steps=6;
-  for(let i=0;i<steps;i++){
-    const t=i/steps;
-    ctx.fillStyle = rgb(lerp([210,175,140],[160,125,100],t));
-    ctx.fillRect(0, stepsTop+t*stepsH, W, stepsH/steps+1);
-  }
-
-  // river
-  const riverTop = stepsTop+stepsH;
-  vGradient(riverTop, H, [255,170,110],[60,40,60]);
-  ctx.strokeStyle='rgba(255,255,255,0.18)'; ctx.lineWidth=2;
-  for(let i=0;i<12;i++){
-    const y=riverTop+18+i*24;
-    if(y>H-15) break;
-    ctx.beginPath();
-    for(let x=0;x<=W;x+=50){
-      const wob=5*Math.sin(x/70+i*0.6);
-      if(x===0) ctx.moveTo(x,y+wob); else ctx.lineTo(x,y+wob);
-    }
-    ctx.stroke();
-  }
-
-  // floating diyas
-  const rnd = mulberry32(23);
-  for(let i=0;i<16;i++){
-    const dx = rnd()*W, dy = riverTop+20+rnd()*(H-riverTop-40);
-    ctx.fillStyle='rgb(255,190,90)';
-    ctx.beginPath(); ctx.arc(dx,dy,4,0,7); ctx.fill();
-    ctx.fillStyle='rgba(255,190,90,0.35)';
-    ctx.beginPath(); ctx.arc(dx,dy,9,0,7); ctx.fill();
-  }
-
-  // small boat
-  ctx.fillStyle='rgb(60,40,30)';
-  ctx.beginPath();
-  ctx.moveTo(W*0.58,H-100); ctx.quadraticCurveTo(W*0.66,H-118,W*0.78,H-100);
-  ctx.quadraticCurveTo(W*0.66,H-92,W*0.58,H-100);
-  ctx.closePath(); ctx.fill();
-
-  ctx.fillStyle='rgb(75,38,30)';
-  ctx.fillRect(0,H-26,W,26);
-  ctx.fillStyle='rgb(255,210,130)';
-  for(let x=20;x<W;x+=40){
-    ctx.beginPath(); ctx.arc(x, H-13, 4,0,7); ctx.fill();
-  }
-}
-
-function drawLumioraMark(){
-  const label = '✦ LUMIORA';
-  ctx.font = `600 26px 'Segoe UI', Arial, sans-serif`;
-  ctx.textAlign = 'right'; ctx.textBaseline = 'top';
-  const tw = ctx.measureText(label).width;
-  const padX = 16, padY = 8;
-  const mx = W - 28, my = 28;
-  ctx.fillStyle = 'rgba(10,10,10,0.32)';
-  roundRect(mx - tw - padX*2, my - padY, tw + padX*2, 26 + padY*2, 14);
-  ctx.fill();
-  ctx.fillStyle = 'rgb(212,175,55)';
-  ctx.fillText(label, mx - padX, my);
-}
-
 function render(){
   ctx.clearRect(0,0,W,H);
   const photoLayout = uploadedImg ? document.getElementById('photoLayout').value : 'split';
@@ -1277,20 +1025,30 @@ function render(){
   } else if(currentTheme==='gujarat') drawGujarat();
   else if(currentTheme==='sikkim') drawSikkim();
   else if(currentTheme==='ladakh') drawLadakh();
-  else if(currentTheme==='rajasthan') drawRajasthan();
-  else if(currentTheme==='kerala') drawKerala();
-  else if(currentTheme==='himachal') drawHimachal();
-  else drawVaranasi();
+  else drawRajasthan();
 
   const sizes = THEME_SIZES[currentTheme];
-  const line1 = document.getElementById('line1').value;
-  const line2 = document.getElementById('line2').value;
-  const line3 = document.getElementById('line3').value;
+  const quoteSize = parseInt(quoteSizeSlider.value, 10);
+  const quoteText = document.getElementById('quoteText').value;
   const author = document.getElementById('author').value;
   const username = document.getElementById('username').value;
 
-  const lines = [line1, line2, line3].filter(l => l.trim().length > 0);
-  const lineGap = Math.round(sizes.quote*1.4);
+  const fontStyleVal = document.getElementById('fontStyle').value;
+  const quoteFontFamily = fontStyleVal === 'serif'
+    ? `'Georgia','Noto Serif Devanagari','Times New Roman',serif`
+    : `'Segoe UI','Noto Sans Devanagari',Arial,sans-serif`;
+  const quoteFontWeight = fontStyleVal === 'serif' ? 700 : 700;
+  const maxTextWidth = W - 130; // safe margin on both sides so text never runs off-card
+
+  const rawLines = quoteText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  let lines = [];
+  rawLines.forEach(rl => {
+    const wrapped = wrapLine(rl, maxTextWidth, `${quoteFontWeight} ${quoteSize}px ${quoteFontFamily}`);
+    lines.push(...wrapped);
+  });
+  lines = lines.slice(0, 8); // safety cap so very long text doesn't overflow the card
+
+  const lineGap = Math.round(quoteSize*1.4);
   const totalH = lineGap*lines.length;
   // in full-photo mode the quote sits near the top third instead of a fixed plain panel
   const startY = isFullPhoto
@@ -1298,13 +1056,9 @@ function render(){
     : Math.round((PLAIN_H-totalH)/2)-10;
 
   lines.forEach((line, i) => {
-    centeredText(line, startY+lineGap*i, sizes.quote, 700, 'rgb(255,250,240)', {shadow:true});
+    centeredText(line, startY+lineGap*i, quoteSize, 700, QUOTE_COLORS[currentQuoteColor], {shadow:true});
   });
   centeredText(author, startY+lineGap*lines.length+18, sizes.author, 400, 'rgb(235,220,255)');
-
-  if(document.getElementById('showLumioraMark').checked){
-    drawLumioraMark();
-  }
 
   // name watermark, fixed 30px, near bottom
   if(username.trim().length>0){
@@ -1342,10 +1096,9 @@ updateSizeLabels();
 render();
 
 // live update as user types
-['line1','line2','line3','author','username'].forEach(id => {
+['quoteText','author','username'].forEach(id => {
   document.getElementById(id).addEventListener('input', render);
 });
-document.getElementById('showLumioraMark').addEventListener('change', render);
 
 </script>
 </body>
