@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumiora Reel Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(180deg, #0b0e1a 0%, #14182b 100%);
+    color: #f3ead9;
+    min-height: 100vh;
+    padding: 16px;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    text-align: center;
+    color: #e8c675;
+    margin: 8px 0 2px;
+  }
+  .sub {
+    text-align: center;
+    color: #b9b2a0;
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+  .top-controls {
+    max-width: 1000px;
+    margin: 0 auto 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .top-controls > div { min-width: 140px; }
+  label {
+    display: block;
+    font-size: 13px;
+    color: #d8c9a3;
+    margin: 14px 0 6px;
+    font-weight: 600;
+  }
+  label:first-of-type { margin-top: 0; }
+  input[type=text], textarea, input[type=number] {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 2px solid #2c3252;
+    background: #0f1223;
+    color: #f3ead9;
+    font-family: 'Poppins', sans-serif;
+  }
+  textarea { resize: vertical; min-height: 70px; }
+  .scene-tabs {
+    display: flex;
+    gap: 6px;
+    max-width: 1000px;
+    margin: 0 auto 18px;
+    flex-wrap: wrap;
+  }
+  .scene-tab {
+    flex: 1;
+    min-width: 70px;
+    padding: 14px 4px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    background: #1c2138;
+    border: 2px solid #2c3252;
+    border-radius: 10px;
+    color: #cfc9b8;
+    cursor: pointer;
+    min-height: 48px;
+  }
+  .scene-tab.active { background: #e8c675; color: #14182b; border-color: #e8c675; }
+  .layout {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
+  .panel {
+    background: #171b2e;
+    border: 1px solid #2c3252;
+    border-radius: 14px;
+    padding: 18px;
+  }
+  .lang-tabs { display: flex; gap: 6px; }
+  .lang-tab {
+    flex: 1; padding: 12px 4px; text-align: center;
+    background: #0f1223; border: 2px solid #2c3252; border-radius: 8px;
+    color: #cfc9b8; font-size: 14px; font-weight: 600; cursor: pointer; min-height: 44px;
+  }
+  .lang-tab.active { background: #7d6cff; border-color: #7d6cff; color: #fff; }
+  .bg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .bg-thumb {
+    height: 70px; border-radius: 8px; border: 3px solid transparent;
+    background-size: cover; background-position: center; cursor: pointer;
+  }
+  .bg-thumb.active { border-color: #e8c675; }
+  .toggle-row { display: flex; gap: 8px; }
+  .toggle-btn {
+    flex: 1; padding: 12px; text-align: center; background: #0f1223;
+    border: 2px solid #2c3252; border-radius: 8px; color: #cfc9b8;
+    font-weight: 600; cursor: pointer; min-height: 44px;
+  }
+  .toggle-btn.active { background: #e8c675; color: #14182b; border-color: #e8c675; }
+  .file-btn {
+    display: block; width: 100%; padding: 14px; text-align: center;
+    background: #0f1223; border: 2px dashed #2c3252; border-radius: 8px;
+    color: #cfc9b8; font-weight: 600; cursor: pointer; min-height: 48px;
+  }
+  canvas { width: 100%; border-radius: 12px; border: 1px solid #2c3252; display: block; background: #000; }
+  .btn {
+    width: 100%; padding: 16px; font-size: 16px; font-weight: 700;
+    border-radius: 10px; border: none; cursor: pointer; margin-top: 12px; min-height: 52px;
+  }
+  .btn-primary { background: #e8c675; color: #14182b; }
+  .btn-secondary { background: #7d6cff; color: #fff; }
+  .btn-outline { background: transparent; color: #e8c675; border: 2px solid #e8c675; }
+  .status { text-align: center; font-size: 13px; color: #b9b2a0; margin-top: 8px; min-height: 18px; }
+  .progress-wrap {
+    height: 10px; background: #0f1223; border-radius: 6px; overflow: hidden; margin-top: 10px;
+    border: 1px solid #2c3252;
+  }
+  .progress-bar { height: 100%; width: 0%; background: #e8c675; }
+  .script-block {
+    background: #0f1223; border: 2px solid #2c3252; border-radius: 8px;
+    padding: 12px; font-size: 13px; color: #d8c9a3; margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Lumiora Reel Studio</h1>
+<p class="sub">Scene-by-scene reel script + browser video assembly</p>
+
+<div class="top-controls">
+  <div>
+    <label>Number of scenes</label>
+    <input type="number" id="sceneCount" value="5" min="2" max="10">
+  </div>
+  <div>
+    <label>Seconds per scene (default)</label>
+    <input type="number" id="defaultDuration" value="4" min="2" max="15">
+  </div>
+</div>
+
+<div class="scene-tabs" id="sceneTabs"></div>
+
+<div class="layout">
+  <div class="panel">
+    <label>On-screen text language</label>
+    <div class="lang-tabs" id="langTabs">
+      <div class="lang-tab" data-lang="hi">हिंदी</div>
+      <div class="lang-tab" data-lang="en">English</div>
+      <div class="lang-tab" data-lang="es">Español</div>
+    </div>
+
+    <label>On-screen text (this scene)</label>
+    <textarea id="onScreenText"></textarea>
+
+    <label>Veo 3 prompt (editable)</label>
+    <textarea id="veoPrompt" style="min-height:90px;"></textarea>
+
+    <label>Background image</label>
+    <div class="bg-grid" id="bgGrid"></div>
+    <input type="file" id="uploadImg" accept="image/*" style="display:none">
+    <label class="file-btn" id="uploadImgLabel" style="margin-top:8px;">Upload your own photo for this scene</label>
+
+    <label>Scene duration (seconds)</label>
+    <input type="number" id="sceneDuration" value="4" min="2" max="15">
+
+    <label>Zoom direction</label>
+    <div class="toggle-row" id="zoomToggle">
+      <div class="toggle-btn active" data-zoom="in">Zoom in</div>
+      <div class="toggle-btn" data-zoom="out">Zoom out</div>
+    </div>
+
+    <label>Voice preview (not baked into video)</label>
+    <select id="voiceSelect" style="width:100%; padding:12px; font-size:15px; border-radius:8px; border:2px solid #2c3252; background:#0f1223; color:#f3ead9; margin-bottom:10px;"></select>
+    <button class="btn btn-outline" id="listenScene">Listen to this scene</button>
+    <button class="btn btn-outline" id="stopListen">Stop</button>
+  </div>
+
+  <div class="panel">
+    <canvas id="previewCanvas" width="608" height="1080"></canvas>
+    <button class="btn btn-primary" id="playWithVoice">Play with voice (auto scene-by-scene)</button>
+    <button class="btn btn-outline" id="stopPlayWithVoice">Stop</button>
+
+    <label>Background music (optional, mp3)</label>
+    <input type="file" id="uploadAudio" accept="audio/*" style="display:none">
+    <label class="file-btn" id="uploadAudioLabel">Upload background music</label>
+    <label>Music volume</label>
+    <input type="number" id="musicVolume" value="60" min="0" max="100">
+
+    <button class="btn btn-primary" id="generateVideo">Generate video (all scenes)</button>
+    <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+    <button class="btn btn-secondary" id="copyPrompts">Copy all Veo 3 prompts</button>
+    <button class="btn btn-secondary" id="downloadChecklist">Download VN editing checklist</button>
+    <div class="status" id="status"></div>
+  </div>
+</div>
+
+<script>
+const BACKGROUNDS = [
+  { name: "Starfield Indigo", url: "https://images.pexels.com/photos/1252890/pexels-photo-1252890.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Silhouette Sunrise", url: "https://images.pexels.com/photos/1670187/pexels-photo-1670187.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Mountain Mist", url: "https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Back-view Ocean", url: "https://images.pexels.com/photos/1544947/pexels-photo-1544947.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Night Sky Hills", url: "https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Golden Hour Walk", url: "https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg?auto=compress&cs=tinysrgb&w=1080" }
+];
+
+const TEMPLATE_SCENES = [
+  { hi: "हर सुबह एक नई शुरुआत है", en: "Every morning is a new beginning", es: "Cada manana es un nuevo comienzo", role: "Opening hook" },
+  { hi: "मुश्किलें आती हैं, रुकती नहीं", en: "Struggles come, but they never stay", es: "Las dificultades llegan, pero no se quedan", role: "Build tension" },
+  { hi: "आपकी मेहनत कभी बेकार नहीं जाती", en: "Your hard work is never wasted", es: "Tu esfuerzo nunca es en vano", role: "Turning point" },
+  { hi: "आज ही एक कदम उठाइए", en: "Take one step today", es: "Da un paso hoy mismo", role: "Call to action" },
+  { hi: "Lumiora के साथ जुड़े रहिए", en: "Stay connected with Lumiora", es: "Mantente conectado con Lumiora", role: "Closing / follow" }
+];
+
+function veoPromptFor(sceneText, bgName) {
+  return "Cinematic 9:16 vertical shot, " + (bgName || "soft golden-hour atmosphere") + ", slow gentle camera drift, warm natural light, no on-screen text, mood matches: \"" + sceneText + "\", 4 seconds, photorealistic, calm and inspiring tone. Ambient sound: soft natural background audio matching the scene, such as gentle wind, distant birds, or quiet rustling — no dialogue, no music.";
+}
+
+function buildScenes(count, defaultDur) {
+  const scenes = [];
+  for (let i = 0; i < count; i++) {
+    const t = TEMPLATE_SCENES[i % TEMPLATE_SCENES.length];
+    const bg = BACKGROUNDS[i % BACKGROUNDS.length];
+    scenes.push({
+      hi: t.hi, en: t.en, es: t.es,
+      veoPrompt: veoPromptFor(t.en, bg.name),
+      bgIndex: i % BACKGROUNDS.length,
+      customImgData: null,
+      duration: defaultDur,
+      zoom: "in"
+    });
+  }
+  return scenes;
+}
+
+let sceneCount = 5;
+let defaultDuration = 4;
+let scenes = buildScenes(sceneCount, defaultDuration);
+let activeScene = 0;
+let activeLang = "en";
+
+const sceneTabsEl = document.getElementById("sceneTabs");
+const langTabsEl = document.getElementById("langTabs");
+const bgGridEl = document.getElementById("bgGrid");
+const onScreenText = document.getElementById("onScreenText");
+const veoPromptEl = document.getElementById("veoPrompt");
+const sceneDurationEl = document.getElementById("sceneDuration");
+const zoomToggleEl = document.getElementById("zoomToggle");
+const statusEl = document.getElementById("status");
+const progressBar = document.getElementById("progressBar");
+const previewCanvas = document.getElementById("previewCanvas");
+const pctx = previewCanvas.getContext("2d");
+
+document.getElementById("sceneCount").addEventListener("change", (e) => {
+  const n = Math.max(2, Math.min(10, Number(e.target.value) || 5));
+  e.target.value = n;
+  const old = scenes;
+  scenes = buildScenes(n, defaultDuration);
+  for (let i = 0; i < Math.min(old.length, n); i++) scenes[i] = old[i];
+  sceneCount = n;
+  activeScene = 0;
+  syncAll();
+});
+
+document.getElementById("defaultDuration").addEventListener("change", (e) => {
+  defaultDuration = Math.max(2, Math.min(15, Number(e.target.value) || 4));
+  e.target.value = defaultDuration;
+});
+
+function renderSceneTabs() {
+  sceneTabsEl.innerHTML = "";
+  scenes.forEach((s, i) => {
+    const el = document.createElement("div");
+    el.className = "scene-tab" + (i === activeScene ? " active" : "");
+    el.textContent = "Scene " + (i + 1);
+    el.onclick = () => { activeScene = i; syncControlsFromState(); };
+    sceneTabsEl.appendChild(el);
+  });
+}
+
+function renderLangTabs() {
+  [...langTabsEl.children].forEach(el => {
+    el.classList.toggle("active", el.dataset.lang === activeLang);
+    el.onclick = () => { activeLang = el.dataset.lang; syncControlsFromState(); };
+  });
+}
+
+function renderBgGrid() {
+  bgGridEl.innerHTML = "";
+  BACKGROUNDS.forEach((b, i) => {
+    const el = document.createElement("div");
+    const isActive = !scenes[activeScene].customImgData && scenes[activeScene].bgIndex === i;
+    el.className = "bg-thumb" + (isActive ? " active" : "");
+    el.style.background = `url(${b.url})`;
+    el.title = b.name;
+    el.onclick = () => {
+      scenes[activeScene].bgIndex = i;
+      scenes[activeScene].customImgData = null;
+      renderBgGrid();
+      drawPreviewFrame(activeScene, 0);
+    };
+    bgGridEl.appendChild(el);
+  });
+}
+
+document.getElementById("uploadImgLabel").onclick = () => document.getElementById("uploadImg").click();
+document.getElementById("uploadImg").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    scenes[activeScene].customImgData = ev.target.result;
+    renderBgGrid();
+    drawPreviewFrame(activeScene, 0);
+  };
+  reader.readAsDataURL(file);
+});
+
+let bgMusicData = null;
+document.getElementById("uploadAudioLabel").onclick = () => document.getElementById("uploadAudio").click();
+document.getElementById("uploadAudio").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    bgMusicData = ev.target.result;
+    document.getElementById("uploadAudioLabel").textContent = "Music added: " + file.name;
+  };
+  reader.readAsDataURL(file);
+});
+
+function syncControlsFromState() {
+  renderSceneTabs();
+  renderLangTabs();
+  renderBgGrid();
+  const s = scenes[activeScene];
+  onScreenText.value = s[activeLang];
+  veoPromptEl.value = s.veoPrompt;
+  sceneDurationEl.value = s.duration;
+  [...zoomToggleEl.children].forEach(b => b.classList.toggle("active", b.dataset.zoom === s.zoom));
+  drawPreviewFrame(activeScene, 0);
+}
+
+function syncAll() { syncControlsFromState(); }
+
+onScreenText.addEventListener("input", () => { scenes[activeScene][activeLang] = onScreenText.value; drawPreviewFrame(activeScene, 0); });
+veoPromptEl.addEventListener("input", () => { scenes[activeScene].veoPrompt = veoPromptEl.value; });
+sceneDurationEl.addEventListener("input", () => { scenes[activeScene].duration = Math.max(2, Math.min(15, Number(sceneDurationEl.value) || 4)); });
+[...zoomToggleEl.children].forEach(b => {
+  b.onclick = () => {
+    scenes[activeScene].zoom = b.dataset.zoom;
+    [...zoomToggleEl.children].forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+  };
+});
+
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(" ");
+  let line = "";
+  const lines = [];
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + " ";
+    if (context.measureText(testLine).width > maxWidth && n > 0) {
+      lines.push(line.trim());
+      line = words[n] + " ";
+    } else {
+      line = testLine;
+    }
+  }
+  lines.push(line.trim());
+  const totalH = lines.length * lineHeight;
+  lines.forEach((l, i) => context.fillText(l, x, y - totalH/2 + i * lineHeight + lineHeight/2));
+}
+
+const imgCache = {};
+function getImage(url) {
+  if (imgCache[url]) return imgCache[url];
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.src = url;
+  imgCache[url] = img;
+  return img;
+}
+
+function drawFrame(context, w, h, scene, tRatio) {
+  context.clearRect(0, 0, w, h);
+  const src = scene.customImgData ? scene.customImgData : BACKGROUNDS[scene.bgIndex].url;
+  const img = getImage(src);
+
+  function paintTextAndOverlay() {
+    const grad = context.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, "rgba(10,12,25,0.25)");
+    grad.addColorStop(0.6, "rgba(10,12,25,0.5)");
+    grad.addColorStop(1, "rgba(10,12,25,0.85)");
+    context.fillStyle = grad;
+    context.fillRect(0, 0, w, h);
+
+    context.textAlign = "center";
+    context.fillStyle = "#f3ead9";
+    context.font = "italic 500 " + Math.round(w*0.075) + "px 'Cormorant Garamond', serif";
+    wrapText(context, scene[activeLang], w/2, h*0.5, w*0.82, w*0.09);
+
+    context.font = "600 " + Math.round(w*0.04) + "px Poppins, sans-serif";
+    context.fillStyle = "#e8c675";
+    context.fillText("LUMIORA", w/2, h*0.93);
+  }
+
+  const zoomFrom = scene.zoom === "in" ? 1.0 : 1.15;
+  const zoomTo = scene.zoom === "in" ? 1.15 : 1.0;
+  const scaleT = zoomFrom + (zoomTo - zoomFrom) * tRatio;
+
+  if (img.complete && img.naturalWidth) {
+    const baseScale = Math.max(w / img.naturalWidth, h / img.naturalHeight) * scaleT;
+    const iw = img.naturalWidth * baseScale, ih = img.naturalHeight * baseScale;
+    context.drawImage(img, (w-iw)/2, (h-ih)/2, iw, ih);
+    paintTextAndOverlay();
+  } else {
+    const grad = context.createLinearGradient(0, 0, w, h);
+    grad.addColorStop(0, "#1c2138");
+    grad.addColorStop(1, "#3a2f6b");
+    context.fillStyle = grad;
+    context.fillRect(0, 0, w, h);
+    paintTextAndOverlay();
+    if (!img.complete) img.onload = () => drawFrame(context, w, h, scene, tRatio);
+  }
+}
+
+function drawPreviewFrame(sceneIndex, tRatio) {
+  drawFrame(pctx, previewCanvas.width, previewCanvas.height, scenes[sceneIndex], tRatio);
+}
+
+let previewing = false;
+let playToken = 0;
+
+function stopPlayback() {
+  previewing = false;
+  playToken++;
+  stopSpeechKeepAlive();
+  window.speechSynthesis.cancel();
+  statusEl.textContent = "Stopped.";
+  drawPreviewFrame(activeScene, 0);
+}
+
+document.getElementById("stopPlayWithVoice").onclick = stopPlayback;
+
+document.getElementById("playWithVoice").onclick = () => {
+  if (previewing) return;
+  previewing = true;
+  const myToken = ++playToken;
+  window.speechSynthesis.cancel();
+  startSpeechKeepAlive();
+
+  let sceneIdx = 0;
+
+  function playScene() {
+    if (myToken !== playToken) return;
+    if (sceneIdx >= scenes.length) {
+      previewing = false;
+      stopSpeechKeepAlive();
+      statusEl.textContent = "Playback finished.";
+      drawPreviewFrame(activeScene, 0);
+      return;
+    }
+    const s = scenes[sceneIdx];
+    statusEl.textContent = "Playing scene " + (sceneIdx + 1) + " of " + scenes.length + "...";
+
+    const utter = new SpeechSynthesisUtterance(s[activeLang]);
+    utter.lang = LANG_CODES[activeLang];
+    utter.rate = 0.92;
+    utter.pitch = 1.0;
+    const voice = pickVoice(LANG_CODES[activeLang]);
+    if (voice) utter.voice = voice;
+
+    let animDone = false;
+    let speechDone = false;
+    function maybeAdvance() {
+      if (animDone && speechDone && myToken === playToken) {
+        sceneIdx++;
+        playScene();
+      }
+    }
+
+    utter.onend = () => { speechDone = true; maybeAdvance(); };
+    utter.onerror = () => { speechDone = true; maybeAdvance(); };
+    window.speechSynthesis.speak(utter);
+
+    const sceneStart = performance.now();
+    function step(now) {
+      if (myToken !== playToken) return;
+      const elapsed = (now - sceneStart) / 1000;
+      const ratio = Math.min(1, elapsed / s.duration);
+      drawPreviewFrame(sceneIdx, ratio);
+      if (ratio >= 1) {
+        animDone = true;
+        maybeAdvance();
+        return;
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  playScene();
+};
+
+document.getElementById("copyPrompts").onclick = async () => {
+  let text = "LUMIORA REEL — VEO 3 SCENE PROMPTS\n\n";
+  scenes.forEach((s, i) => {
+    text += "Scene " + (i+1) + " (" + s.duration + "s):\n";
+    text += "On-screen text: " + s.en + "\n";
+    text += "Veo 3 prompt: " + s.veoPrompt + "\n\n";
+  });
+  try {
+    await navigator.clipboard.writeText(text);
+    statusEl.textContent = "All scene prompts copied to clipboard.";
+  } catch (e) {
+    statusEl.textContent = "Could not copy automatically — please select and copy manually.";
+  }
+};
+
+document.getElementById("downloadChecklist").onclick = () => {
+  let text = "LUMIORA REEL — VN EDITING CHECKLIST\n\n";
+  text += "Total scenes: " + scenes.length + "\n";
+  text += "Total length: " + scenes.reduce((a,s)=>a+s.duration,0) + " seconds\n\n";
+  scenes.forEach((s, i) => {
+    text += "Scene " + (i+1) + " — " + s.duration + "s\n";
+    text += "  Hindi: " + s.hi + "\n";
+    text += "  English: " + s.en + "\n";
+    text += "  Spanish: " + s.es + "\n";
+    text += "  Zoom: " + s.zoom + "\n\n";
+  });
+  text += "VN steps:\n";
+  text += "1. Import the generated Lumiora_Reel.webm as the base visual track.\n";
+  text += "2. Add Mature Male TTS voice-over reading the Hindi or English line for each scene.\n";
+  text += "3. Confirm background music ducks under the voice-over.\n";
+  text += "4. Add Zoom In transition between scenes if not already baked in.\n";
+  text += "5. Export at 1080x1920 for Reels.\n";
+  const blob = new Blob([text], { type: "text/plain" });
+  downloadBlob(blob, "Lumiora_Reel_VN_Checklist.txt");
+  statusEl.textContent = "Checklist downloaded.";
+};
+
+function downloadBlob(blob, filename) {
+  if (navigator.userAgent.match(/iPhone|iPad|iPod/)) {
+    const url = URL.createObjectURL(blob);
+    const w = window.open(url, "_blank");
+    if (!w) {
+      const a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  } else {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+}
+
+document.getElementById("generateVideo").onclick = async () => {
+  const genCanvas = document.createElement("canvas");
+  genCanvas.width = 1080;
+  genCanvas.height = 1920;
+  const gctx = genCanvas.getContext("2d");
+
+  for (const s of scenes) {
+    const src = s.customImgData ? s.customImgData : BACKGROUNDS[s.bgIndex].url;
+    const img = getImage(src);
+    if (!img.complete) {
+      await new Promise((res) => { img.onload = res; img.onerror = res; });
+    }
+  }
+
+  statusEl.textContent = "Recording video...";
+  progressBar.style.width = "0%";
+
+  const stream = genCanvas.captureStream(30);
+  let audioCtx, destination, audioEl;
+
+  if (bgMusicData) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    audioEl = new Audio(bgMusicData);
+    audioEl.crossOrigin = "anonymous";
+    audioEl.loop = true;
+    const vol = Math.max(0, Math.min(100, Number(document.getElementById("musicVolume").value) || 60)) / 100;
+    const sourceNode = audioCtx.createMediaElementSource(audioEl);
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.value = vol;
+    destination = audioCtx.createMediaStreamDestination();
+    sourceNode.connect(gainNode);
+    gainNode.connect(destination);
+    destination.stream.getAudioTracks().forEach(track => stream.addTrack(track));
+    await audioEl.play();
+  }
+
+  let recordedChunks = [];
+  const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
+    ? "video/webm;codecs=vp9,opus"
+    : "video/webm";
+  const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 6000000 });
+  recorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+
+  const totalDuration = scenes.reduce((a, s) => a + s.duration, 0);
+  let elapsedBefore = 0;
+
+  const finished = new Promise((resolve) => { recorder.onstop = resolve; });
+
+  recorder.start();
+
+  for (let i = 0; i < scenes.length; i++) {
+    const s = scenes[i];
+    const sceneStart = performance.now();
+    await new Promise((resolve) => {
+      function frameStep(now) {
+        const elapsed = (now - sceneStart) / 1000;
+        const ratio = Math.min(1, elapsed / s.duration);
+        drawFrame(gctx, genCanvas.width, genCanvas.height, s, ratio);
+        const overallProgress = Math.min(100, Math.round(((elapsedBefore + elapsed) / totalDuration) * 100));
+        progressBar.style.width = overallProgress + "%";
+        statusEl.textContent = "Recording scene " + (i+1) + " of " + scenes.length + "...";
+        if (ratio >= 1) { resolve(); return; }
+        requestAnimationFrame(frameStep);
+      }
+      requestAnimationFrame(frameStep);
+    });
+    elapsedBefore += s.duration;
+  }
+
+  recorder.stop();
+  if (audioEl) audioEl.pause();
+  await finished;
+
+  const blob = new Blob(recordedChunks, { type: "video/webm" });
+  downloadBlob(blob, "Lumiora_Reel.webm");
+  progressBar.style.width = "100%";
+  statusEl.textContent = "Video ready and downloaded. Import it into VN to add voice-over.";
+};
+
+const LANG_CODES = { hi: "hi-IN", en: "en-US", es: "es-ES" };
+const voiceSelectEl = document.getElementById("voiceSelect");
+let cachedVoices = [];
+
+function populateVoiceList() {
+  cachedVoices = window.speechSynthesis.getVoices();
+  const relevant = cachedVoices.filter(v =>
+    v.lang.startsWith("hi") || v.lang.startsWith("en") || v.lang.startsWith("es")
+  );
+  const list = relevant.length ? relevant : cachedVoices;
+  voiceSelectEl.innerHTML = "";
+  const autoOpt = document.createElement("option");
+  autoOpt.value = "";
+  autoOpt.textContent = "Auto (match scene language)";
+  voiceSelectEl.appendChild(autoOpt);
+  list.forEach((v, i) => {
+    const opt = document.createElement("option");
+    opt.value = v.name;
+    opt.textContent = v.name + " (" + v.lang + ")" + (v.localService ? "" : " — online");
+    voiceSelectEl.appendChild(opt);
+  });
+}
+
+if ("speechSynthesis" in window) {
+  populateVoiceList();
+  window.speechSynthesis.onvoiceschanged = populateVoiceList;
+}
+
+function pickVoice(langCode) {
+  const chosenName = voiceSelectEl.value;
+  if (chosenName) {
+    const found = cachedVoices.find(v => v.name === chosenName);
+    if (found) return found;
+  }
+  return cachedVoices.find(v => v.lang === langCode) || cachedVoices.find(v => v.lang.startsWith(langCode.split("-")[0])) || null;
+}
+
+function speakText(text, langCode, onEnd) {
+  if (!("speechSynthesis" in window)) {
+    statusEl.textContent = "Voice preview is not supported in this browser.";
+    return;
+  }
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = langCode;
+  utter.rate = 0.92;
+  utter.pitch = 1.0;
+  const voice = pickVoice(langCode);
+  if (voice) utter.voice = voice;
+  if (onEnd) utter.onend = onEnd;
+  window.speechSynthesis.speak(utter);
+}
+
+let speechKeepAliveTimer = null;
+function startSpeechKeepAlive() {
+  stopSpeechKeepAlive();
+  speechKeepAliveTimer = setInterval(() => {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.pause();
+      window.speechSynthesis.resume();
+    } else {
+      stopSpeechKeepAlive();
+    }
+  }, 4000);
+}
+function stopSpeechKeepAlive() {
+  if (speechKeepAliveTimer) { clearInterval(speechKeepAliveTimer); speechKeepAliveTimer = null; }
+}
+
+document.getElementById("listenScene").onclick = () => {
+  window.speechSynthesis.cancel();
+  const s = scenes[activeScene];
+  speakText(s[activeLang], LANG_CODES[activeLang]);
+  startSpeechKeepAlive();
+  statusEl.textContent = "Reading scene " + (activeScene + 1) + " aloud (preview only, not in the exported video).";
+};
+
+document.getElementById("stopListen").onclick = () => {
+  playToken++;
+  previewing = false;
+  stopSpeechKeepAlive();
+  window.speechSynthesis.cancel();
+  statusEl.textContent = "Voice preview stopped.";
+};
+
+syncControlsFromState();
+</script>
+</body>
+</html>

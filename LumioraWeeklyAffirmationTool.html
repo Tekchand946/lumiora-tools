@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumiora Weekly Affirmation Calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(180deg, #0b0e1a 0%, #14182b 100%);
+    color: #f3ead9;
+    min-height: 100vh;
+    padding: 16px;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    text-align: center;
+    color: #e8c675;
+    margin: 8px 0 2px;
+    letter-spacing: 0.5px;
+  }
+  .sub {
+    text-align: center;
+    color: #b9b2a0;
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+  .day-tabs {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    max-width: 1000px;
+    margin: 0 auto 18px;
+  }
+  .day-tab {
+    padding: 14px 4px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    background: #1c2138;
+    border: 2px solid #2c3252;
+    border-radius: 10px;
+    color: #cfc9b8;
+    cursor: pointer;
+    min-height: 48px;
+  }
+  .day-tab.active {
+    background: #e8c675;
+    color: #14182b;
+    border-color: #e8c675;
+  }
+  .layout {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+  .panel {
+    background: #171b2e;
+    border: 1px solid #2c3252;
+    border-radius: 14px;
+    padding: 18px;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    color: #d8c9a3;
+    margin: 14px 0 6px;
+    font-weight: 600;
+  }
+  label:first-of-type { margin-top: 0; }
+  input[type=text], textarea, select, input[type=number] {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 2px solid #2c3252;
+    background: #0f1223;
+    color: #f3ead9;
+    font-family: 'Poppins', sans-serif;
+  }
+  textarea { resize: vertical; min-height: 70px; }
+  .lang-tabs {
+    display: flex;
+    gap: 6px;
+  }
+  .lang-tab {
+    flex: 1;
+    padding: 12px 4px;
+    text-align: center;
+    background: #0f1223;
+    border: 2px solid #2c3252;
+    border-radius: 8px;
+    color: #cfc9b8;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .lang-tab.active {
+    background: #7d6cff;
+    border-color: #7d6cff;
+    color: #fff;
+  }
+  .bg-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .bg-thumb {
+    height: 70px;
+    border-radius: 8px;
+    border: 3px solid transparent;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+  }
+  .bg-thumb.active { border-color: #e8c675; }
+  .size-toggle {
+    display: flex;
+    gap: 8px;
+  }
+  .size-btn {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    background: #0f1223;
+    border: 2px solid #2c3252;
+    border-radius: 8px;
+    color: #cfc9b8;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .size-btn.active { background: #e8c675; color: #14182b; border-color: #e8c675; }
+  .num-row { display: flex; gap: 10px; }
+  .num-row > div { flex: 1; }
+  canvas {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid #2c3252;
+    display: block;
+  }
+  .btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    margin-top: 12px;
+    min-height: 52px;
+  }
+  .btn-primary { background: #e8c675; color: #14182b; }
+  .btn-secondary { background: #7d6cff; color: #fff; }
+  .btn-outline { background: transparent; color: #e8c675; border: 2px solid #e8c675; }
+  .status {
+    text-align: center;
+    font-size: 13px;
+    color: #b9b2a0;
+    margin-top: 8px;
+    min-height: 18px;
+  }
+  .caption-box {
+    background: #0f1223;
+    border: 2px solid #2c3252;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 13px;
+    color: #d8c9a3;
+    white-space: pre-wrap;
+    margin-top: 8px;
+    max-height: 160px;
+    overflow-y: auto;
+  }
+</style>
+</head>
+<body>
+
+<h1>Lumiora — Weekly Affirmation Calendar</h1>
+<p class="sub">Monday to Sunday · 7 trilingual affirmation cards · Cosmic silhouette style</p>
+
+<div style="max-width:1000px;margin:0 auto 18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;">
+  <label style="margin:0;">Week:</label>
+  <select id="weekSelect" style="padding:12px;font-size:15px;border-radius:8px;border:2px solid #2c3252;background:#0f1223;color:#f3ead9;min-height:44px;min-width:140px;"></select>
+  <button class="toggle-btn-inline" id="newWeekBtn" style="padding:12px 18px;background:#7d6cff;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">+ New week</button>
+  <button class="toggle-btn-inline" id="renameWeekBtn" style="padding:12px 18px;background:#0f1223;color:#e8c675;border:2px solid #2c3252;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Rename</button>
+  <button class="toggle-btn-inline" id="deleteWeekBtn" style="padding:12px 18px;background:#0f1223;color:#e07a7a;border:2px solid #2c3252;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Delete week</button>
+</div>
+
+<div class="day-tabs" id="dayTabs"></div>
+
+<div class="layout">
+  <div class="panel">
+    <label>Theme (day headline)</label>
+    <input type="text" id="themeInput" placeholder="e.g. New Beginnings">
+
+    <label>Language for this quote</label>
+    <div class="lang-tabs" id="langTabs">
+      <div class="lang-tab" data-lang="hi">हिंदी</div>
+      <div class="lang-tab" data-lang="en">English</div>
+      <div class="lang-tab" data-lang="es">Español</div>
+    </div>
+
+    <label>Quote text</label>
+    <textarea id="quoteInput"></textarea>
+
+    <label>Background style</label>
+    <div class="bg-grid" id="bgGrid"></div>
+
+    <label>Card size</label>
+    <div class="size-toggle">
+      <div class="size-btn active" data-size="post">Post (1080×1350) — for Facebook feed</div>
+      <div class="size-btn" data-size="reel">Reel (1080×1920) — for Reels/Stories only</div>
+    </div>
+
+    <label>Text colour</label>
+    <div class="size-toggle" id="colorToggle">
+      <div class="size-btn active" data-color="white">White</div>
+      <div class="size-btn" data-color="golden">Golden</div>
+      <div class="size-btn" data-color="black">Black</div>
+    </div>
+
+    <label>Text sizing</label>
+    <div class="num-row">
+      <div>
+        <label style="margin-top:0">Theme size (px)</label>
+        <input type="number" id="themeSize" value="46" min="24" max="90">
+      </div>
+      <div>
+        <label style="margin-top:0">Quote size (px)</label>
+        <input type="number" id="quoteSize" value="52" min="24" max="90">
+      </div>
+    </div>
+
+    <label>Facebook caption (auto-generated, editable)</label>
+    <textarea id="captionInput" style="min-height:110px;"></textarea>
+  </div>
+
+  <div class="panel">
+    <canvas id="cardCanvas"></canvas>
+    <button class="btn btn-primary" id="downloadOne">Download this card</button>
+    <button class="btn btn-secondary" id="downloadAll">Download all 7 (zip)</button>
+    <button class="btn btn-outline" id="resetDay">Reset this day to default</button>
+    <div class="status" id="status"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const DAY_HI = ["सोमवार","मंगलवार","बुधवार","गुरुवार","शुक्रवार","शनिवार","रविवार"];
+const DAY_ES = ["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"];
+
+function dayLabelFor(lang, i) {
+  if (lang === "hi") return DAY_HI[i];
+  if (lang === "es") return DAY_ES[i].toUpperCase();
+  return DAYS[i].toUpperCase();
+}
+
+const DEFAULTS = [
+  {
+    themeHi: "नई शुरुआत", themeEn: "New Beginnings", themeEs: "Nuevos Comienzos",
+    hi: "हर सुबह एक नया अवसर है खुद को फिर से गढ़ने का।",
+    en: "Every sunrise is a fresh page — write it with courage.",
+    es: "Cada amanecer es una pagina nueva; escribela con valentia.",
+    bg: 0
+  },
+  {
+    themeHi: "कृतज्ञता", themeEn: "Gratitude", themeEs: "Gratitud",
+    hi: "जो आपके पास है उसे सराहें, और जो आने वाला है उसका स्वागत करें।",
+    en: "Gratitude turns what we have into enough, and more.",
+    es: "La gratitud convierte lo que tenemos en suficiente, y en mas.",
+    bg: 1
+  },
+  {
+    themeHi: "आंतरिक शक्ति", themeEn: "Inner Strength", themeEs: "Fuerza Interior",
+    hi: "तूफान गुजर जाते हैं, लेकिन जो जड़ें गहरी हैं वे टिकी रहती हैं।",
+    en: "Storms pass, but roots planted deep always hold.",
+    es: "Las tormentas pasan, pero las raices profundas siempre resisten.",
+    bg: 2
+  },
+  {
+    themeHi: "विकास", themeEn: "Growth", themeEs: "Crecimiento",
+    hi: "आप जहां खड़े हैं वहां से नहीं, बल्कि आप कितना आगे बढ़े हैं उससे नापें।",
+    en: "Measure yourself not by where you stand, but by how far you have come.",
+    es: "Midete no por donde estas, sino por cuanto has avanzado.",
+    bg: 3
+  },
+  {
+    themeHi: "सकारात्मकता", themeEn: "Positivity", themeEs: "Positividad",
+    hi: "एक सकारात्मक मन हर मुश्किल में भी रास्ता ढूंढ लेता है।",
+    en: "A positive mind finds a path even inside a difficult moment.",
+    es: "Una mente positiva encuentra un camino incluso en el momento mas dificil.",
+    bg: 4
+  },
+  {
+    themeHi: "आत्म-प्रेम", themeEn: "Self-Love", themeEs: "Amor Propio",
+    hi: "खुद से उतना ही प्रेम करें जितना आप औरों को समझने की कोशिश करते हैं।",
+    en: "Offer yourself the same kindness you so freely give to others.",
+    es: "Ofrecete la misma bondad que le das libremente a los demas.",
+    bg: 5
+  },
+  {
+    themeHi: "शांति", themeEn: "Peace", themeEs: "Paz",
+    hi: "शांति बाहर नहीं मिलती, वह भीतर की खामोशी में बसती है।",
+    en: "Peace was never out there — it lives quietly within.",
+    es: "La paz nunca estuvo afuera; vive en silencio dentro de ti.",
+    bg: 6
+  }
+];
+
+const BACKGROUNDS = [
+  { name: "Starfield Indigo", url: "https://images.pexels.com/photos/1252890/pexels-photo-1252890.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Silhouette Sunrise", url: "https://images.pexels.com/photos/1670187/pexels-photo-1670187.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Mountain Mist", url: "https://images.pexels.com/photos/1287145/pexels-photo-1287145.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Back-view Ocean", url: "https://images.pexels.com/photos/1544947/pexels-photo-1544947.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Night Sky Hills", url: "https://images.pexels.com/photos/1252869/pexels-photo-1252869.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Golden Hour Walk", url: "https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Cosmic Gradient (no photo)", url: null }
+];
+
+function themeFor(day, lang) {
+  if (lang === "hi") return day.themeHi;
+  if (lang === "es") return day.themeEs;
+  return day.themeEn;
+}
+
+function freshWeekState() {
+  return DEFAULTS.map((d, i) => ({
+    themeHi: d.themeHi, themeEn: d.themeEn, themeEs: d.themeEs,
+    hi: d.hi, en: d.en, es: d.es,
+    bg: d.bg,
+    themeSize: 46,
+    quoteSize: 52,
+    size: "post",
+    textColor: "white"
+  }));
+}
+
+function buildCaption(theme, quoteEn) {
+  return quoteEn + "\n\n#Lumiora #DailyAffirmation #" + theme.replace(/\s+/g,"") + " #Motivation #MondayMotivation #PositiveVibes #SelfGrowth #TrilingualQuotes";
+}
+
+const STORAGE_KEY = "lumiora_weekly_affirmations_weeks";
+const CURRENT_KEY = "lumiora_weekly_affirmations_current_week";
+
+function loadWeeksStore() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return null;
+}
+
+function saveWeeksStore() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(weeksStore));
+    localStorage.setItem(CURRENT_KEY, currentWeekName);
+  } catch (e) {}
+}
+
+function saveCurrentWeek() {
+  weeksStore[currentWeekName] = state;
+  saveWeeksStore();
+}
+
+function nextWeekName() {
+  let n = 1;
+  while (weeksStore["Week " + n]) n++;
+  return "Week " + n;
+}
+
+let weeksStore = loadWeeksStore();
+if (!weeksStore || Object.keys(weeksStore).length === 0) {
+  weeksStore = { "Week 1": freshWeekState() };
+}
+
+let currentWeekName = null;
+try { currentWeekName = localStorage.getItem(CURRENT_KEY); } catch (e) {}
+if (!currentWeekName || !weeksStore[currentWeekName]) {
+  currentWeekName = Object.keys(weeksStore)[0];
+}
+
+let state = weeksStore[currentWeekName];
+let activeDay = 0;
+let activeLang = "en";
+
+const weekSelectEl = document.getElementById("weekSelect");
+
+function renderWeekSelect() {
+  weekSelectEl.innerHTML = "";
+  Object.keys(weeksStore).forEach((name) => {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    if (name === currentWeekName) opt.selected = true;
+    weekSelectEl.appendChild(opt);
+  });
+}
+
+weekSelectEl.addEventListener("change", () => {
+  currentWeekName = weekSelectEl.value;
+  state = weeksStore[currentWeekName];
+  activeDay = 0;
+  saveWeeksStore();
+  syncControlsFromState();
+});
+
+document.getElementById("newWeekBtn").onclick = () => {
+  const name = nextWeekName();
+  weeksStore[name] = freshWeekState();
+  currentWeekName = name;
+  state = weeksStore[currentWeekName];
+  activeDay = 0;
+  saveWeeksStore();
+  renderWeekSelect();
+  syncControlsFromState();
+  statusEl.textContent = name + " created with fresh defaults.";
+};
+
+document.getElementById("renameWeekBtn").onclick = () => {
+  const newName = prompt("Naya naam is week ke liye:", currentWeekName);
+  if (!newName || !newName.trim() || newName === currentWeekName) return;
+  if (weeksStore[newName]) { alert("Ye naam pehle se hai, doosra naam chunein."); return; }
+  weeksStore[newName] = weeksStore[currentWeekName];
+  delete weeksStore[currentWeekName];
+  currentWeekName = newName;
+  saveWeeksStore();
+  renderWeekSelect();
+  statusEl.textContent = "Week ka naam badal diya gaya.";
+};
+
+document.getElementById("deleteWeekBtn").onclick = () => {
+  if (Object.keys(weeksStore).length <= 1) {
+    alert("Kam se kam ek week hona zaroori hai, ise delete nahi kar sakte.");
+    return;
+  }
+  if (!confirm(currentWeekName + " ko delete karein? Ye wapas nahi aayega.")) return;
+  delete weeksStore[currentWeekName];
+  currentWeekName = Object.keys(weeksStore)[0];
+  state = weeksStore[currentWeekName];
+  activeDay = 0;
+  saveWeeksStore();
+  renderWeekSelect();
+  syncControlsFromState();
+  statusEl.textContent = "Week delete kar di gayi.";
+};
+
+const dayTabsEl = document.getElementById("dayTabs");
+const langTabsEl = document.getElementById("langTabs");
+const bgGridEl = document.getElementById("bgGrid");
+const themeInput = document.getElementById("themeInput");
+const quoteInput = document.getElementById("quoteInput");
+const captionInput = document.getElementById("captionInput");
+const themeSizeInput = document.getElementById("themeSize");
+const quoteSizeInput = document.getElementById("quoteSize");
+const statusEl = document.getElementById("status");
+const canvas = document.getElementById("cardCanvas");
+const ctx = canvas.getContext("2d");
+
+function renderDayTabs() {
+  dayTabsEl.innerHTML = "";
+  DAYS.forEach((d, i) => {
+    const el = document.createElement("div");
+    el.className = "day-tab" + (i === activeDay ? " active" : "");
+    el.textContent = DAY_HI[i];
+    el.onclick = () => { activeDay = i; syncControlsFromState(); drawCard(); };
+    dayTabsEl.appendChild(el);
+  });
+}
+
+function renderLangTabs() {
+  [...langTabsEl.children].forEach(el => {
+    el.classList.toggle("active", el.dataset.lang === activeLang);
+    el.onclick = () => { activeLang = el.dataset.lang; syncControlsFromState(); };
+  });
+}
+
+function captionKeyFor(lang) { return "caption_" + lang; }
+
+function getCaptionFor(day, lang) {
+  const key = captionKeyFor(lang);
+  if (!day[key]) {
+    day[key] = buildCaption(themeFor(day, lang), day[lang]);
+  }
+  return day[key];
+}
+
+function renderBgGrid() {
+  bgGridEl.innerHTML = "";
+  BACKGROUNDS.forEach((b, i) => {
+    const el = document.createElement("div");
+    el.className = "bg-thumb" + (state[activeDay].bg === i ? " active" : "");
+    el.style.background = b.url ? `url(${b.url})` : "linear-gradient(160deg,#1c2138,#3a2f6b)";
+    el.style.backgroundSize = "cover";
+    el.title = b.name;
+    el.onclick = () => { state[activeDay].bg = i; renderBgGrid(); drawCard(); };
+    bgGridEl.appendChild(el);
+  });
+}
+
+function syncControlsFromState() {
+  renderDayTabs();
+  renderLangTabs();
+  renderBgGrid();
+  const d = state[activeDay];
+  themeInput.value = themeFor(d, activeLang);
+  quoteInput.value = d[activeLang];
+  captionInput.value = getCaptionFor(d, activeLang);
+  themeSizeInput.value = d.themeSize;
+  quoteSizeInput.value = d.quoteSize;
+  [...document.querySelectorAll(".size-btn[data-size]")].forEach(b => {
+    b.classList.toggle("active", b.dataset.size === d.size);
+  });
+  [...document.querySelectorAll(".size-btn[data-color]")].forEach(b => {
+    b.classList.toggle("active", b.dataset.color === (d.textColor || "white"));
+  });
+  drawCard();
+}
+
+themeInput.addEventListener("input", () => {
+  const key = activeLang === "hi" ? "themeHi" : activeLang === "es" ? "themeEs" : "themeEn";
+  state[activeDay][key] = themeInput.value;
+  delete state[activeDay][captionKeyFor(activeLang)];
+  captionInput.value = getCaptionFor(state[activeDay], activeLang);
+  drawCard();
+});
+quoteInput.addEventListener("input", () => {
+  state[activeDay][activeLang] = quoteInput.value;
+  delete state[activeDay][captionKeyFor(activeLang)];
+  captionInput.value = getCaptionFor(state[activeDay], activeLang);
+  drawCard();
+});
+captionInput.addEventListener("input", () => { state[activeDay][captionKeyFor(activeLang)] = captionInput.value; saveCurrentWeek(); });
+themeSizeInput.addEventListener("input", () => { state[activeDay].themeSize = Number(themeSizeInput.value) || 46; drawCard(); });
+quoteSizeInput.addEventListener("input", () => { state[activeDay].quoteSize = Number(quoteSizeInput.value) || 52; drawCard(); });
+
+[...document.querySelectorAll(".size-btn[data-size]")].forEach(b => {
+  b.onclick = () => {
+    state[activeDay].size = b.dataset.size;
+    [...document.querySelectorAll(".size-btn[data-size]")].forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    drawCard();
+  };
+});
+
+[...document.querySelectorAll(".size-btn[data-color]")].forEach(b => {
+  b.onclick = () => {
+    state[activeDay].textColor = b.dataset.color;
+    [...document.querySelectorAll(".size-btn[data-color]")].forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    drawCard();
+  };
+});
+
+document.getElementById("resetDay").onclick = () => {
+  const def = DEFAULTS[activeDay];
+  state[activeDay] = {
+    themeHi: def.themeHi, themeEn: def.themeEn, themeEs: def.themeEs, hi: def.hi, en: def.en, es: def.es, bg: def.bg,
+    themeSize: 46, quoteSize: 52, size: state[activeDay].size, textColor: "white"
+  };
+  syncControlsFromState();
+};
+
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(" ");
+  let line = "";
+  const lines = [];
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + " ";
+    if (context.measureText(testLine).width > maxWidth && n > 0) {
+      lines.push(line.trim());
+      line = words[n] + " ";
+    } else {
+      line = testLine;
+    }
+  }
+  lines.push(line.trim());
+  lines.forEach((l, i) => {
+    context.fillText(l, x, y + i * lineHeight);
+  });
+  return lines.length;
+}
+
+function dimsFor(size) {
+  return size === "reel" ? { w: 1080, h: 1920 } : { w: 1080, h: 1350 };
+}
+
+function drawCardToContext(context, w, h, dayIndex, lang) {
+  const d = state[dayIndex];
+  const bgDef = BACKGROUNDS[d.bg];
+  context.clearRect(0, 0, w, h);
+
+  function drawOverlayAndText() {
+    const grad = context.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, "rgba(10,12,25,0.35)");
+    grad.addColorStop(0.55, "rgba(10,12,25,0.55)");
+    grad.addColorStop(1, "rgba(10,12,25,0.88)");
+    context.fillStyle = grad;
+    context.fillRect(0, 0, w, h);
+
+    context.fillStyle = "#e8c675";
+    context.font = "600 " + Math.round(w*0.032) + "px Poppins, sans-serif";
+    context.textAlign = "center";
+    context.fillText(dayLabelFor(lang, dayIndex), w/2, h*0.10);
+
+    context.fillStyle = "#e8c675";
+    context.fillRect(w/2 - 60, h*0.13, 120, 3);
+
+    const colorMap = { white: "#f3ead9", golden: "#e8c675", black: "#151515" };
+    const mainColor = colorMap[d.textColor || "white"];
+
+    context.fillStyle = mainColor;
+    context.font = "600 " + d.themeSize + "px 'Cormorant Garamond', serif";
+    context.fillText(themeFor(d, lang), w/2, h*0.22);
+
+    context.font = (lang === "hi" ? "500 " : "italic 500 ") + d.quoteSize + "px 'Cormorant Garamond', serif";
+    context.fillStyle = mainColor;
+    const maxWidth = w * 0.82;
+    const lineHeight = d.quoteSize * 125 / 1000 * d.quoteSize / d.quoteSize + d.quoteSize * 1.3 - d.quoteSize;
+    const lh = d.quoteSize * 1.35;
+    wrapText(context, d[lang], w/2, h*0.46, maxWidth, lh);
+
+    context.font = "500 " + Math.round(w*0.026) + "px Poppins, sans-serif";
+    context.fillStyle = "#cfc9b8";
+    context.fillText("LUMIORA", w/2, h*0.94);
+    context.font = Math.round(w*0.018) + "px Poppins, sans-serif";
+    context.fillStyle = "#8f8a7c";
+    context.fillText("Weekly Affirmations", w/2, h*0.965);
+  }
+
+  if (bgDef.url) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        const scale = Math.max(w / img.width, h / img.height);
+        const iw = img.width * scale, ih = img.height * scale;
+        context.drawImage(img, (w-iw)/2, (h-ih)/2, iw, ih);
+        drawOverlayAndText();
+        resolve();
+      };
+      img.onerror = () => {
+        const grad = context.createLinearGradient(0, 0, w, h);
+        grad.addColorStop(0, "#1c2138");
+        grad.addColorStop(1, "#3a2f6b");
+        context.fillStyle = grad;
+        context.fillRect(0, 0, w, h);
+        drawOverlayAndText();
+        resolve();
+      };
+      img.src = bgDef.url;
+    });
+  } else {
+    const grad = context.createLinearGradient(0, 0, w, h);
+    grad.addColorStop(0, "#1c2138");
+    grad.addColorStop(1, "#3a2f6b");
+    context.fillStyle = grad;
+    context.fillRect(0, 0, w, h);
+    context.fillStyle = "rgba(255,255,255,0.7)";
+    for (let i = 0; i < 80; i++) {
+      const sx = Math.random()*w, sy = Math.random()*h*0.6, r = Math.random()*1.8;
+      context.beginPath();
+      context.arc(sx, sy, r, 0, Math.PI*2);
+      context.fill();
+    }
+    drawOverlayAndText();
+    return Promise.resolve();
+  }
+}
+
+function drawCard() {
+  const d = state[activeDay];
+  const { w, h } = dimsFor(d.size);
+  canvas.width = w;
+  canvas.height = h;
+  drawCardToContext(ctx, w, h, activeDay, activeLang);
+  saveCurrentWeek();
+}
+
+function downloadBlob(blob, filename) {
+  if (navigator.userAgent.match(/iPhone|iPad|iPod/)) {
+    const url = URL.createObjectURL(blob);
+    const w = window.open(url, "_blank");
+    if (!w) {
+      const a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  } else {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+}
+
+document.getElementById("downloadOne").onclick = () => {
+  const captionText = getCaptionFor(state[activeDay], activeLang);
+  navigator.clipboard.writeText(captionText).catch(() => {});
+  canvas.toBlob((blob) => {
+    downloadBlob(blob, "Lumiora_" + DAYS[activeDay] + "_Affirmation.png");
+    statusEl.textContent = DAYS[activeDay] + " card downloaded — caption copied, ready to paste on Facebook.";
+  }, "image/png");
+};
+
+document.getElementById("downloadAll").onclick = async () => {
+  statusEl.textContent = "Preparing all 7 cards...";
+  const zip = new JSZip();
+  const tempCanvas = document.createElement("canvas");
+  const tctx = tempCanvas.getContext("2d");
+  let captionsText = "LUMIORA — WEEKLY AFFIRMATION CAPTIONS\n\n";
+  for (let i = 0; i < 7; i++) {
+    const d = state[i];
+    const { w, h } = dimsFor(d.size);
+    tempCanvas.width = w; tempCanvas.height = h;
+    await drawCardToContext(tctx, w, h, i, activeLang);
+    const blob = await new Promise(res => tempCanvas.toBlob(res, "image/png"));
+    zip.file("Lumiora_" + String(i+1).padStart(2,"0") + "_" + DAYS[i] + ".png", blob);
+    captionsText += DAYS[i] + ":\n" + getCaptionFor(d, activeLang) + "\n\n";
+    statusEl.textContent = "Rendered " + (i+1) + " of 7...";
+  }
+  zip.file("Captions.txt", captionsText);
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+  downloadBlob(zipBlob, "Lumiora_Weekly_Affirmation_Calendar.zip");
+  statusEl.textContent = "All 7 cards + Captions.txt downloaded as a zip.";
+};
+
+renderWeekSelect();
+syncControlsFromState();
+</script>
+</body>
+</html>
