@@ -115,6 +115,15 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
   }
+  input[type=file] {
+    width: 100%;
+    padding: 10px;
+    font-size: 13px;
+    border-radius: 8px;
+    border: 2px solid #2c3252;
+    background: #0f1223;
+    color: #cfc9b8;
+  }
   .bg-thumb {
     height: 70px;
     border-radius: 8px;
@@ -189,14 +198,6 @@
 <h1>Lumiora — Weekly Affirmation Calendar</h1>
 <p class="sub">Monday to Sunday · 7 trilingual affirmation cards · Cosmic silhouette style</p>
 
-<div style="max-width:1000px;margin:0 auto 18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;">
-  <label style="margin:0;">Week:</label>
-  <select id="weekSelect" style="padding:12px;font-size:15px;border-radius:8px;border:2px solid #2c3252;background:#0f1223;color:#f3ead9;min-height:44px;min-width:140px;"></select>
-  <button class="toggle-btn-inline" id="newWeekBtn" style="padding:12px 18px;background:#7d6cff;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">+ New week</button>
-  <button class="toggle-btn-inline" id="renameWeekBtn" style="padding:12px 18px;background:#0f1223;color:#e8c675;border:2px solid #2c3252;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Rename</button>
-  <button class="toggle-btn-inline" id="deleteWeekBtn" style="padding:12px 18px;background:#0f1223;color:#e07a7a;border:2px solid #2c3252;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Delete week</button>
-</div>
-
 <div class="day-tabs" id="dayTabs"></div>
 
 <div class="layout">
@@ -210,12 +211,28 @@
       <div class="lang-tab" data-lang="en">English</div>
       <div class="lang-tab" data-lang="es">Español</div>
     </div>
+    <div class="lang-tabs" id="langTabsPair" style="margin-top:6px;">
+      <div class="lang-tab" data-lang="hi_en">हिंदी + English</div>
+      <div class="lang-tab" data-lang="en_es">English + Español</div>
+    </div>
 
-    <label>Quote text</label>
-    <textarea id="quoteInput"></textarea>
+    <div id="singleQuoteWrap">
+      <label>Quote text</label>
+      <textarea id="quoteInput"></textarea>
+    </div>
+    <div id="dualQuoteWrap" style="display:none;">
+      <label id="dualLabel1">Line 1</label>
+      <textarea id="quoteInput1"></textarea>
+      <label id="dualLabel2">Line 2</label>
+      <textarea id="quoteInput2"></textarea>
+    </div>
 
     <label>Background style</label>
     <div class="bg-grid" id="bgGrid"></div>
+
+    <label>Ya apni photo upload karein (is din ke liye)</label>
+    <input type="file" id="customBgUpload" accept="image/*">
+    <button class="btn btn-outline" id="removeCustomBg" style="margin-top:8px;">Photo hataayein (preset background par wapas jaayein)</button>
 
     <label>Card size</label>
     <div class="size-toggle">
@@ -223,22 +240,23 @@
       <div class="size-btn" data-size="reel">Reel (1080×1920) — for Reels/Stories only</div>
     </div>
 
-    <label>Text colour</label>
+    <label>Theme text colour</label>
     <div class="size-toggle" id="colorToggle">
       <div class="size-btn active" data-color="white">White</div>
       <div class="size-btn" data-color="golden">Golden</div>
       <div class="size-btn" data-color="black">Black</div>
     </div>
+    <p style="font-size:13px;color:#b9b2a0;margin-top:8px;">Quote/Line text ka rang ab bhasha ke hisaab se apne aap tay hota hai — हिंदी = Golden, English = White, Español = Teal — taaki dono lines turant alag pehchaani ja sakein.</p>
 
     <label>Text sizing</label>
     <div class="num-row">
       <div>
         <label style="margin-top:0">Theme size (px)</label>
-        <input type="number" id="themeSize" value="46" min="24" max="90">
+        <input type="number" id="themeSize" value="60" min="24" max="90">
       </div>
       <div>
         <label style="margin-top:0">Quote size (px)</label>
-        <input type="number" id="quoteSize" value="52" min="24" max="90">
+        <input type="number" id="quoteSize" value="75" min="24" max="90">
       </div>
     </div>
 
@@ -262,56 +280,66 @@ const DAY_HI = ["सोमवार","मंगलवार","बुधवार
 const DAY_ES = ["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"];
 
 function dayLabelFor(lang, i) {
-  if (lang === "hi") return DAY_HI[i];
+  if (lang === "hi" || lang === "hi_en") return DAY_HI[i];
   if (lang === "es") return DAY_ES[i].toUpperCase();
+  if (lang === "en_es") return DAYS[i].toUpperCase();
   return DAYS[i].toUpperCase();
 }
 
+const PAIR_MAP = {
+  hi_en: ["hi", "en"],
+  en_es: ["en", "es"]
+};
+const PAIR_LABELS = {
+  hi_en: ["हिंदी", "English"],
+  en_es: ["English", "Español"]
+};
+
 const DEFAULTS = [
   {
-    themeHi: "नई शुरुआत", themeEn: "New Beginnings", themeEs: "Nuevos Comienzos",
+    theme: "New Beginnings",
     hi: "हर सुबह एक नया अवसर है खुद को फिर से गढ़ने का।",
     en: "Every sunrise is a fresh page — write it with courage.",
     es: "Cada amanecer es una pagina nueva; escribela con valentia.",
     bg: 0
   },
   {
-    themeHi: "कृतज्ञता", themeEn: "Gratitude", themeEs: "Gratitud",
+    theme: "Gratitude",
     hi: "जो आपके पास है उसे सराहें, और जो आने वाला है उसका स्वागत करें।",
     en: "Gratitude turns what we have into enough, and more.",
     es: "La gratitud convierte lo que tenemos en suficiente, y en mas.",
     bg: 1
   },
   {
-    themeHi: "आंतरिक शक्ति", themeEn: "Inner Strength", themeEs: "Fuerza Interior",
+    theme: "Inner Strength",
     hi: "तूफान गुजर जाते हैं, लेकिन जो जड़ें गहरी हैं वे टिकी रहती हैं।",
     en: "Storms pass, but roots planted deep always hold.",
     es: "Las tormentas pasan, pero las raices profundas siempre resisten.",
     bg: 2
   },
   {
-    themeHi: "विकास", themeEn: "Growth", themeEs: "Crecimiento",
+    theme: "Growth",
     hi: "आप जहां खड़े हैं वहां से नहीं, बल्कि आप कितना आगे बढ़े हैं उससे नापें।",
     en: "Measure yourself not by where you stand, but by how far you have come.",
     es: "Midete no por donde estas, sino por cuanto has avanzado.",
     bg: 3
   },
   {
-    themeHi: "सकारात्मकता", themeEn: "Positivity", themeEs: "Positividad",
+    theme: "Positivity",
     hi: "एक सकारात्मक मन हर मुश्किल में भी रास्ता ढूंढ लेता है।",
     en: "A positive mind finds a path even inside a difficult moment.",
     es: "Una mente positiva encuentra un camino incluso en el momento mas dificil.",
     bg: 4
   },
   {
-    themeHi: "आत्म-प्रेम", themeEn: "Self-Love", themeEs: "Amor Propio",
+    theme: "Self-Love",
     hi: "खुद से उतना ही प्रेम करें जितना आप औरों को समझने की कोशिश करते हैं।",
     en: "Offer yourself the same kindness you so freely give to others.",
     es: "Ofrecete la misma bondad que le das libremente a los demas.",
     bg: 5
   },
   {
-    themeHi: "शांति", themeEn: "Peace", themeEs: "Paz",
+    theme: "Peace",
     hi: "शांति बाहर नहीं मिलती, वह भीतर की खामोशी में बसती है।",
     en: "Peace was never out there — it lives quietly within.",
     es: "La paz nunca estuvo afuera; vive en silencio dentro de ti.",
@@ -329,19 +357,16 @@ const BACKGROUNDS = [
   { name: "Cosmic Gradient (no photo)", url: null }
 ];
 
-function themeFor(day, lang) {
-  if (lang === "hi") return day.themeHi;
-  if (lang === "es") return day.themeEs;
-  return day.themeEn;
-}
-
-function freshWeekState() {
+function loadState() {
+  let raw = null;
+  try { raw = window.__lumioraState || null; } catch (e) {}
+  if (raw) return raw;
   return DEFAULTS.map((d, i) => ({
-    themeHi: d.themeHi, themeEn: d.themeEn, themeEs: d.themeEs,
+    theme: d.theme,
     hi: d.hi, en: d.en, es: d.es,
     bg: d.bg,
-    themeSize: 46,
-    quoteSize: 52,
+    themeSize: 60,
+    quoteSize: 75,
     size: "post",
     textColor: "white"
   }));
@@ -351,119 +376,27 @@ function buildCaption(theme, quoteEn) {
   return quoteEn + "\n\n#Lumiora #DailyAffirmation #" + theme.replace(/\s+/g,"") + " #Motivation #MondayMotivation #PositiveVibes #SelfGrowth #TrilingualQuotes";
 }
 
-const STORAGE_KEY = "lumiora_weekly_affirmations_weeks";
-const CURRENT_KEY = "lumiora_weekly_affirmations_current_week";
-
-function loadWeeksStore() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch (e) {}
-  return null;
-}
-
-function saveWeeksStore() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(weeksStore));
-    localStorage.setItem(CURRENT_KEY, currentWeekName);
-  } catch (e) {}
-}
-
-function saveCurrentWeek() {
-  weeksStore[currentWeekName] = state;
-  saveWeeksStore();
-}
-
-function nextWeekName() {
-  let n = 1;
-  while (weeksStore["Week " + n]) n++;
-  return "Week " + n;
-}
-
-let weeksStore = loadWeeksStore();
-if (!weeksStore || Object.keys(weeksStore).length === 0) {
-  weeksStore = { "Week 1": freshWeekState() };
-}
-
-let currentWeekName = null;
-try { currentWeekName = localStorage.getItem(CURRENT_KEY); } catch (e) {}
-if (!currentWeekName || !weeksStore[currentWeekName]) {
-  currentWeekName = Object.keys(weeksStore)[0];
-}
-
-let state = weeksStore[currentWeekName];
+let state = loadState();
 let activeDay = 0;
 let activeLang = "en";
 
-const weekSelectEl = document.getElementById("weekSelect");
-
-function renderWeekSelect() {
-  weekSelectEl.innerHTML = "";
-  Object.keys(weeksStore).forEach((name) => {
-    const opt = document.createElement("option");
-    opt.value = name;
-    opt.textContent = name;
-    if (name === currentWeekName) opt.selected = true;
-    weekSelectEl.appendChild(opt);
-  });
-}
-
-weekSelectEl.addEventListener("change", () => {
-  currentWeekName = weekSelectEl.value;
-  state = weeksStore[currentWeekName];
-  activeDay = 0;
-  saveWeeksStore();
-  syncControlsFromState();
-});
-
-document.getElementById("newWeekBtn").onclick = () => {
-  const name = nextWeekName();
-  weeksStore[name] = freshWeekState();
-  currentWeekName = name;
-  state = weeksStore[currentWeekName];
-  activeDay = 0;
-  saveWeeksStore();
-  renderWeekSelect();
-  syncControlsFromState();
-  statusEl.textContent = name + " created with fresh defaults.";
-};
-
-document.getElementById("renameWeekBtn").onclick = () => {
-  const newName = prompt("Naya naam is week ke liye:", currentWeekName);
-  if (!newName || !newName.trim() || newName === currentWeekName) return;
-  if (weeksStore[newName]) { alert("Ye naam pehle se hai, doosra naam chunein."); return; }
-  weeksStore[newName] = weeksStore[currentWeekName];
-  delete weeksStore[currentWeekName];
-  currentWeekName = newName;
-  saveWeeksStore();
-  renderWeekSelect();
-  statusEl.textContent = "Week ka naam badal diya gaya.";
-};
-
-document.getElementById("deleteWeekBtn").onclick = () => {
-  if (Object.keys(weeksStore).length <= 1) {
-    alert("Kam se kam ek week hona zaroori hai, ise delete nahi kar sakte.");
-    return;
-  }
-  if (!confirm(currentWeekName + " ko delete karein? Ye wapas nahi aayega.")) return;
-  delete weeksStore[currentWeekName];
-  currentWeekName = Object.keys(weeksStore)[0];
-  state = weeksStore[currentWeekName];
-  activeDay = 0;
-  saveWeeksStore();
-  renderWeekSelect();
-  syncControlsFromState();
-  statusEl.textContent = "Week delete kar di gayi.";
-};
-
 const dayTabsEl = document.getElementById("dayTabs");
 const langTabsEl = document.getElementById("langTabs");
+const langTabsPairEl = document.getElementById("langTabsPair");
 const bgGridEl = document.getElementById("bgGrid");
 const themeInput = document.getElementById("themeInput");
 const quoteInput = document.getElementById("quoteInput");
+const singleQuoteWrap = document.getElementById("singleQuoteWrap");
+const dualQuoteWrap = document.getElementById("dualQuoteWrap");
+const quoteInput1 = document.getElementById("quoteInput1");
+const quoteInput2 = document.getElementById("quoteInput2");
+const dualLabel1 = document.getElementById("dualLabel1");
+const dualLabel2 = document.getElementById("dualLabel2");
 const captionInput = document.getElementById("captionInput");
 const themeSizeInput = document.getElementById("themeSize");
 const quoteSizeInput = document.getElementById("quoteSize");
+const customBgUpload = document.getElementById("customBgUpload");
+const removeCustomBg = document.getElementById("removeCustomBg");
 const statusEl = document.getElementById("status");
 const canvas = document.getElementById("cardCanvas");
 const ctx = canvas.getContext("2d");
@@ -484,6 +417,10 @@ function renderLangTabs() {
     el.classList.toggle("active", el.dataset.lang === activeLang);
     el.onclick = () => { activeLang = el.dataset.lang; syncControlsFromState(); };
   });
+  [...langTabsPairEl.children].forEach(el => {
+    el.classList.toggle("active", el.dataset.lang === activeLang);
+    el.onclick = () => { activeLang = el.dataset.lang; syncControlsFromState(); };
+  });
 }
 
 function captionKeyFor(lang) { return "caption_" + lang; }
@@ -491,7 +428,8 @@ function captionKeyFor(lang) { return "caption_" + lang; }
 function getCaptionFor(day, lang) {
   const key = captionKeyFor(lang);
   if (!day[key]) {
-    day[key] = buildCaption(themeFor(day, lang), day[lang]);
+    const baseQuote = PAIR_MAP[lang] ? day.en : day[lang];
+    day[key] = buildCaption(day.theme, baseQuote);
   }
   return day[key];
 }
@@ -514,11 +452,28 @@ function syncControlsFromState() {
   renderLangTabs();
   renderBgGrid();
   const d = state[activeDay];
-  themeInput.value = themeFor(d, activeLang);
-  quoteInput.value = d[activeLang];
+  themeInput.value = d.theme;
+
+  if (PAIR_MAP[activeLang]) {
+    const [l1, l2] = PAIR_MAP[activeLang];
+    const [lbl1, lbl2] = PAIR_LABELS[activeLang];
+    singleQuoteWrap.style.display = "none";
+    dualQuoteWrap.style.display = "block";
+    dualLabel1.textContent = "Line 1 (" + lbl1 + ")";
+    dualLabel2.textContent = "Line 2 (" + lbl2 + ")";
+    quoteInput1.value = d[l1];
+    quoteInput2.value = d[l2];
+  } else {
+    singleQuoteWrap.style.display = "block";
+    dualQuoteWrap.style.display = "none";
+    quoteInput.value = d[activeLang];
+  }
+
   captionInput.value = getCaptionFor(d, activeLang);
   themeSizeInput.value = d.themeSize;
   quoteSizeInput.value = d.quoteSize;
+  customBgUpload.value = "";
+  statusEl.textContent = d.customBg ? (DAYS[activeDay] + " ke liye custom photo lagi hui hai.") : "";
   [...document.querySelectorAll(".size-btn[data-size]")].forEach(b => {
     b.classList.toggle("active", b.dataset.size === d.size);
   });
@@ -529,9 +484,8 @@ function syncControlsFromState() {
 }
 
 themeInput.addEventListener("input", () => {
-  const key = activeLang === "hi" ? "themeHi" : activeLang === "es" ? "themeEs" : "themeEn";
-  state[activeDay][key] = themeInput.value;
-  delete state[activeDay][captionKeyFor(activeLang)];
+  state[activeDay].theme = themeInput.value;
+  ["hi","en","es"].forEach(l => { delete state[activeDay][captionKeyFor(l)]; });
   captionInput.value = getCaptionFor(state[activeDay], activeLang);
   drawCard();
 });
@@ -541,7 +495,23 @@ quoteInput.addEventListener("input", () => {
   captionInput.value = getCaptionFor(state[activeDay], activeLang);
   drawCard();
 });
-captionInput.addEventListener("input", () => { state[activeDay][captionKeyFor(activeLang)] = captionInput.value; saveCurrentWeek(); });
+quoteInput1.addEventListener("input", () => {
+  if (!PAIR_MAP[activeLang]) return;
+  const [l1] = PAIR_MAP[activeLang];
+  state[activeDay][l1] = quoteInput1.value;
+  delete state[activeDay][captionKeyFor(activeLang)];
+  captionInput.value = getCaptionFor(state[activeDay], activeLang);
+  drawCard();
+});
+quoteInput2.addEventListener("input", () => {
+  if (!PAIR_MAP[activeLang]) return;
+  const [, l2] = PAIR_MAP[activeLang];
+  state[activeDay][l2] = quoteInput2.value;
+  delete state[activeDay][captionKeyFor(activeLang)];
+  captionInput.value = getCaptionFor(state[activeDay], activeLang);
+  drawCard();
+});
+captionInput.addEventListener("input", () => { state[activeDay][captionKeyFor(activeLang)] = captionInput.value; });
 themeSizeInput.addEventListener("input", () => { state[activeDay].themeSize = Number(themeSizeInput.value) || 46; drawCard(); });
 quoteSizeInput.addEventListener("input", () => { state[activeDay].quoteSize = Number(quoteSizeInput.value) || 52; drawCard(); });
 
@@ -563,12 +533,32 @@ quoteSizeInput.addEventListener("input", () => { state[activeDay].quoteSize = Nu
   };
 });
 
+customBgUpload.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    state[activeDay].customBg = ev.target.result;
+    drawCard();
+    statusEl.textContent = DAYS[activeDay] + " ke liye custom photo laga di gayi.";
+  };
+  reader.readAsDataURL(file);
+});
+
+removeCustomBg.onclick = () => {
+  delete state[activeDay].customBg;
+  customBgUpload.value = "";
+  drawCard();
+  statusEl.textContent = DAYS[activeDay] + " ka background wapas preset par set kar diya.";
+};
+
 document.getElementById("resetDay").onclick = () => {
   const def = DEFAULTS[activeDay];
   state[activeDay] = {
-    themeHi: def.themeHi, themeEn: def.themeEn, themeEs: def.themeEs, hi: def.hi, en: def.en, es: def.es, bg: def.bg,
-    themeSize: 46, quoteSize: 52, size: state[activeDay].size, textColor: "white"
+    theme: def.theme, hi: def.hi, en: def.en, es: def.es, bg: def.bg,
+    themeSize: 60, quoteSize: 75, size: state[activeDay].size, textColor: "white"
   };
+  customBgUpload.value = "";
   syncControlsFromState();
 };
 
@@ -599,6 +589,7 @@ function dimsFor(size) {
 function drawCardToContext(context, w, h, dayIndex, lang) {
   const d = state[dayIndex];
   const bgDef = BACKGROUNDS[d.bg];
+  const imgSrc = d.customBg || bgDef.url;
   context.clearRect(0, 0, w, h);
 
   function drawOverlayAndText() {
@@ -619,17 +610,39 @@ function drawCardToContext(context, w, h, dayIndex, lang) {
 
     const colorMap = { white: "#f3ead9", golden: "#e8c675", black: "#151515" };
     const mainColor = colorMap[d.textColor || "white"];
+    const LANG_QUOTE_COLORS = { hi: "#e8c675", en: "#f3ead9", es: "#6fe3d9" };
 
     context.fillStyle = mainColor;
     context.font = "600 " + d.themeSize + "px 'Cormorant Garamond', serif";
-    context.fillText(themeFor(d, lang), w/2, h*0.22);
+    context.fillText(d.theme, w/2, h*0.22);
 
-    context.font = (lang === "hi" ? "500 " : "italic 500 ") + d.quoteSize + "px 'Cormorant Garamond', serif";
-    context.fillStyle = mainColor;
     const maxWidth = w * 0.82;
-    const lineHeight = d.quoteSize * 125 / 1000 * d.quoteSize / d.quoteSize + d.quoteSize * 1.3 - d.quoteSize;
-    const lh = d.quoteSize * 1.35;
-    wrapText(context, d[lang], w/2, h*0.46, maxWidth, lh);
+
+    if (PAIR_MAP[lang]) {
+      const [l1, l2] = PAIR_MAP[lang];
+      const size1 = d.quoteSize;
+      const size2 = d.quoteSize;
+      const lh1 = size1 * 1.35;
+      const lh2 = size2 * 1.35;
+
+      let y = h * 0.36;
+      context.font = (l1 === "hi" ? "500 " : "italic 500 ") + size1 + "px 'Cormorant Garamond', serif";
+      context.fillStyle = LANG_QUOTE_COLORS[l1] || "#f3ead9";
+      const lines1 = wrapText(context, d[l1], w/2, y, maxWidth, lh1);
+
+      y += (lines1 - 1) * lh1 + lh1 * 0.9 + 46;
+
+      context.font = (l2 === "hi" ? "500 " : "italic 500 ") + size2 + "px 'Cormorant Garamond', serif";
+      context.fillStyle = LANG_QUOTE_COLORS[l2] || "#f3ead9";
+      context.globalAlpha = 0.92;
+      wrapText(context, d[l2], w/2, y, maxWidth, lh2);
+      context.globalAlpha = 1;
+    } else {
+      context.font = (lang === "hi" ? "500 " : "italic 500 ") + d.quoteSize + "px 'Cormorant Garamond', serif";
+      context.fillStyle = LANG_QUOTE_COLORS[lang] || "#f3ead9";
+      const lh = d.quoteSize * 1.35;
+      wrapText(context, d[lang], w/2, h*0.46, maxWidth, lh);
+    }
 
     context.font = "500 " + Math.round(w*0.026) + "px Poppins, sans-serif";
     context.fillStyle = "#cfc9b8";
@@ -639,7 +652,7 @@ function drawCardToContext(context, w, h, dayIndex, lang) {
     context.fillText("Weekly Affirmations", w/2, h*0.965);
   }
 
-  if (bgDef.url) {
+  if (imgSrc) {
     return new Promise((resolve) => {
       const img = new Image();
       img.crossOrigin = "anonymous";
@@ -659,7 +672,7 @@ function drawCardToContext(context, w, h, dayIndex, lang) {
         drawOverlayAndText();
         resolve();
       };
-      img.src = bgDef.url;
+      img.src = imgSrc;
     });
   } else {
     const grad = context.createLinearGradient(0, 0, w, h);
@@ -685,7 +698,6 @@ function drawCard() {
   canvas.width = w;
   canvas.height = h;
   drawCardToContext(ctx, w, h, activeDay, activeLang);
-  saveCurrentWeek();
 }
 
 function downloadBlob(blob, filename) {
@@ -710,9 +722,10 @@ function downloadBlob(blob, filename) {
 document.getElementById("downloadOne").onclick = () => {
   const captionText = getCaptionFor(state[activeDay], activeLang);
   navigator.clipboard.writeText(captionText).catch(() => {});
+  const langSuffix = { hi: "Hindi", en: "English", es: "Spanish", hi_en: "Hindi-English", en_es: "English-Spanish" }[activeLang] || activeLang;
   canvas.toBlob((blob) => {
-    downloadBlob(blob, "Lumiora_" + DAYS[activeDay] + "_Affirmation.png");
-    statusEl.textContent = DAYS[activeDay] + " card downloaded — caption copied, ready to paste on Facebook.";
+    downloadBlob(blob, "Lumiora_" + DAYS[activeDay] + "_" + langSuffix + "_Affirmation.png");
+    statusEl.textContent = DAYS[activeDay] + " (" + langSuffix + ") card downloaded — caption copied, ready to paste on Facebook.";
   }, "image/png");
 };
 
@@ -738,7 +751,6 @@ document.getElementById("downloadAll").onclick = async () => {
   statusEl.textContent = "All 7 cards + Captions.txt downloaded as a zip.";
 };
 
-renderWeekSelect();
 syncControlsFromState();
 </script>
 </body>
