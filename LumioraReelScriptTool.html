@@ -1,442 +1,590 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumiora — Reel Script Studio</title>
+<title>Reel Script Studio · Lumiora</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Marcellus&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-deep:#0a0c16;
-    --bg-panel:#12142a;
-    --bg-panel-2:#171a35;
-    --line:#2a2d52;
-    --gold:#d4af37;
-    --gold-soft:#f0d796;
-    --teal:#3fd0c9;
-    --text:#eae8f5;
-    --muted:#8d8ba8;
-    --danger:#e0664f;
+    --bg-0:#07070d;
+    --bg-1:#0d0f1c;
+    --bg-2:#12142a;
+    --card:#151831;
+    --card-border:#2a2e52;
+    --gold:#e8c877;
+    --gold-soft:#d9bd7a;
+    --teal:#5fd9c9;
+    --text:#e7e6f0;
+    --text-dim:#9a9bb5;
+    --text-faint:#6a6b8a;
+    --danger:#ef8a8a;
+    --ok:#7fd99a;
+    --radius:18px;
+    --shadow: 0 10px 40px rgba(0,0,0,0.45);
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
     background:
-      radial-gradient(ellipse 900px 500px at 15% -10%, #221b3d 0%, transparent 60%),
-      radial-gradient(ellipse 700px 500px at 100% 0%, #0f2a2c 0%, transparent 55%),
-      var(--bg-deep);
+      radial-gradient(circle at 20% 0%, rgba(95,217,201,0.08), transparent 40%),
+      radial-gradient(circle at 80% 10%, rgba(232,200,119,0.07), transparent 45%),
+      linear-gradient(180deg, var(--bg-0), var(--bg-1) 40%, var(--bg-2));
     color:var(--text);
-    font-family:'Poppins',sans-serif;
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     min-height:100vh;
-    padding:36px 20px 80px;
+    padding:32px 18px 80px;
   }
-  .stars{
-    position:fixed; inset:0; pointer-events:none; z-index:0;
-    background-image:
-      radial-gradient(1px 1px at 20% 30%, #fff8 40%, transparent),
-      radial-gradient(1px 1px at 75% 15%, #fff6 40%, transparent),
-      radial-gradient(1px 1px at 50% 70%, #fff5 40%, transparent),
-      radial-gradient(1.5px 1.5px at 90% 60%, #fff7 40%, transparent),
-      radial-gradient(1px 1px at 30% 85%, #fff5 40%, transparent),
-      radial-gradient(1.5px 1.5px at 10% 55%, #fff6 40%, transparent);
-    background-size:600px 600px;
-    opacity:.7;
-  }
-  .wrap{max-width:900px; margin:0 auto; position:relative; z-index:1;}
-
-  header{text-align:center; margin-bottom:38px;}
-  .eyebrow{
-    font-family:'Marcellus',serif; letter-spacing:.35em; text-transform:uppercase;
-    font-size:11px; color:var(--teal); margin-bottom:10px;
+  .wrap{max-width:880px;margin:0 auto;}
+  .hub-back{display:inline-block;margin-bottom:14px;color:var(--text-dim);text-decoration:none;font-size:14px;}
+  .hub-back:hover{color:var(--gold);}
+  header{text-align:center;margin-bottom:36px;}
+  .brand{
+    font-size:12px;
+    letter-spacing:6px;
+    color:var(--teal);
+    font-weight:600;
+    margin-bottom:14px;
   }
   h1{
-    font-family:'Cormorant Garamond',serif; font-weight:600; font-style:italic;
-    font-size:44px; margin:0 0 6px; color:var(--gold-soft);
-    text-shadow:0 0 30px rgba(212,175,55,.25);
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:600;
+    color:var(--gold);
+    font-size:42px;
+    margin:0 0 10px;
+    text-shadow: 0 0 30px rgba(232,200,119,0.25);
   }
-  .sub{color:var(--muted); font-size:14px; font-weight:300;}
+  .subtitle{color:var(--text-dim);font-size:15px;margin:0 0 6px;}
+  .badge-row{display:flex;justify-content:center;gap:8px;margin-top:18px;flex-wrap:wrap;}
+  .badge{
+    font-size:12px;
+    color:var(--text-dim);
+    border:1px solid var(--card-border);
+    padding:5px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.02);
+  }
 
-  .panel{
-    background:linear-gradient(160deg,var(--bg-panel),var(--bg-panel-2));
-    border:1px solid var(--line); border-radius:14px;
-    padding:24px; margin-bottom:22px;
-    box-shadow:0 10px 30px -12px #000a;
+  .section{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:var(--radius);
+    padding:26px 24px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
   }
-  .panel h2{
-    font-family:'Marcellus',serif; font-size:15px; letter-spacing:.08em;
-    color:var(--gold); margin:0 0 16px; text-transform:uppercase; font-weight:400;
+  .section h2{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    color:var(--gold-soft);
+    font-size:22px;
+    margin:0 0 4px;
   }
-  .row{display:flex; gap:14px; flex-wrap:wrap;}
-  .field{flex:1; min-width:180px; margin-bottom:14px;}
-  label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px; letter-spacing:.02em;}
-  input[type=text], input[type=number], select, textarea{
-    width:100%; background:#0d0f22; border:1px solid var(--line); color:var(--text);
-    border-radius:8px; padding:10px 12px; font-family:'Poppins',sans-serif; font-size:13.5px;
-    outline:none; transition:border .2s;
-  }
-  input:focus, select:focus, textarea:focus{border-color:var(--gold);}
-  textarea{resize:vertical; min-height:64px; line-height:1.5;}
-  select{cursor:pointer;}
+  .section .hint{color:var(--text-faint);font-size:13px;margin:0 0 18px;}
 
-  /* Scene timeline */
-  .timeline{position:relative; padding-left:34px;}
-  .timeline::before{
-    content:''; position:absolute; left:11px; top:6px; bottom:6px; width:2px;
-    background:linear-gradient(var(--gold), var(--teal), var(--danger), var(--gold));
-    opacity:.5;
+  label{display:block;font-size:13px;color:var(--text-dim);margin:14px 0 6px;font-weight:500;}
+  label:first-of-type{margin-top:0;}
+  input[type=text], input[type=number], textarea, select{
+    width:100%;
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--card-border);
+    color:var(--text);
+    border-radius:10px;
+    padding:11px 13px;
+    font-size:14px;
+    font-family:inherit;
+    outline:none;
+    transition:border-color .15s;
   }
-  .scene{position:relative; margin-bottom:20px;}
-  .scene:last-child{margin-bottom:0;}
-  .scene-dot{
-    position:absolute; left:-34px; top:2px; width:22px; height:22px; border-radius:50%;
-    background:var(--bg-deep); border:2px solid var(--gold); color:var(--gold-soft);
-    display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600;
-    font-family:'Marcellus',serif;
-  }
-  .scene-title{font-family:'Marcellus',serif; font-size:14px; color:var(--gold-soft); margin-bottom:2px;}
-  .scene-tag{font-size:11px; color:var(--muted); margin-bottom:10px;}
+  input:focus, textarea:focus, select:focus{border-color:var(--teal);}
+  textarea{resize:vertical;min-height:56px;line-height:1.4;}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  @media (max-width:560px){.row,.row3{grid-template-columns:1fr;}}
 
-  .btn-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:6px;}
-  button{
-    font-family:'Poppins',sans-serif; font-weight:500; font-size:13px;
-    border-radius:8px; padding:11px 20px; cursor:pointer; border:none;
-    transition:transform .12s, opacity .12s;
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:linear-gradient(135deg, var(--gold), #c9a94f);
+    color:#1a1406;
+    border:none;
+    padding:11px 20px;
+    border-radius:10px;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+    transition:transform .1s, box-shadow .15s;
   }
-  button:active{transform:scale(.97);}
-  .primary{background:linear-gradient(135deg,var(--gold),#b8860b); color:#1a1200;}
-  .secondary{background:transparent; color:var(--teal); border:1px solid var(--teal);}
-  .ghost{background:transparent; color:var(--muted); border:1px solid var(--line);}
-  .danger-btn{background:transparent; color:var(--danger); border:1px solid #5a2a24;}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,200,119,0.25);}
+  .btn:active{transform:translateY(0);}
+  .btn.secondary{
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--card-border);
+    font-weight:600;
+  }
+  .btn.secondary:hover{border-color:var(--teal);color:var(--teal);box-shadow:none;}
+  .btn.small{padding:7px 13px;font-size:12.5px;}
+  .btn.danger-outline{background:transparent;border:1px solid rgba(239,138,138,0.4);color:var(--danger);font-weight:600;}
+  .btn:disabled{opacity:0.45;cursor:not-allowed;transform:none;box-shadow:none;}
 
-  .output-block{position:relative; margin-bottom:16px;}
-  .output-block h3{
-    font-family:'Marcellus',serif; font-size:13px; color:var(--teal); margin:0 0 8px; letter-spacing:.05em;
-  }
-  pre{
-    background:#0a0b18; border:1px solid var(--line); border-radius:10px; padding:16px;
-    white-space:pre-wrap; word-break:break-word; font-family:'Poppins',sans-serif; font-size:12.8px;
-    line-height:1.65; color:#d8d6ec; margin:0; max-height:340px; overflow-y:auto;
-  }
-  .copy-btn{
-    position:absolute; top:0; right:0; font-size:11px; padding:6px 12px;
-    background:var(--bg-panel-2); color:var(--gold-soft); border:1px solid var(--line);
-  }
-  .copy-btn.copied{color:var(--teal); border-color:var(--teal);}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
 
-  .history-list{display:flex; flex-direction:column; gap:8px;}
-  .history-item{
-    display:flex; justify-content:space-between; align-items:center;
-    background:#0d0f22; border:1px solid var(--line); border-radius:8px; padding:10px 14px;
-    font-size:12.5px;
+  .scene-card{
+    border:1px solid var(--card-border);
+    background:rgba(255,255,255,0.02);
+    border-radius:14px;
+    padding:18px;
+    margin-bottom:16px;
   }
-  .history-item .name{color:var(--gold-soft); cursor:pointer;}
-  .history-item .meta{color:var(--muted); font-size:11px;}
-  .history-item .del{color:var(--danger); cursor:pointer; font-size:11px; margin-left:10px;}
-  .empty{color:var(--muted); font-size:12.5px; font-style:italic;}
-
-  footer{text-align:center; margin-top:40px; color:var(--muted); font-size:11px; letter-spacing:.15em;}
-  footer span{color:var(--gold-soft); font-family:'Marcellus',serif;}
-
-  @media(max-width:640px){
-    h1{font-size:32px;} .panel{padding:18px;}
+  .scene-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .scene-title{font-weight:700;color:var(--gold-soft);font-size:14px;letter-spacing:0.3px;display:flex;align-items:center;gap:8px;}
+  .scene-num{
+    width:26px;height:26px;border-radius:50%;
+    background:rgba(232,200,119,0.12);
+    color:var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    font-size:12.5px;font-weight:700;
   }
+  .scene-remove{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:18px;line-height:1;padding:4px 6px;}
+  .scene-remove:hover{color:var(--danger);}
+
+  .prompt-box{
+    margin-top:14px;
+    background:rgba(95,217,201,0.05);
+    border:1px dashed rgba(95,217,201,0.35);
+    border-radius:10px;
+    padding:13px 14px;
+    font-size:13px;
+    line-height:1.55;
+    color:#cfe9e4;
+    white-space:pre-wrap;
+    font-family:'SF Mono', 'Fira Code', Consolas, monospace;
+    display:none;
+  }
+  .prompt-box.show{display:block;}
+  .copy-note{font-size:11.5px;color:var(--teal);margin-left:8px;opacity:0;transition:opacity .2s;}
+  .copy-note.show{opacity:1;}
+
+  .checklist{list-style:none;margin:0;padding:0;}
+  .checklist li{
+    display:flex;align-items:flex-start;gap:12px;
+    padding:11px 4px;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+    font-size:14.5px;
+  }
+  .checklist li:last-child{border-bottom:none;}
+  .checklist input[type=checkbox]{
+    appearance:none;-webkit-appearance:none;
+    width:19px;height:19px;flex:0 0 19px;
+    border:1.5px solid var(--card-border);
+    border-radius:6px;
+    margin-top:1px;
+    cursor:pointer;
+    position:relative;
+    background:rgba(255,255,255,0.02);
+  }
+  .checklist input[type=checkbox]:checked{
+    background:var(--teal);
+    border-color:var(--teal);
+  }
+  .checklist input[type=checkbox]:checked::after{
+    content:'';
+    position:absolute;
+    left:6px;top:2px;
+    width:5px;height:10px;
+    border:solid #07070d;
+    border-width:0 2px 2px 0;
+    transform:rotate(45deg);
+  }
+  .checklist label{margin:0;font-size:14.5px;color:var(--text);font-weight:400;cursor:pointer;}
+  .checklist li.done label{color:var(--text-faint);text-decoration:line-through;}
+
+  .progress-wrap{margin-top:14px;}
+  .progress-bar{height:6px;border-radius:999px;background:rgba(255,255,255,0.06);overflow:hidden;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));width:0%;transition:width .3s;}
+  .progress-label{font-size:12px;color:var(--text-faint);margin-top:6px;}
+
+  .footer-note{
+    text-align:center;color:var(--text-faint);font-size:12px;margin-top:34px;
+    letter-spacing:1px;
+  }
+  .file-input{display:none;}
+
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:#1c1f3d;border:1px solid var(--card-border);color:var(--text);
+    padding:11px 20px;border-radius:10px;font-size:13.5px;
+    box-shadow:var(--shadow);
+    opacity:0;pointer-events:none;transition:all .25s;
+    z-index:50;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .empty{color:var(--text-faint);font-size:13.5px;text-align:center;padding:20px 0;}
 </style>
 </head>
 <body>
-<div class="stars"></div>
 <div class="wrap">
-
+  <a class="hub-back" href="index.html">&#8592; Hub par wapas</a>
   <header>
-    <div class="eyebrow">Lumiora Studio</div>
-    <h1>Reel Script Builder</h1>
-    <div class="sub">Ek baar structure banao, har reel mein sirf topic badlo</div>
+    <div class="brand">LUMIORA</div>
+    <h1>Reel Script Studio</h1>
+    <p class="subtitle">Scene-by-scene reel builder — idea → Veo 3 / Flow prompts → VN edit checklist</p>
+    <div class="badge-row">
+      <span class="badge">🎬 Scene planner</span>
+      <span class="badge">✨ AI prompt generator</span>
+      <span class="badge">✅ VN checklist</span>
+      <span class="badge">♻️ Reusable template</span>
+    </div>
   </header>
 
-  <!-- SETUP -->
-  <div class="panel">
-    <h2>Setup</h2>
-    <div class="row">
-      <div class="field">
-        <label>Reel Topic / Theme</label>
-        <input type="text" id="topic" placeholder="e.g. Bhagirath ki Tapasya, Self-love quote, Sikkim travel">
+  <!-- STEP 1: IDEA -->
+  <div class="section">
+    <h2>1. Your Reel Idea</h2>
+    <p class="hint">Fill this in, then auto-build a scene structure — or add scenes manually below.</p>
+
+    <label for="topic">Reel topic / idea</label>
+    <textarea id="topic" placeholder="e.g. Morning routine of a Varanasi ghat photographer, cinematic and calm"></textarea>
+
+    <div class="row3">
+      <div>
+        <label for="duration">Target duration (sec)</label>
+        <input type="number" id="duration" value="30" min="5" max="180">
       </div>
-      <div class="field" style="max-width:160px;">
-        <label>Language</label>
-        <select id="lang">
-          <option value="hi">Hindi</option>
-          <option value="en">English</option>
-          <option value="es">Spanish</option>
+      <div>
+        <label for="style">Visual style / tone</label>
+        <input type="text" id="style" placeholder="cinematic, golden hour, handheld">
+      </div>
+      <div>
+        <label for="platform">Platform</label>
+        <select id="platform">
+          <option>Instagram Reels</option>
+          <option>YouTube Shorts</option>
+          <option>TikTok</option>
         </select>
       </div>
-      <div class="field" style="max-width:160px;">
-        <label>Total Duration</label>
-        <select id="duration">
-          <option value="15-20 sec">15–20 sec</option>
-          <option value="20-30 sec" selected>20–30 sec</option>
-          <option value="30-45 sec">30–45 sec</option>
-          <option value="45-60 sec">45–60 sec</option>
-        </select>
-      </div>
     </div>
-    <div class="row">
-      <div class="field">
-        <label>Visual Mood (for Flow / Veo 3)</label>
-        <input type="text" id="mood" placeholder="e.g. cinematic golden hour, cosmic mystical, warm documentary">
-      </div>
-      <div class="field">
-        <label>Voiceover / Music Style</label>
-        <input type="text" id="audiostyle" placeholder="e.g. deep male narrator + soft tabla, gentle piano">
-      </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="autoBuildScenes()">✨ Auto-build 5-scene structure</button>
+      <button class="btn secondary" onclick="addScene()">+ Add blank scene</button>
     </div>
   </div>
 
-  <!-- SCENE TIMELINE -->
-  <div class="panel">
-    <h2>Scene-by-Scene Structure</h2>
-    <div class="timeline" id="timeline">
-
-      <div class="scene">
-        <div class="scene-dot">1</div>
-        <div class="scene-title">Hook</div>
-        <div class="scene-tag">0–3 sec — viewer ko rokna hai</div>
-        <textarea id="s1desc" placeholder="Kya dikhega/hoga screen par jo turant attention kheenche"></textarea>
-      </div>
-
-      <div class="scene">
-        <div class="scene-dot">2</div>
-        <div class="scene-title">Build-up</div>
-        <div class="scene-tag">Story / message ka development</div>
-        <textarea id="s2desc" placeholder="Context ya kahani aage badhती hai"></textarea>
-      </div>
-
-      <div class="scene">
-        <div class="scene-dot">3</div>
-        <div class="scene-title">Emotional Peak</div>
-        <div class="scene-tag">Sabse strong moment / turning point</div>
-        <textarea id="s3desc" placeholder="Sabse powerful visual ya dialogue moment"></textarea>
-      </div>
-
-      <div class="scene">
-        <div class="scene-dot">4</div>
-        <div class="scene-title">Quote / CTA End</div>
-        <div class="scene-tag">Message + Lumiora branding ke saath close</div>
-        <textarea id="s4desc" placeholder="Final quote text ya call-to-action"></textarea>
-      </div>
-
+  <!-- STEP 2: SCENES -->
+  <div class="section">
+    <h2>2. Scenes</h2>
+    <p class="hint">Edit each scene, then generate its Veo 3 / Flow prompt.</p>
+    <div id="scenesContainer"></div>
+    <div id="scenesEmpty" class="empty">No scenes yet — use "Auto-build" above or add one manually.</div>
+    <div class="btn-row">
+      <button class="btn secondary" onclick="addScene()">+ Add another scene</button>
+      <button class="btn" onclick="generateAllPrompts()">✨ Generate all prompts</button>
     </div>
   </div>
 
-  <div class="btn-row" style="margin-bottom:22px;">
-    <button class="primary" onclick="generate()">✦ Generate Prompt + Checklist</button>
-    <button class="secondary" onclick="saveTemplate()">Save as Template</button>
-    <button class="ghost" onclick="clearForm()">Clear Form</button>
-  </div>
-
-  <!-- OUTPUT -->
-  <div class="panel" id="outputPanel" style="display:none;">
-    <h2>Ready Output</h2>
-
-    <div class="output-block">
-      <h3>Google Flow / Veo 3 Prompt</h3>
-      <button class="copy-btn" onclick="copyBlock('flowOut', this)">Copy</button>
-      <pre id="flowOut"></pre>
+  <!-- STEP 3: CHECKLIST -->
+  <div class="section">
+    <h2>3. VN Editing Checklist</h2>
+    <p class="hint">Work through this once your AI clips are generated and ready to assemble.</p>
+    <ul class="checklist" id="checklist"></ul>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">0 of 0 done</div>
     </div>
-
-    <div class="output-block">
-      <h3>VN Editor Checklist</h3>
-      <button class="copy-btn" onclick="copyBlock('vnOut', this)">Copy</button>
-      <pre id="vnOut"></pre>
+    <div class="btn-row">
+      <button class="btn secondary small" onclick="resetChecklist()">Reset checklist</button>
     </div>
   </div>
 
-  <!-- HISTORY -->
-  <div class="panel">
-    <h2>Saved Templates</h2>
-    <div class="history-list" id="historyList"></div>
+  <!-- STEP 4: SAVE / LOAD TEMPLATE -->
+  <div class="section">
+    <h2>4. Save as Template</h2>
+    <p class="hint">Download this whole reel plan as a file so you can reload and reuse it for your next reel — no account or storage needed.</p>
+    <div class="btn-row">
+      <button class="btn" onclick="exportTemplate()">⬇ Export template (.json)</button>
+      <button class="btn secondary" onclick="document.getElementById('importFile').click()">⬆ Import template</button>
+      <input type="file" id="importFile" class="file-input" accept="application/json" onchange="importTemplate(event)">
+      <button class="btn danger-outline" onclick="clearAll()">Clear everything</button>
+    </div>
   </div>
 
-  <footer>LUMIORA <span>✦</span> REEL SCRIPT STUDIO</footer>
+  <div class="footer-note">LUMIORA ✦ CONTENT STUDIO ✦ REEL SCRIPT STUDIO</div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-const STORAGE_KEY = 'lumiora_reel_templates';
+let scenes = [];
+let sceneIdCounter = 0;
 
-function getFormData(){
-  return {
-    topic: document.getElementById('topic').value.trim(),
-    lang: document.getElementById('lang').value,
-    duration: document.getElementById('duration').value,
-    mood: document.getElementById('mood').value.trim(),
-    audiostyle: document.getElementById('audiostyle').value.trim(),
-    s1: document.getElementById('s1desc').value.trim(),
-    s2: document.getElementById('s2desc').value.trim(),
-    s3: document.getElementById('s3desc').value.trim(),
-    s4: document.getElementById('s4desc').value.trim(),
-  };
+const CHECKLIST_ITEMS = [
+  "Import all generated clips in scene order",
+  "Trim each clip to its planned duration / beat point",
+  "Add transitions between scenes",
+  "Overlay on-screen text/captions per scene",
+  "Add background music, synced to the hook (first 1-2s)",
+  "Add spoken captions/subtitles if there's voiceover",
+  "Check color/lighting consistency across scenes",
+  "Add logo or branding watermark if needed",
+  "Set export: 1080x1920 (9:16), 30/60fps",
+  "Watch full reel back before posting"
+];
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
 }
 
-function langLabel(code){
-  return {hi:'Hindi', en:'English', es:'Spanish'}[code] || code;
+function blankScene(prefill){
+  sceneIdCounter++;
+  return Object.assign({
+    id: sceneIdCounter,
+    duration: 5,
+    shotType: "Medium shot",
+    action: "",
+    camera: "",
+    mood: "",
+    dialogue: "",
+    onScreenText: "",
+    prompt: ""
+  }, prefill || {});
 }
 
-function buildFlowPrompt(d){
-  return [
-`SCENE 1 — HOOK (0–3s)`,
-`${d.s1 || '[hook description]'}`,
-`Style: ${d.mood || 'cinematic'}, vertical 9:16, sharp opening frame`,
-``,
-`SCENE 2 — BUILD-UP`,
-`${d.s2 || '[build-up description]'}`,
-`Style: ${d.mood || 'cinematic'}, smooth camera movement, consistent lighting with Scene 1`,
-``,
-`SCENE 3 — EMOTIONAL PEAK`,
-`${d.s3 || '[peak moment description]'}`,
-`Style: ${d.mood || 'cinematic'}, close-up or dramatic angle, heightened emotion`,
-``,
-`SCENE 4 — QUOTE / CTA END`,
-`${d.s4 || '[closing quote / message]'}`,
-`Style: ${d.mood || 'cinematic'}, calm settle shot, space left for text overlay + Lumiora watermark`,
-``,
-`— GLOBAL —`,
-`Total length: ${d.duration}`,
-`Language: ${langLabel(d.lang)}`,
-`Audio direction: ${d.audiostyle || 'not specified'}`,
-`Topic: ${d.topic || 'not specified'}`,
-`Consistency: same character/subject design, same color grade and lighting logic across all 4 scenes.`
-  ].join('\n');
+function autoBuildScenes(){
+  const topic = document.getElementById('topic').value.trim() || "your reel";
+  const style = document.getElementById('style').value.trim() || "cinematic";
+  const totalDur = parseInt(document.getElementById('duration').value) || 30;
+  const per = Math.max(3, Math.round(totalDur / 5));
+
+  const structure = [
+    {label:"Hook", shotType:"Close-up", action:`An eye-catching opening moment that grabs attention related to: ${topic}`, mood:`${style}, high energy start`},
+    {label:"Context", shotType:"Wide shot", action:`Establish the setting and situation for: ${topic}`, mood:`${style}, sets the scene`},
+    {label:"Build-up", shotType:"Medium shot", action:`Show the process or journey unfolding`, mood:`${style}, building momentum`},
+    {label:"Payoff / Reveal", shotType:"Close-up", action:`The key moment or result is revealed`, mood:`${style}, emotional peak`},
+    {label:"CTA / Close", shotType:"Medium shot", action:`Closing shot with a call-to-action or final thought`, mood:`${style}, warm close`}
+  ];
+
+  scenes = structure.map(s => blankScene({
+    duration: per,
+    shotType: s.shotType,
+    action: s.action,
+    camera: "Slow push-in",
+    mood: s.mood,
+    dialogue: "",
+    onScreenText: s.label
+  }));
+  renderScenes();
+  toast("5-scene structure built — edit each scene freely");
 }
 
-function buildVNChecklist(d){
-  return [
-`1. IMPORT`,
-`   • Drop Scene 1→4 clips in order, trim dead frames at start/end`,
-``,
-`2. TRANSITIONS`,
-`   • Scene 1→2: quick cut or whip pan (keep hook energy)`,
-`   • Scene 2→3: cross dissolve or match cut (build tension)`,
-`   • Scene 3→4: gentle fade/settle (let peak breathe before CTA)`,
-``,
-`3. TEXT OVERLAY`,
-`   • Scene 1: optional hook text, top third, bold`,
-`   • Scene 4: quote text (${langLabel(d.lang)}) + "— Lumiora" watermark, bottom third`,
-`   • Keep text out of bottom 15% (FB UI overlap zone)`,
-``,
-`4. AUDIO`,
-`   • VO/style: ${d.audiostyle || 'add narration or music'}`,
-`   • Duck music -6dB under any voiceover`,
-`   • Fade out music in final 1s`,
-``,
-`5. COLOR / EXPORT`,
-`   • Match color grade across all clips (consistency check)`,
-`   • Export: 1080x1920, 9:16, 1080p, target length ${d.duration}`,
-``,
-`6. CAPTION FOR POST`,
-`   • Write FB caption in ${langLabel(d.lang)} + relevant hashtags before publishing`
-  ].join('\n');
+function addScene(){
+  scenes.push(blankScene());
+  renderScenes();
 }
 
-function generate(){
-  const d = getFormData();
-  document.getElementById('flowOut').textContent = buildFlowPrompt(d);
-  document.getElementById('vnOut').textContent = buildVNChecklist(d);
-  document.getElementById('outputPanel').style.display = 'block';
-  document.getElementById('outputPanel').scrollIntoView({behavior:'smooth', block:'start'});
+function removeScene(id){
+  scenes = scenes.filter(s => s.id !== id);
+  renderScenes();
 }
 
-function copyBlock(id, btn){
-  const text = document.getElementById(id).textContent;
-  navigator.clipboard.writeText(text).then(()=>{
-    btn.textContent = 'Copied ✓';
-    btn.classList.add('copied');
-    setTimeout(()=>{ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
-  });
+function updateScene(id, field, value){
+  const s = scenes.find(s => s.id === id);
+  if(s) s[field] = value;
 }
 
-function clearForm(){
-  ['topic','mood','audiostyle','s1desc','s2desc','s3desc','s4desc'].forEach(id=>{
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('outputPanel').style.display = 'none';
+function buildPromptText(s, idx){
+  const parts = [];
+  parts.push(`${s.shotType || "Shot"}: ${s.action || "describe the action here"}.`);
+  if(s.camera) parts.push(`Camera: ${s.camera}.`);
+  if(s.mood) parts.push(`Mood/lighting: ${s.mood}.`);
+  parts.push(`Duration: ~${s.duration || 5}s.`);
+  if(s.dialogue) parts.push(`Voiceover/dialogue: "${s.dialogue}".`);
+  parts.push(`Style: cinematic, high detail, smooth realistic motion, 9:16 vertical framing.`);
+  return parts.join(' ');
 }
 
-function loadTemplates(){
-  try{
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  }catch(e){ return []; }
+function generatePrompt(id){
+  const s = scenes.find(s => s.id === id);
+  if(!s) return;
+  s.prompt = buildPromptText(s);
+  renderScenes();
 }
 
-function saveTemplates(list){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+function generateAllPrompts(){
+  if(scenes.length === 0){ toast("Add at least one scene first"); return; }
+  scenes.forEach(s => s.prompt = buildPromptText(s));
+  renderScenes();
+  toast("Prompts generated for all scenes");
 }
 
-function saveTemplate(){
-  const d = getFormData();
-  if(!d.topic){
-    alert('Template save karne se pehle Topic field bharo.');
-    return;
-  }
-  const list = loadTemplates();
-  list.unshift({
-    id: Date.now(),
-    name: d.topic,
-    date: new Date().toLocaleDateString('en-IN'),
-    data: d
-  });
-  saveTemplates(list);
-  renderHistory();
+function copyPrompt(id){
+  const s = scenes.find(s => s.id === id);
+  if(!s || !s.prompt) return;
+  navigator.clipboard.writeText(s.prompt).then(()=> toast("Prompt copied"));
 }
 
-function loadTemplate(id){
-  const list = loadTemplates();
-  const item = list.find(t => t.id === id);
-  if(!item) return;
-  const d = item.data;
-  document.getElementById('topic').value = d.topic || '';
-  document.getElementById('lang').value = d.lang || 'hi';
-  document.getElementById('duration').value = d.duration || '20-30 sec';
-  document.getElementById('mood').value = d.mood || '';
-  document.getElementById('audiostyle').value = d.audiostyle || '';
-  document.getElementById('s1desc').value = d.s1 || '';
-  document.getElementById('s2desc').value = d.s2 || '';
-  document.getElementById('s3desc').value = d.s3 || '';
-  document.getElementById('s4desc').value = d.s4 || '';
-  generate();
-  window.scrollTo({top:0, behavior:'smooth'});
-}
+function renderScenes(){
+  const container = document.getElementById('scenesContainer');
+  const empty = document.getElementById('scenesEmpty');
+  container.innerHTML = '';
+  empty.style.display = scenes.length === 0 ? 'block' : 'none';
 
-function deleteTemplate(id, ev){
-  ev.stopPropagation();
-  const list = loadTemplates().filter(t => t.id !== id);
-  saveTemplates(list);
-  renderHistory();
-}
-
-function renderHistory(){
-  const list = loadTemplates();
-  const container = document.getElementById('historyList');
-  if(list.length === 0){
-    container.innerHTML = '<div class="empty">Abhi koi saved template nahi hai. Form bharo aur "Save as Template" dabao.</div>';
-    return;
-  }
-  container.innerHTML = list.map(t => `
-    <div class="history-item">
-      <div>
-        <span class="name" onclick="loadTemplate(${t.id})">${escapeHtml(t.name)}</span>
-        <div class="meta">${t.date} · ${langLabel(t.data.lang)}</div>
+  scenes.forEach((s, idx) => {
+    const card = document.createElement('div');
+    card.className = 'scene-card';
+    card.innerHTML = `
+      <div class="scene-head">
+        <div class="scene-title"><span class="scene-num">${idx+1}</span> Scene ${idx+1}${s.onScreenText ? ' — ' + escapeHtml(s.onScreenText) : ''}</div>
+        <button class="scene-remove" title="Remove scene" onclick="removeScene(${s.id})">✕</button>
       </div>
-      <span class="del" onclick="deleteTemplate(${t.id}, event)">Delete</span>
-    </div>
-  `).join('');
+      <div class="row3">
+        <div>
+          <label>Shot type</label>
+          <select onchange="updateScene(${s.id}, 'shotType', this.value)">
+            ${["Close-up","Medium shot","Wide shot","Tracking shot","POV shot","Aerial/drone shot"].map(o => `<option ${o===s.shotType?'selected':''}>${o}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label>Duration (sec)</label>
+          <input type="number" min="1" max="60" value="${s.duration}" onchange="updateScene(${s.id}, 'duration', this.value)">
+        </div>
+        <div>
+          <label>On-screen text</label>
+          <input type="text" value="${escapeAttr(s.onScreenText)}" placeholder="e.g. Hook" onchange="updateScene(${s.id}, 'onScreenText', this.value)">
+        </div>
+      </div>
+      <label>Action / what happens</label>
+      <textarea onchange="updateScene(${s.id}, 'action', this.value)" placeholder="Describe what's visually happening in this scene">${escapeHtml(s.action)}</textarea>
+      <div class="row">
+        <div>
+          <label>Camera movement</label>
+          <input type="text" value="${escapeAttr(s.camera)}" placeholder="e.g. slow push-in, handheld pan" onchange="updateScene(${s.id}, 'camera', this.value)">
+        </div>
+        <div>
+          <label>Mood / lighting</label>
+          <input type="text" value="${escapeAttr(s.mood)}" placeholder="e.g. golden hour, warm tones" onchange="updateScene(${s.id}, 'mood', this.value)">
+        </div>
+      </div>
+      <label>Dialogue / voiceover (optional)</label>
+      <input type="text" value="${escapeAttr(s.dialogue)}" placeholder="Spoken line for this scene, if any" onchange="updateScene(${s.id}, 'dialogue', this.value)">
+
+      <div class="btn-row">
+        <button class="btn small" onclick="generatePrompt(${s.id})">✨ Generate Veo 3 / Flow prompt</button>
+        <button class="btn secondary small" onclick="copyPrompt(${s.id})" ${!s.prompt ? 'disabled' : ''}>📋 Copy prompt</button>
+      </div>
+      <div class="prompt-box ${s.prompt ? 'show' : ''}">${escapeHtml(s.prompt)}</div>
+    `;
+    container.appendChild(card);
+  });
 }
 
 function escapeHtml(str){
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+  if(!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escapeAttr(str){
+  if(!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
 }
 
-renderHistory();
+// Checklist
+let checklistState = {};
+function renderChecklist(){
+  const ul = document.getElementById('checklist');
+  ul.innerHTML = '';
+  CHECKLIST_ITEMS.forEach((item, i) => {
+    if(!(i in checklistState)) checklistState[i] = false;
+    const li = document.createElement('li');
+    if(checklistState[i]) li.classList.add('done');
+    li.innerHTML = `<input type="checkbox" id="chk${i}" ${checklistState[i] ? 'checked' : ''} onchange="toggleCheck(${i})"><label for="chk${i}">${escapeHtml(item)}</label>`;
+    ul.appendChild(li);
+  });
+  updateProgress();
+}
+function toggleCheck(i){
+  checklistState[i] = !checklistState[i];
+  renderChecklist();
+}
+function updateProgress(){
+  const total = CHECKLIST_ITEMS.length;
+  const done = Object.values(checklistState).filter(Boolean).length;
+  document.getElementById('progressFill').style.width = (done/total*100) + '%';
+  document.getElementById('progressLabel').textContent = `${done} of ${total} done`;
+}
+function resetChecklist(){
+  checklistState = {};
+  renderChecklist();
+  toast("Checklist reset");
+}
+
+// Export / Import
+function exportTemplate(){
+  const data = {
+    topic: document.getElementById('topic').value,
+    duration: document.getElementById('duration').value,
+    style: document.getElementById('style').value,
+    platform: document.getElementById('platform').value,
+    scenes: scenes,
+    checklistState: checklistState,
+    savedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = (document.getElementById('topic').value || 'reel-script').trim().slice(0,40).replace(/[^a-z0-9]+/gi,'-').toLowerCase() || 'reel-script';
+  a.href = url;
+  a.download = `${safeName}-template.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast("Template downloaded");
+}
+
+function importTemplate(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const data = JSON.parse(e.target.result);
+      document.getElementById('topic').value = data.topic || '';
+      document.getElementById('duration').value = data.duration || 30;
+      document.getElementById('style').value = data.style || '';
+      document.getElementById('platform').value = data.platform || 'Instagram Reels';
+      scenes = (data.scenes || []).map(s => blankScene(s));
+      checklistState = data.checklistState || {};
+      renderScenes();
+      renderChecklist();
+      toast("Template loaded");
+    }catch(err){
+      toast("Couldn't read that file");
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function clearAll(){
+  if(!confirm("Clear the current idea, all scenes, and checklist progress?")) return;
+  document.getElementById('topic').value = '';
+  document.getElementById('style').value = '';
+  document.getElementById('duration').value = 30;
+  scenes = [];
+  checklistState = {};
+  renderScenes();
+  renderChecklist();
+  toast("Cleared");
+}
+
+// init
+renderScenes();
+renderChecklist();
 </script>
 </body>
 </html>

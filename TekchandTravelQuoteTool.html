@@ -102,16 +102,6 @@
     color:var(--accent);
     background:#3a2c1e;
   }
-  input[type=range]{
-    width:100%;
-    accent-color:var(--accent);
-  }
-  .color-btn.golden{ color:#f0c96a; }
-  .color-btn.white{ color:#f5f0e8; }
-  .color-btn.black{ color:#8a8580; }
-  .color-btn.active.golden{ background:#3a2c1e; }
-  .color-btn.active.white{ background:#33332e; }
-  .color-btn.active.black{ background:#25211e; }
   button.generate{
     width:100%;
     padding:12px;
@@ -163,19 +153,10 @@
     line-height:1.5;
     margin-top:2px;
   }
-  .hub-back {
-    display:inline-block;
-    margin-bottom:12px;
-    color:var(--muted);
-    text-decoration:none;
-    font-size:13px;
-  }
-  .hub-back:hover{ color:var(--accent); }
 </style>
 </head>
 <body>
 
-<a class="hub-back" href="index.html">&#8592; Hub par wapas</a>
 <h1>Tekchand Travel Quote Card Generator</h1>
 <div class="subtitle">Gujarat · Sikkim · Ladakh &nbsp;|&nbsp; 1080×1350 px &nbsp;|&nbsp; Upper 45% plain area for quote</div>
 
@@ -232,23 +213,18 @@
     </div>
 
     <div class="field">
-      <label>Quote Text <span class="hint" style="display:inline;">(Enter दबाकर नई line शुरू करें)</span></label>
-      <textarea id="quoteText" rows="4">हार मत मानो,
-मंज़िल पास ही है।</textarea>
+      <label>Quote line 1 <span class="size-tag" id="qsizeLabel">(74px)</span></label>
+      <input type="text" id="line1" value="हार मत मानो,">
     </div>
 
     <div class="field">
-      <label>Quote Font Size <span class="size-tag" id="qsizeLabel">(74px)</span></label>
-      <input type="range" id="quoteSizeSlider" min="30" max="110" value="74">
+      <label>Quote line 2</label>
+      <input type="text" id="line2" value="मंज़िल पास ही है।">
     </div>
 
     <div class="field">
-      <label>Quote Text Color</label>
-      <div class="theme-grid">
-        <div class="theme-btn color-btn golden active" data-color="golden">Golden</div>
-        <div class="theme-btn color-btn white" data-color="white">White</div>
-        <div class="theme-btn color-btn black" data-color="black">Black</div>
-      </div>
+      <label>Quote line 3 (वैकल्पिक)</label>
+      <input type="text" id="line3" value="">
     </div>
 
     <div class="field">
@@ -300,27 +276,6 @@ const THEME_COLORS = {
 };
 
 let uploadedImg = null;
-let currentQuoteColor = 'golden';
-const QUOTE_COLORS = {
-  golden: 'rgb(255,215,130)',
-  white:  'rgb(255,250,240)',
-  black:  'rgb(25,20,15)'
-};
-
-document.querySelectorAll('.color-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentQuoteColor = btn.dataset.color;
-    render();
-  });
-});
-
-const quoteSizeSlider = document.getElementById('quoteSizeSlider');
-quoteSizeSlider.addEventListener('input', () => {
-  document.getElementById('qsizeLabel').textContent = `(${quoteSizeSlider.value}px)`;
-  render();
-});
 
 const photoInput = document.getElementById('photoInput');
 const clearPhotoBtn = document.getElementById('clearPhotoBtn');
@@ -463,7 +418,6 @@ document.querySelectorAll('.theme-btn').forEach(btn => {
     document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentTheme = btn.dataset.theme;
-    quoteSizeSlider.value = THEME_SIZES[currentTheme].quote;
     updateSizeLabels();
     render();
   });
@@ -471,7 +425,7 @@ document.querySelectorAll('.theme-btn').forEach(btn => {
 
 function updateSizeLabels(){
   const s = THEME_SIZES[currentTheme];
-  document.getElementById('qsizeLabel').textContent = `(${quoteSizeSlider.value}px)`;
+  document.getElementById('qsizeLabel').textContent = `(${s.quote}px)`;
   document.getElementById('asizeLabel').textContent = `(${s.author}px)`;
 }
 
@@ -573,24 +527,6 @@ function drawPine(cx,baseY,h,w,color){
   ctx.fillRect(cx-4, baseY-6, 8, 12);
 }
 
-function wrapLine(text, maxWidth, font){
-  ctx.font = font;
-  const words = text.split(/\s+/).filter(Boolean);
-  const out = [];
-  let cur = '';
-  for(const word of words){
-    const test = cur ? cur + ' ' + word : word;
-    if(cur && ctx.measureText(test).width > maxWidth){
-      out.push(cur);
-      cur = word;
-    } else {
-      cur = test;
-    }
-  }
-  if(cur) out.push(cur);
-  return out.length ? out : [''];
-}
-
 function centeredText(text, y, size, weight, color, opts={}){
   const fontStyle = document.getElementById('fontStyle').value;
   const effect = document.getElementById('textEffect').value;
@@ -603,15 +539,11 @@ function centeredText(text, y, size, weight, color, opts={}){
   ctx.textBaseline = 'top';
 
   if(effect === 'emboss'){
-    // deeper dark shadow (lower-right) for stronger carved depth
-    ctx.fillStyle = 'rgba(0,0,0,0.65)';
-    ctx.fillText(text, W/2+5, y+6);
-    ctx.fillStyle = 'rgba(0,0,0,0.35)';
+    // dark shadow (lower-right) for depth
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.fillText(text, W/2+3, y+4);
-    // brighter highlight (upper-left) for the raised edge
-    ctx.fillStyle = 'rgba(255,255,255,0.65)';
-    ctx.fillText(text, W/2-4, y-4);
-    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    // soft highlight (upper-left) for the raised edge
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
     ctx.fillText(text, W/2-2, y-2);
     // main fill
     ctx.fillStyle = color;
@@ -1028,27 +960,14 @@ function render(){
   else drawRajasthan();
 
   const sizes = THEME_SIZES[currentTheme];
-  const quoteSize = parseInt(quoteSizeSlider.value, 10);
-  const quoteText = document.getElementById('quoteText').value;
+  const line1 = document.getElementById('line1').value;
+  const line2 = document.getElementById('line2').value;
+  const line3 = document.getElementById('line3').value;
   const author = document.getElementById('author').value;
   const username = document.getElementById('username').value;
 
-  const fontStyleVal = document.getElementById('fontStyle').value;
-  const quoteFontFamily = fontStyleVal === 'serif'
-    ? `'Georgia','Noto Serif Devanagari','Times New Roman',serif`
-    : `'Segoe UI','Noto Sans Devanagari',Arial,sans-serif`;
-  const quoteFontWeight = fontStyleVal === 'serif' ? 700 : 700;
-  const maxTextWidth = W - 130; // safe margin on both sides so text never runs off-card
-
-  const rawLines = quoteText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-  let lines = [];
-  rawLines.forEach(rl => {
-    const wrapped = wrapLine(rl, maxTextWidth, `${quoteFontWeight} ${quoteSize}px ${quoteFontFamily}`);
-    lines.push(...wrapped);
-  });
-  lines = lines.slice(0, 8); // safety cap so very long text doesn't overflow the card
-
-  const lineGap = Math.round(quoteSize*1.4);
+  const lines = [line1, line2, line3].filter(l => l.trim().length > 0);
+  const lineGap = Math.round(sizes.quote*1.4);
   const totalH = lineGap*lines.length;
   // in full-photo mode the quote sits near the top third instead of a fixed plain panel
   const startY = isFullPhoto
@@ -1056,7 +975,7 @@ function render(){
     : Math.round((PLAIN_H-totalH)/2)-10;
 
   lines.forEach((line, i) => {
-    centeredText(line, startY+lineGap*i, quoteSize, 700, QUOTE_COLORS[currentQuoteColor], {shadow:true});
+    centeredText(line, startY+lineGap*i, sizes.quote, 700, 'rgb(255,250,240)', {shadow:true});
   });
   centeredText(author, startY+lineGap*lines.length+18, sizes.author, 400, 'rgb(235,220,255)');
 
@@ -1096,7 +1015,7 @@ updateSizeLabels();
 render();
 
 // live update as user types
-['quoteText','author','username'].forEach(id => {
+['line1','line2','line3','author','username'].forEach(id => {
   document.getElementById(id).addEventListener('input', render);
 });
 

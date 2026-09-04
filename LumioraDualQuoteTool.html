@@ -186,20 +186,127 @@
     color: rgba(255,255,255,0.75);
     font-family: 'Noto Serif Devanagari', 'Playfair Display', 'Georgia', serif;
   }
+  .hub-back-wrap {
+    max-width: 1100px;
+    margin: 0 auto 12px;
+  }
+  .hub-back {
+    display: inline-block;
+    color: #9aa3c0;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+  }
+  .hub-back:hover {
+    color: #d4af37;
+  }
+  .carousel-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 14px 0 6px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #cfd4ee;
+  }
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider-track {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #2a3150;
+    border-radius: 24px;
+    transition: 0.2s;
+  }
+  .slider-track:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.2s;
+  }
+  .switch input:checked + .slider-track {
+    background: linear-gradient(135deg, #4a6cf7, #7b4af7);
+  }
+  .switch input:checked + .slider-track:before {
+    transform: translateX(18px);
+  }
+  .hint-text {
+    font-size: 12px;
+    color: #9aa3c0;
+    margin-top: 6px;
+    font-family: Arial, sans-serif;
+  }
+  #carouselProgress {
+    text-align: center;
+    font-size: 13px;
+    color: #9aa3c0;
+    margin-top: 8px;
+    font-family: Arial, sans-serif;
+  }
 </style>
 </head>
 <body>
+<div class="hub-back-wrap"><a class="hub-back" href="index.html">&#8592; Hub par wapas</a></div>
 
 <div class="app">
   <h1>🌌 Dual Language Quote Generator — Lumiora</h1>
   <div class="subtitle">Hindi + English/Spanish dono ek hi card mein — space background ke sath</div>
 
   <div class="panel">
-    <label>Hindi Quote (upar dikhega)</label>
-    <textarea id="quoteInputHi">जो आप चाहते हैं, वो पहले से ही आपका है — ऐसे जिएं जैसे यह हो चुका है, तब ब्रह्मांड खुद रास्ता बना देगा।</textarea>
+    <div class="carousel-toggle-row">
+      <label class="switch">
+        <input type="checkbox" id="carouselMode">
+        <span class="slider-track"></span>
+      </label>
+      <span>Carousel Mode (ek saath kai quotes)</span>
+    </div>
 
-    <label>English / Spanish Translation (niche dikhega)</label>
-    <textarea id="quoteInput">Act as if what you want is already yours, then the Universe will rearrange itself to make it happen.</textarea>
+    <div id="singleQuoteWrap">
+      <label>Hindi Quote (upar dikhega)</label>
+      <textarea id="quoteInputHi">जो आप चाहते हैं, वो पहले से ही आपका है — ऐसे जिएं जैसे यह हो चुका है, तब ब्रह्मांड खुद रास्ता बना देगा।</textarea>
+
+      <label>English / Spanish Translation (niche dikhega)</label>
+      <textarea id="quoteInput">Act as if what you want is already yours, then the Universe will rearrange itself to make it happen.</textarea>
+    </div>
+
+    <div id="carouselQuoteWrap" style="display:none;">
+      <label>Hindi Quotes (har line = ek slide)</label>
+      <textarea id="carouselInputHi" rows="10">जो आप चाहते हैं, वो पहले से ही आपका है।
+विश्वास रखो, तुम आधे रास्ते पर हो।
+भविष्य बनाने का सबसे अच्छा तरीका है उसे खुद बनाना।
+हर सूरज उगना एक नई शुरुआत है।
+हर दिन के छोटे कदम बड़े बदलाव लाते हैं।
+आपकी सोच ही आपकी सबसे बड़ी सीमा है।
+बड़े सपने देखो, असफल होने का साहस रखो।
+सफलता रोज़ाना के छोटे प्रयासों का योग है।
+जितनी मेहनत करोगे, उतनी किस्मत साथ देगी।
+बड़ी चीज़ें कभी आराम से नहीं मिलतीं।</textarea>
+
+      <label>English / Spanish Quotes (same order, har line = ek slide)</label>
+      <textarea id="carouselInputEn" rows="10">Act as if what you want is already yours.
+Believe you can and you're halfway there.
+The best way to predict the future is to create it.
+Every sunrise is a new chance to begin again.
+Small steps every day lead to big changes.
+Your only limit is your mind.
+Dream big and dare to fail.
+Success is the sum of small efforts repeated daily.
+The harder you work, the luckier you get.
+Great things never come from comfort zones.</textarea>
+      <div class="hint-text">Dono box mein lines ka number aur order match hona chahiye — pehli Hindi line pehli English line ke saath slide banegi</div>
+    </div>
 
     <label>Font Size</label>
     <input type="range" id="fontSize" min="16" max="34" value="24">
@@ -227,6 +334,7 @@
     </div>
 
     <button id="downloadBtn">📥 Image Download Karein</button>
+    <div id="carouselProgress"></div>
     <div id="statusMsg" style="text-align:center; font-size:12px; color:#9aa3c0; margin-top:8px; font-family:Arial, sans-serif;"></div>
   </div>
 
@@ -330,16 +438,42 @@
 
   const quoteInput = document.getElementById('quoteInput');
   const quoteInputHi = document.getElementById('quoteInputHi');
+  const carouselInputHi = document.getElementById('carouselInputHi');
+  const carouselInputEn = document.getElementById('carouselInputEn');
+  const carouselMode = document.getElementById('carouselMode');
+  const singleQuoteWrap = document.getElementById('singleQuoteWrap');
+  const carouselQuoteWrap = document.getElementById('carouselQuoteWrap');
   const quoteDisplay = document.getElementById('quoteDisplay');
   const quoteDisplayHi = document.getElementById('quoteDisplayHi');
   const brandInput = document.getElementById('brandInput');
   const brandDisplay = document.getElementById('brandDisplay');
   const fontSize = document.getElementById('fontSize');
   const bgStyle = document.getElementById('bgStyle');
+  const carouselProgress = document.getElementById('carouselProgress');
+
+  function getCarouselPairs() {
+    const hiLines = carouselInputHi.value.split('\n').map(l => l.trim()).filter(Boolean);
+    const enLines = carouselInputEn.value.split('\n').map(l => l.trim()).filter(Boolean);
+    const count = Math.max(hiLines.length, enLines.length);
+    const pairs = [];
+    for (let i = 0; i < count; i++) {
+      pairs.push({ hi: hiLines[i] || '', en: enLines[i] || '' });
+    }
+    return pairs;
+  }
+
+  function getActivePair() {
+    if (carouselMode.checked) {
+      const pairs = getCarouselPairs();
+      return pairs.length ? pairs[0] : { hi: '', en: '' };
+    }
+    return { hi: quoteInputHi.value, en: quoteInput.value };
+  }
 
   function updateCard() {
-    quoteDisplay.textContent = quoteInput.value;
-    quoteDisplayHi.textContent = quoteInputHi.value;
+    const pair = getActivePair();
+    quoteDisplay.textContent = pair.en;
+    quoteDisplayHi.textContent = pair.hi;
     brandDisplay.textContent = brandInput.value;
     const base = parseInt(fontSize.value, 10);
     quoteDisplayHi.style.fontSize = (base + 2) + 'px';
@@ -347,8 +481,24 @@
     applyBackground();
   }
 
+  carouselMode.addEventListener('change', () => {
+    if (carouselMode.checked) {
+      singleQuoteWrap.style.display = 'none';
+      carouselQuoteWrap.style.display = 'block';
+      downloadBtn.textContent = '📥 Sabhi Slides Download Karein';
+    } else {
+      singleQuoteWrap.style.display = 'block';
+      carouselQuoteWrap.style.display = 'none';
+      downloadBtn.textContent = '📥 Image Download Karein';
+    }
+    carouselProgress.textContent = '';
+    updateCard();
+  });
+
   quoteInput.addEventListener('input', updateCard);
   quoteInputHi.addEventListener('input', updateCard);
+  carouselInputHi.addEventListener('input', updateCard);
+  carouselInputEn.addEventListener('input', updateCard);
   brandInput.addEventListener('input', updateCard);
   fontSize.addEventListener('input', updateCard);
   bgStyle.addEventListener('change', updateCard);
@@ -364,30 +514,51 @@
   downloadBtn.addEventListener('contextmenu', (e) => e.preventDefault());
   downloadBtn.addEventListener('touchstart', (e) => { /* allow tap, block callout */ }, {passive: true});
 
-  function generateFileName() {
-    const today = new Date();
-    const dateStr = today.getFullYear() + '-' +
-      String(today.getMonth()+1).padStart(2,'0') + '-' +
-      String(today.getDate()).padStart(2,'0');
-
-    // take first 5-6 words of the quote, strip punctuation/Hindi matras-safe chars,
-    // keep only letters/numbers/spaces, then join with hyphens
-    let words = quoteInput.value
+  function slugify(text) {
+    let words = text
       .trim()
       .split(/\s+/)
       .slice(0, 6)
       .join(' ')
-      .replace(/[^\p{L}\p{N}\s]/gu, '')  // remove punctuation, keep unicode letters (Hindi/English) and numbers
+      .replace(/[^\p{L}\p{N}\s]/gu, '')
       .trim()
       .split(/\s+/)
       .join('-');
-
-    if (!words) words = 'quote';
-
-    return `lumiora-dual-${dateStr}-${words}.png`;
+    return words || 'quote';
   }
 
-  function startDownload() {
+  function generateFileName(text, slideNum) {
+    const today = new Date();
+    const dateStr = today.getFullYear() + '-' +
+      String(today.getMonth()+1).padStart(2,'0') + '-' +
+      String(today.getDate()).padStart(2,'0');
+    const words = slugify(text);
+    const prefix = slideNum ? `slide-${slideNum}-` : '';
+    return `lumiora-dual-${dateStr}-${prefix}${words}.png`;
+  }
+
+  function captureCard() {
+    return html2canvas(card, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: null })
+      .then(canvasOut => new Promise((resolve, reject) => {
+        canvasOut.toBlob((blob) => {
+          if (!blob) { reject(new Error('Image nahi ban payi')); return; }
+          resolve(blob);
+        }, 'image/png');
+      }));
+  }
+
+  function triggerDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    return url;
+  }
+
+  function startDownloadSingle() {
     if (typeof html2canvas === 'undefined') {
       statusMsg.textContent = '⚠️ Download tool load nahi hua. Internet connection check karke page reload karein.';
       return;
@@ -395,34 +566,65 @@
     statusMsg.textContent = '⏳ Image taiyar ho rahi hai...';
     downloadBtn.disabled = true;
 
-    html2canvas(card, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: null })
-      .then(canvasOut => {
-        canvasOut.toBlob((blob) => {
-          downloadBtn.disabled = false;
-          if (!blob) {
-            statusMsg.textContent = '⚠️ Image nahi ban payi, dubara try karein.';
-            return;
-          }
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = generateFileName();
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-
-          // Fallback for mobile browsers that block auto-download:
-          // open the image in a new tab so the user can long-press and save it.
-          setTimeout(() => {
-            window.open(url, '_blank');
-            statusMsg.textContent = '✅ Download shuru ho gaya. Agar download na ho to naye tab mein khuli image ko long-press karke "Save Image" karein.';
-          }, 400);
-        }, 'image/png');
+    captureCard()
+      .then(blob => {
+        downloadBtn.disabled = false;
+        const filename = generateFileName(quoteInput.value);
+        const url = triggerDownload(blob, filename);
+        setTimeout(() => {
+          window.open(url, '_blank');
+          statusMsg.textContent = '✅ Download shuru ho gaya. Agar download na ho to naye tab mein khuli image ko long-press karke "Save Image" karein.';
+        }, 400);
       })
-      .catch((err) => {
+      .catch(err => {
         downloadBtn.disabled = false;
         statusMsg.textContent = '⚠️ Kuch error aaya: ' + err.message;
       });
+  }
+
+  async function startDownloadCarousel() {
+    if (typeof html2canvas === 'undefined') {
+      statusMsg.textContent = '⚠️ Download tool load nahi hua. Internet connection check karke page reload karein.';
+      return;
+    }
+    const pairs = getCarouselPairs().slice(0, 15);
+    if (!pairs.length) {
+      statusMsg.textContent = '⚠️ Kam se kam ek quote line likhein.';
+      return;
+    }
+    downloadBtn.disabled = true;
+    statusMsg.textContent = '';
+    const originalBtnText = downloadBtn.textContent;
+
+    for (let i = 0; i < pairs.length; i++) {
+      downloadBtn.textContent = `⏳ Slide ${i+1} / ${pairs.length} ban rahi hai...`;
+      carouselProgress.textContent = `⏳ Slide ${i+1} / ${pairs.length} taiyar ho rahi hai...`;
+      quoteDisplayHi.textContent = pairs[i].hi;
+      quoteDisplay.textContent = pairs[i].en;
+      await new Promise(r => setTimeout(r, 500));
+      try {
+        const blob = await captureCard();
+        const nameSource = pairs[i].en || pairs[i].hi;
+        triggerDownload(blob, generateFileName(nameSource, i+1));
+      } catch (err) {
+        carouselProgress.textContent = `⚠️ Slide ${i+1} par error aaya: ${err.message}`;
+      }
+      await new Promise(r => setTimeout(r, 900));
+    }
+
+    downloadBtn.disabled = false;
+    downloadBtn.textContent = originalBtnText;
+    carouselProgress.textContent = `✅ ${pairs.length} slides download ho gayi. Agar sirf pehli ya kuch hi save hui hon to browser ne baaki block kiya hoga — address bar ke paas download icon par "Always allow" choose karke button dobara dabayein.`;
+    quoteDisplayHi.textContent = pairs[0].hi;
+    quoteDisplay.textContent = pairs[0].en;
+  }
+
+  function startDownload() {
+    if (carouselMode.checked) {
+      startDownloadCarousel();
+    } else {
+      startDownloadSingle();
+    }
   }
 
   downloadBtn.addEventListener('click', startDownload);

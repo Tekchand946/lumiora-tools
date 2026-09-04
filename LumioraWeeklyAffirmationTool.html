@@ -198,6 +198,14 @@
 <h1>Lumiora — Weekly Affirmation Calendar</h1>
 <p class="sub">Monday to Sunday · 7 trilingual affirmation cards · Cosmic silhouette style</p>
 
+<div style="max-width:1000px;margin:0 auto 18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;">
+  <label style="margin:0;">Week:</label>
+  <select id="weekSelect" style="padding:12px;font-size:15px;border-radius:8px;border:2px solid #2c3252;background:#0f1223;color:#f3ead9;min-height:44px;min-width:140px;"></select>
+  <button id="newWeekBtn" style="padding:12px 18px;background:#7d6cff;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">+ New week</button>
+  <button id="renameWeekBtn" style="padding:12px 18px;background:#0f1223;color:#e8c675;border:2px solid #2c3252;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Rename</button>
+  <button id="deleteWeekBtn" style="padding:12px 18px;background:#0f1223;color:#e07a7a;border:2px solid #2c3252;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Delete week</button>
+</div>
+
 <div class="day-tabs" id="dayTabs"></div>
 
 <div class="layout">
@@ -229,6 +237,7 @@
 
     <label>Background style</label>
     <div class="bg-grid" id="bgGrid"></div>
+    <button id="applyBgAllBtn" style="margin-top:10px;width:100%;padding:12px;background:transparent;color:#e8c675;border:2px solid #e8c675;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Apply this background to all 7 days</button>
 
     <label>Ya apni photo upload karein (is din ke liye)</label>
     <input type="file" id="customBgUpload" accept="image/*">
@@ -357,10 +366,7 @@ const BACKGROUNDS = [
   { name: "Cosmic Gradient (no photo)", url: null }
 ];
 
-function loadState() {
-  let raw = null;
-  try { raw = window.__lumioraState || null; } catch (e) {}
-  if (raw) return raw;
+function freshWeekState() {
   return DEFAULTS.map((d, i) => ({
     theme: d.theme,
     hi: d.hi, en: d.en, es: d.es,
@@ -376,7 +382,47 @@ function buildCaption(theme, quoteEn) {
   return quoteEn + "\n\n#Lumiora #DailyAffirmation #" + theme.replace(/\s+/g,"") + " #Motivation #MondayMotivation #PositiveVibes #SelfGrowth #TrilingualQuotes";
 }
 
-let state = loadState();
+const STORAGE_KEY = "lumiora_weekly_affirmations_weeks_v2";
+const CURRENT_KEY = "lumiora_weekly_affirmations_current_week_v2";
+
+function loadWeeksStore() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return null;
+}
+
+function saveWeeksStore() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(weeksStore));
+    localStorage.setItem(CURRENT_KEY, currentWeekName);
+  } catch (e) {}
+}
+
+function saveCurrentWeek() {
+  weeksStore[currentWeekName] = state;
+  saveWeeksStore();
+}
+
+function nextWeekName() {
+  let n = 1;
+  while (weeksStore["Week " + n]) n++;
+  return "Week " + n;
+}
+
+let weeksStore = loadWeeksStore();
+if (!weeksStore || Object.keys(weeksStore).length === 0) {
+  weeksStore = { "Week 1": freshWeekState() };
+}
+
+let currentWeekName = null;
+try { currentWeekName = localStorage.getItem(CURRENT_KEY); } catch (e) {}
+if (!currentWeekName || !weeksStore[currentWeekName]) {
+  currentWeekName = Object.keys(weeksStore)[0];
+}
+
+let state = weeksStore[currentWeekName];
 let activeDay = 0;
 let activeLang = "en";
 
@@ -552,6 +598,22 @@ removeCustomBg.onclick = () => {
   statusEl.textContent = DAYS[activeDay] + " ka background wapas preset par set kar diya.";
 };
 
+document.getElementById("applyBgAllBtn").onclick = () => {
+  const d = state[activeDay];
+  for (let i = 0; i < 7; i++) {
+    state[i].bg = d.bg;
+    if (d.customBg) {
+      state[i].customBg = d.customBg;
+    } else {
+      delete state[i].customBg;
+    }
+  }
+  saveCurrentWeek();
+  renderBgGrid();
+  drawCard();
+  statusEl.textContent = "Ye background sabhi 7 dinon par laga diya gaya.";
+};
+
 document.getElementById("resetDay").onclick = () => {
   const def = DEFAULTS[activeDay];
   state[activeDay] = {
@@ -698,6 +760,7 @@ function drawCard() {
   canvas.width = w;
   canvas.height = h;
   drawCardToContext(ctx, w, h, activeDay, activeLang);
+  saveCurrentWeek();
 }
 
 function downloadBlob(blob, filename) {
@@ -751,6 +814,68 @@ document.getElementById("downloadAll").onclick = async () => {
   statusEl.textContent = "All 7 cards + Captions.txt downloaded as a zip.";
 };
 
+const weekSelectEl = document.getElementById("weekSelect");
+
+function renderWeekSelect() {
+  weekSelectEl.innerHTML = "";
+  Object.keys(weeksStore).forEach((name) => {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    if (name === currentWeekName) opt.selected = true;
+    weekSelectEl.appendChild(opt);
+  });
+}
+
+weekSelectEl.addEventListener("change", () => {
+  currentWeekName = weekSelectEl.value;
+  state = weeksStore[currentWeekName];
+  activeDay = 0;
+  saveWeeksStore();
+  syncControlsFromState();
+});
+
+document.getElementById("newWeekBtn").onclick = () => {
+  const name = nextWeekName();
+  weeksStore[name] = freshWeekState();
+  currentWeekName = name;
+  state = weeksStore[currentWeekName];
+  activeDay = 0;
+  saveWeeksStore();
+  renderWeekSelect();
+  syncControlsFromState();
+  statusEl.textContent = name + " created with fresh defaults.";
+};
+
+document.getElementById("renameWeekBtn").onclick = () => {
+  const newName = prompt("Naya naam is week ke liye:", currentWeekName);
+  if (!newName || !newName.trim() || newName === currentWeekName) return;
+  if (weeksStore[newName]) { alert("Ye naam pehle se hai, doosra naam chunein."); return; }
+  weeksStore[newName] = weeksStore[currentWeekName];
+  delete weeksStore[currentWeekName];
+  currentWeekName = newName;
+  saveWeeksStore();
+  renderWeekSelect();
+  statusEl.textContent = "Week ka naam badal diya gaya.";
+};
+
+document.getElementById("deleteWeekBtn").onclick = () => {
+  if (Object.keys(weeksStore).length <= 1) {
+    alert("Kam se kam ek week hona zaroori hai, ise delete nahi kar sakte.");
+    return;
+  }
+  if (!confirm(currentWeekName + " ko delete karein? Ye wapas nahi aayega.")) return;
+  delete weeksStore[currentWeekName];
+  currentWeekName = Object.keys(weeksStore)[0];
+  state = weeksStore[currentWeekName];
+  activeDay = 0;
+  saveWeeksStore();
+  renderWeekSelect();
+  syncControlsFromState();
+  statusEl.textContent = "Week delete kar di gayi.";
+};
+
+renderWeekSelect();
 syncControlsFromState();
 </script>
 </body>

@@ -29,6 +29,11 @@
     padding:20px 16px 60px;
   }
   .wrap{max-width:1000px;margin:0 auto;}
+  .hub-back{
+    display:inline-block;margin-bottom:14px;
+    color:var(--muted);text-decoration:none;font-size:14px;
+  }
+  .hub-back:hover{color:var(--lumiora-gold);}
   .brandmark{
     display:flex;align-items:center;gap:8px;
     font-size:12px;letter-spacing:.35em;text-transform:uppercase;
@@ -90,6 +95,33 @@
   }
   .dim-label{text-align:center;color:var(--muted);font-size:12px;margin-top:8px;}
 
+  .size-row{display:flex;gap:8px;}
+  .size-btn{
+    flex:1;padding:12px 6px;text-align:center;border-radius:8px;cursor:pointer;
+    border:1px solid var(--border);background:var(--panel-2);font-size:13px;color:var(--muted);
+  }
+  .size-btn.active{border-color:var(--accent);color:var(--text);background:#2c2018;}
+
+  .preset-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;
+  }
+  .preset-thumb{
+    position:relative;aspect-ratio:1080/1350;border-radius:8px;overflow:hidden;
+    cursor:pointer;border:2px solid var(--border);background:#000;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .preset-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .preset-thumb.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-2);}
+  .preset-thumb .loading{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--muted);font-size:10px;background:var(--panel-2);
+  }
+  .preset-none{
+    grid-column:1 / -1;padding:10px;text-align:center;border-radius:8px;cursor:pointer;
+    border:1px solid var(--border);background:var(--panel-2);font-size:12.5px;color:var(--muted);
+  }
+  .preset-none.active{border-color:var(--accent);color:var(--text);}
+
   @media(max-width:400px){
     body{padding:16px 12px 50px;}
     .controls,.preview-wrap{max-width:100%;}
@@ -98,6 +130,7 @@
 </head>
 <body>
 <div class="wrap">
+  <a class="hub-back" href="index.html">&#8592; Hub par wapas</a>
   <div class="brandmark">✦ Lumiora ✦</div>
   <h1>Long Quote Card Maker</h1>
   <div class="subtitle">Apni photo upload karein, lamba quote likhein — text color khud match ho jayega</div>
@@ -110,9 +143,26 @@
       </div>
 
       <div class="field">
+        <label>Card Size</label>
+        <div class="size-row">
+          <div class="size-btn active" data-size="post">Post — 1080×1350</div>
+          <div class="size-btn" data-size="reel">Reel — 1080×1920</div>
+        </div>
+        <div class="hint">Facebook post ke liye "Post" chunein, reel/story background ke liye "Reel"</div>
+      </div>
+
+      <div class="field">
         <label>Background Photo</label>
         <input type="file" id="photoInput" accept="image/*">
         <div class="hint">Apni koi bhi photo upload karein — light ya dark, dono chalengi</div>
+      </div>
+
+      <div class="field">
+        <label>Ya Ready-made Background Chunein</label>
+        <div class="preset-grid" id="presetGrid">
+          <div class="preset-none active" id="presetNoneBtn">Koi nahi (apni photo use karein)</div>
+        </div>
+        <div class="hint">Silhouette / back-view style backgrounds — seedhe tap karke use karein, download ki zaroorat nahi</div>
       </div>
 
       <div class="field">
@@ -151,7 +201,7 @@
 
     <div class="preview-wrap">
       <canvas id="canvas" width="1080" height="1350"></canvas>
-      <div class="dim-label">1080 × 1350 px</div>
+      <div class="dim-label" id="dimLabel">1080 × 1350 px</div>
     </div>
   </div>
 </div>
@@ -159,11 +209,86 @@
 <script>
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const W = canvas.width, H = canvas.height;
+let W = canvas.width, H = canvas.height;
 
 let uploadedImg = null;
 let selectedColorMode = 'auto';
 let selectedPos = 'top';
+let selectedSize = 'post';
+
+const SIZES = {
+  post: {w:1080, h:1350, label:'1080 × 1350 px'},
+  reel: {w:1080, h:1920, label:'1080 × 1920 px (Reel)'}
+};
+
+document.querySelectorAll('.size-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedSize = btn.dataset.size;
+    const s = SIZES[selectedSize];
+    canvas.width = s.w; canvas.height = s.h;
+    W = s.w; H = s.h;
+    canvas.style.aspectRatio = s.w + '/' + s.h;
+    document.getElementById('dimLabel').textContent = s.label;
+    render();
+  });
+});
+
+// ---- Ready-made background presets (silhouette / back-view style) ----
+// Photos via Pexels (free to use, no attribution required — pexels.com/license)
+const PRESETS = [
+  {id:'34182829', label:'Beach walk'},
+  {id:'34182830', label:'Pier walk'},
+  {id:'3789388',  label:'Dock sunset'},
+  {id:'9679776',  label:'Sea overlook'},
+  {id:'20273041', label:'Shore standing'},
+  {id:'6679174',  label:'Golden hour walk'},
+  {id:'2260959',  label:'Hilltop sitting'},
+  {id:'12895726', label:'Cliff sitting'},
+  {id:'17519355', label:'Cliff edge'}
+];
+
+function pexelsUrl(id, w){
+  return `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}`;
+}
+
+const presetGrid = document.getElementById('presetGrid');
+const presetNoneBtn = document.getElementById('presetNoneBtn');
+
+PRESETS.forEach(p=>{
+  const thumb = document.createElement('div');
+  thumb.className = 'preset-thumb';
+  thumb.innerHTML = `<div class="loading">...</div><img loading="lazy" alt="${p.label}">`;
+  presetGrid.appendChild(thumb);
+
+  const imgEl = thumb.querySelector('img');
+  imgEl.src = pexelsUrl(p.id, 400);
+  imgEl.onload = ()=>{ thumb.querySelector('.loading').remove(); };
+  imgEl.onerror = ()=>{ thumb.querySelector('.loading').textContent = '⚠'; };
+
+  thumb.addEventListener('click', ()=>{
+    document.querySelectorAll('.preset-thumb').forEach(t=>t.classList.remove('active'));
+    presetNoneBtn.classList.remove('active');
+    thumb.classList.add('active');
+
+    const fullImg = new Image();
+    fullImg.crossOrigin = 'anonymous';
+    fullImg.onload = ()=>{ uploadedImg = fullImg; render(); };
+    fullImg.onerror = ()=>{
+      thumb.classList.remove('active');
+      alert('Ye background load nahi ho paya, doosra try karein ya apni photo upload karein.');
+    };
+    fullImg.src = pexelsUrl(p.id, 1600);
+  });
+});
+
+presetNoneBtn.addEventListener('click', ()=>{
+  document.querySelectorAll('.preset-thumb').forEach(t=>t.classList.remove('active'));
+  presetNoneBtn.classList.add('active');
+  uploadedImg = null;
+  render();
+});
 
 document.querySelectorAll('.color-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -189,7 +314,12 @@ document.getElementById('photoInput').addEventListener('change', (e)=>{
   const reader = new FileReader();
   reader.onload = (ev)=>{
     const img = new Image();
-    img.onload = ()=>{ uploadedImg = img; render(); };
+    img.onload = ()=>{
+      uploadedImg = img;
+      document.querySelectorAll('.preset-thumb').forEach(t=>t.classList.remove('active'));
+      document.getElementById('presetNoneBtn').classList.add('active');
+      render();
+    };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
@@ -356,9 +486,13 @@ function render(){
 function downloadCard(){
   render();
   const link = document.createElement('a');
-  link.download = 'lumiora-quote-card.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
+  link.download = `lumiora-quote-card-${selectedSize}.png`;
+  try{
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }catch(e){
+    alert('Download fail hua — agar aapne "Ready-made Background" use kiya hai to thoda wait karke dobara try karein, ya apni photo upload karein.');
+  }
 }
 
 // Ensure the Devanagari font is fully loaded before measuring/drawing text.

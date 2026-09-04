@@ -169,17 +169,112 @@
     color: rgba(255,255,255,0.75);
     font-family: 'Noto Serif Devanagari', 'Playfair Display', 'Georgia', serif;
   }
+  .hub-back-wrap {
+    max-width: 1100px;
+    margin: 0 auto 12px;
+  }
+  .hub-back {
+    display: inline-block;
+    color: #9aa3c0;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+  }
+  .hub-back:hover {
+    color: #d4af37;
+  }
+  .carousel-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 14px 0 6px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #cfd4ee;
+  }
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider-track {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #2a3150;
+    border-radius: 24px;
+    transition: 0.2s;
+  }
+  .slider-track:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.2s;
+  }
+  .switch input:checked + .slider-track {
+    background: linear-gradient(135deg, #4a6cf7, #7b4af7);
+  }
+  .switch input:checked + .slider-track:before {
+    transform: translateX(18px);
+  }
+  .hint-text {
+    font-size: 12px;
+    color: #9aa3c0;
+    margin-top: 6px;
+    font-family: Arial, sans-serif;
+  }
+  #carouselProgress {
+    text-align: center;
+    font-size: 13px;
+    color: #9aa3c0;
+    margin-top: 8px;
+    font-family: Arial, sans-serif;
+  }
 </style>
 </head>
 <body>
+<div class="hub-back-wrap"><a class="hub-back" href="index.html">&#8592; Hub par wapas</a></div>
 
 <div class="app">
   <h1>🌌 Cosmic Quote Generator — Aapki Soch</h1>
   <div class="subtitle">Space background wale motivational quote cards banaiye</div>
 
   <div class="panel">
-    <label>Quote Text (Hindi / English / Spanish)</label>
-    <textarea id="quoteInput">Act as if what you want is already yours, then the Universe will rearrange itself to make it happen.</textarea>
+    <div class="carousel-toggle-row">
+      <label class="switch">
+        <input type="checkbox" id="carouselMode">
+        <span class="slider-track"></span>
+      </label>
+      <span>Carousel Mode (ek saath kai quotes)</span>
+    </div>
+
+    <div id="singleQuoteWrap">
+      <label>Quote Text (Hindi / English / Spanish)</label>
+      <textarea id="quoteInput">Act as if what you want is already yours, then the Universe will rearrange itself to make it happen.</textarea>
+    </div>
+
+    <div id="carouselQuoteWrap" style="display:none;">
+      <label>Carousel Quotes (har line = ek slide)</label>
+      <textarea id="carouselInput" rows="10">Act as if what you want is already yours, then the Universe will rearrange itself to make it happen.
+Believe you can and you're halfway there.
+The best way to predict the future is to create it.
+Every sunrise is a new chance to begin again.
+Small steps every day lead to big changes.
+Your only limit is your mind.
+Dream big and dare to fail.
+Success is the sum of small efforts repeated daily.
+The harder you work, the luckier you get.
+Great things never come from comfort zones.</textarea>
+      <div class="hint-text">Har line ek alag slide banegi, same background theme ke saath</div>
+    </div>
 
     <label>Font Size</label>
     <input type="range" id="fontSize" min="18" max="40" value="28">
@@ -207,6 +302,7 @@
     </div>
 
     <button id="downloadBtn">📥 Image Download Karein</button>
+    <div id="carouselProgress"></div>
     <div id="statusMsg" style="text-align:center; font-size:12px; color:#9aa3c0; margin-top:8px; font-family:Arial, sans-serif;"></div>
   </div>
 
@@ -305,20 +401,48 @@
   }
 
   const quoteInput = document.getElementById('quoteInput');
+  const carouselInput = document.getElementById('carouselInput');
+  const carouselMode = document.getElementById('carouselMode');
+  const singleQuoteWrap = document.getElementById('singleQuoteWrap');
+  const carouselQuoteWrap = document.getElementById('carouselQuoteWrap');
   const quoteDisplay = document.getElementById('quoteDisplay');
   const brandInput = document.getElementById('brandInput');
   const brandDisplay = document.getElementById('brandDisplay');
   const fontSize = document.getElementById('fontSize');
   const bgStyle = document.getElementById('bgStyle');
+  const carouselProgress = document.getElementById('carouselProgress');
+
+  function getActiveQuoteText() {
+    if (carouselMode.checked) {
+      const lines = carouselInput.value.split('\n').map(l => l.trim()).filter(Boolean);
+      return lines.length ? lines[0] : '';
+    }
+    return quoteInput.value;
+  }
 
   function updateCard() {
-    quoteDisplay.textContent = quoteInput.value;
+    quoteDisplay.textContent = getActiveQuoteText();
     brandDisplay.textContent = brandInput.value;
     quoteDisplay.style.fontSize = fontSize.value + 'px';
     applyBackground();
   }
 
+  carouselMode.addEventListener('change', () => {
+    if (carouselMode.checked) {
+      singleQuoteWrap.style.display = 'none';
+      carouselQuoteWrap.style.display = 'block';
+      downloadBtn.textContent = '📥 Sabhi Slides Download Karein';
+    } else {
+      singleQuoteWrap.style.display = 'block';
+      carouselQuoteWrap.style.display = 'none';
+      downloadBtn.textContent = '📥 Image Download Karein';
+    }
+    carouselProgress.textContent = '';
+    updateCard();
+  });
+
   quoteInput.addEventListener('input', updateCard);
+  carouselInput.addEventListener('input', updateCard);
   brandInput.addEventListener('input', updateCard);
   fontSize.addEventListener('input', updateCard);
   bgStyle.addEventListener('change', updateCard);
@@ -334,30 +458,51 @@
   downloadBtn.addEventListener('contextmenu', (e) => e.preventDefault());
   downloadBtn.addEventListener('touchstart', (e) => { /* allow tap, block callout */ }, {passive: true});
 
-  function generateFileName() {
-    const today = new Date();
-    const dateStr = today.getFullYear() + '-' +
-      String(today.getMonth()+1).padStart(2,'0') + '-' +
-      String(today.getDate()).padStart(2,'0');
-
-    // take first 5-6 words of the quote, strip punctuation/Hindi matras-safe chars,
-    // keep only letters/numbers/spaces, then join with hyphens
-    let words = quoteInput.value
+  function slugify(text) {
+    let words = text
       .trim()
       .split(/\s+/)
       .slice(0, 6)
       .join(' ')
-      .replace(/[^\p{L}\p{N}\s]/gu, '')  // remove punctuation, keep unicode letters (Hindi/English) and numbers
+      .replace(/[^\p{L}\p{N}\s]/gu, '')
       .trim()
       .split(/\s+/)
       .join('-');
-
-    if (!words) words = 'quote';
-
-    return `aapki-soch-${dateStr}-${words}.png`;
+    return words || 'quote';
   }
 
-  function startDownload() {
+  function generateFileName(text, slideNum) {
+    const today = new Date();
+    const dateStr = today.getFullYear() + '-' +
+      String(today.getMonth()+1).padStart(2,'0') + '-' +
+      String(today.getDate()).padStart(2,'0');
+    const words = slugify(text);
+    const prefix = slideNum ? `slide-${slideNum}-` : '';
+    return `aapki-soch-${dateStr}-${prefix}${words}.png`;
+  }
+
+  function captureCard() {
+    return html2canvas(card, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: null })
+      .then(canvasOut => new Promise((resolve, reject) => {
+        canvasOut.toBlob((blob) => {
+          if (!blob) { reject(new Error('Image nahi ban payi')); return; }
+          resolve(blob);
+        }, 'image/png');
+      }));
+  }
+
+  function triggerDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    return url;
+  }
+
+  function startDownloadSingle() {
     if (typeof html2canvas === 'undefined') {
       statusMsg.textContent = '⚠️ Download tool load nahi hua. Internet connection check karke page reload karein.';
       return;
@@ -365,34 +510,65 @@
     statusMsg.textContent = '⏳ Image taiyar ho rahi hai...';
     downloadBtn.disabled = true;
 
-    html2canvas(card, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: null })
-      .then(canvasOut => {
-        canvasOut.toBlob((blob) => {
-          downloadBtn.disabled = false;
-          if (!blob) {
-            statusMsg.textContent = '⚠️ Image nahi ban payi, dubara try karein.';
-            return;
-          }
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = generateFileName();
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-
-          // Fallback for mobile browsers that block auto-download:
-          // open the image in a new tab so the user can long-press and save it.
-          setTimeout(() => {
-            window.open(url, '_blank');
-            statusMsg.textContent = '✅ Download shuru ho gaya. Agar download na ho to naye tab mein khuli image ko long-press karke "Save Image" karein.';
-          }, 400);
-        }, 'image/png');
+    captureCard()
+      .then(blob => {
+        downloadBtn.disabled = false;
+        const filename = generateFileName(quoteInput.value);
+        const url = triggerDownload(blob, filename);
+        setTimeout(() => {
+          window.open(url, '_blank');
+          statusMsg.textContent = '✅ Download shuru ho gaya. Agar download na ho to naye tab mein khuli image ko long-press karke "Save Image" karein.';
+        }, 400);
       })
-      .catch((err) => {
+      .catch(err => {
         downloadBtn.disabled = false;
         statusMsg.textContent = '⚠️ Kuch error aaya: ' + err.message;
       });
+  }
+
+  async function startDownloadCarousel() {
+    if (typeof html2canvas === 'undefined') {
+      statusMsg.textContent = '⚠️ Download tool load nahi hua. Internet connection check karke page reload karein.';
+      return;
+    }
+    const lines = carouselInput.value.split('\n').map(l => l.trim()).filter(Boolean).slice(0, 15);
+    if (!lines.length) {
+      statusMsg.textContent = '⚠️ Kam se kam ek quote line likhein.';
+      return;
+    }
+    downloadBtn.disabled = true;
+    statusMsg.textContent = '';
+    const originalBtnText = downloadBtn.textContent;
+
+    for (let i = 0; i < lines.length; i++) {
+      downloadBtn.textContent = `⏳ Slide ${i+1} / ${lines.length} ban rahi hai...`;
+      carouselProgress.textContent = `⏳ Slide ${i+1} / ${lines.length} taiyar ho rahi hai...`;
+      quoteDisplay.textContent = lines[i];
+      // give the browser a moment to repaint the new text before capturing
+      await new Promise(r => setTimeout(r, 500));
+      try {
+        const blob = await captureCard();
+        triggerDownload(blob, generateFileName(lines[i], i+1));
+      } catch (err) {
+        carouselProgress.textContent = `⚠️ Slide ${i+1} par error aaya: ${err.message}`;
+      }
+      // small gap between downloads so the browser doesn't block them as spam
+      await new Promise(r => setTimeout(r, 900));
+    }
+
+    downloadBtn.disabled = false;
+    downloadBtn.textContent = originalBtnText;
+    carouselProgress.textContent = `✅ ${lines.length} slides download ho gayi. Agar sirf pehli ya kuch hi save hui hon to browser ne baaki block kiya hoga — address bar ke paas download icon par "Always allow" choose karke button dobara dabayein.`;
+    // restore preview to first line
+    quoteDisplay.textContent = lines[0];
+  }
+
+  function startDownload() {
+    if (carouselMode.checked) {
+      startDownloadCarousel();
+    } else {
+      startDownloadSingle();
+    }
   }
 
   downloadBtn.addEventListener('click', startDownload);
