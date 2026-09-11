@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta name="robots" content="noindex, nofollow">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Lumiora — Long Quote Card Maker</title>
@@ -129,6 +131,38 @@
 </style>
 </head>
 <body>
+
+<div id="lumiora-lock-overlay" style="position:fixed;inset:0;z-index:999999;background:#0b0e17;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;text-align:center;font-family:Arial,sans-serif;">
+  <div style="max-width:320px;width:100%;">
+    <p style="color:#fff;font-size:20px;margin-bottom:16px;">🔒 Password Daalein</p>
+    <input id="lumiora-lock-input" type="password" inputmode="text" autocomplete="off" style="width:100%;padding:16px;font-size:18px;border-radius:8px;border:1px solid #2a3150;margin-bottom:14px;text-align:center;box-sizing:border-box;" />
+    <button id="lumiora-lock-btn" style="width:100%;padding:16px;font-size:18px;border-radius:8px;border:none;background:#4a6cf7;color:#fff;cursor:pointer;">Unlock</button>
+    <p id="lumiora-lock-error" style="color:#ff6b6b;margin-top:12px;display:none;">Galat password, dobara try karein.</p>
+  </div>
+</div>
+<script>
+(function(){
+  var PASS = "Tcjsep26";
+  var overlay = document.getElementById('lumiora-lock-overlay');
+  if(localStorage.getItem('lumiora_unlocked') === 'yes'){
+    overlay.style.display = 'none';
+  }
+  function tryUnlock(){
+    var val = document.getElementById('lumiora-lock-input').value;
+    if(val === PASS){
+      localStorage.setItem('lumiora_unlocked','yes');
+      overlay.style.display = 'none';
+    } else {
+      document.getElementById('lumiora-lock-error').style.display = 'block';
+    }
+  }
+  document.getElementById('lumiora-lock-btn').addEventListener('click', tryUnlock);
+  document.getElementById('lumiora-lock-input').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); tryUnlock(); }
+  });
+})();
+</script>
+
 <div class="wrap">
   <a class="hub-back" href="index.html">&#8592; Hub par wapas</a>
   <div class="brandmark">✦ Lumiora ✦</div>
@@ -402,10 +436,11 @@ function render(){
   }
 
   const text = document.getElementById('quoteText').value.trim();
+  const displayText = text ? '“' + text + '”' : text;
   const watermark = document.getElementById('watermark').value.trim();
   const manualSize = parseInt(document.getElementById('fontSize').value);
 
-  const maxWidth = W - 160;
+  const maxWidth = W * 0.65;
   let fontSize = manualSize > 0 ? manualSize : 64;
 
   // auto-fit font size based on text length if manual size not set
@@ -424,7 +459,7 @@ function render(){
   const maxTextAreaHeight = H * 0.62;
   while(fontSize > 24){
     const font = `700 ${fontSize}px 'Noto Sans Devanagari', -apple-system, Arial, sans-serif`;
-    lines = wrapText(text, maxWidth, font);
+    lines = wrapText(displayText, maxWidth, font);
     lineHeight = fontSize * 1.28;
     const totalH = lines.length * lineHeight;
     if(totalH <= maxTextAreaHeight || manualSize > 0) break;

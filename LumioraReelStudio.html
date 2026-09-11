@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="hi">
 <head>
+<meta name="robots" content="noindex, nofollow">
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lumiora Reel Maker</title>
@@ -130,6 +132,38 @@
 </style>
 </head>
 <body>
+
+<div id="lumiora-lock-overlay" style="position:fixed;inset:0;z-index:999999;background:#0b0e17;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;text-align:center;font-family:Arial,sans-serif;">
+  <div style="max-width:320px;width:100%;">
+    <p style="color:#fff;font-size:20px;margin-bottom:16px;">🔒 Password Daalein</p>
+    <input id="lumiora-lock-input" type="password" inputmode="text" autocomplete="off" style="width:100%;padding:16px;font-size:18px;border-radius:8px;border:1px solid #2a3150;margin-bottom:14px;text-align:center;box-sizing:border-box;" />
+    <button id="lumiora-lock-btn" style="width:100%;padding:16px;font-size:18px;border-radius:8px;border:none;background:#4a6cf7;color:#fff;cursor:pointer;">Unlock</button>
+    <p id="lumiora-lock-error" style="color:#ff6b6b;margin-top:12px;display:none;">Galat password, dobara try karein.</p>
+  </div>
+</div>
+<script>
+(function(){
+  var PASS = "Tcjsep26";
+  var overlay = document.getElementById('lumiora-lock-overlay');
+  if(localStorage.getItem('lumiora_unlocked') === 'yes'){
+    overlay.style.display = 'none';
+  }
+  function tryUnlock(){
+    var val = document.getElementById('lumiora-lock-input').value;
+    if(val === PASS){
+      localStorage.setItem('lumiora_unlocked','yes');
+      overlay.style.display = 'none';
+    } else {
+      document.getElementById('lumiora-lock-error').style.display = 'block';
+    }
+  }
+  document.getElementById('lumiora-lock-btn').addEventListener('click', tryUnlock);
+  document.getElementById('lumiora-lock-input').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); tryUnlock(); }
+  });
+})();
+</script>
+
 <div class="wrap">
   <a class="hub-back" href="index.html">&#8592; Hub par wapas</a>
   <p class="eyebrow">Lumiora Positive · Tool</p>
@@ -167,6 +201,17 @@
         <input type="file" id="ringImageInput" accept="image/*">
         <button type="button" class="img-clear" id="ringImgClearBtn" style="display:none;">हटाएं</button>
       </div>
+
+      <label for="bgAudioInput">Background Music जोड़ें (वैकल्पिक, MP3/M4A)</label>
+      <div class="file-row">
+        <input type="file" id="bgAudioInput" accept="audio/*">
+        <button type="button" class="img-clear" id="bgAudioClearBtn" style="display:none;">हटाएं</button>
+      </div>
+      <div class="font-size-row" id="bgVolumeRow" style="display:none; margin-top:10px;">
+        <input type="range" id="bgVolumeInput" min="0" max="100" step="1" value="70">
+        <span id="bgVolumeVal">70%</span>
+      </div>
+      <p class="hint" id="bgAudioHint" style="display:none; margin-top:8px;">Music video जितनी लंबी है उतनी अपने आप loop हो जाएगी। Download दबाने पर यही music साथ में record होगी।</p>
 
       <label>नीचे क्या दिखाएं</label>
       <div class="img-mode-row" id="brandModeRow">
@@ -333,6 +378,49 @@
     if (!previewing) renderStatic();
   });
 
+  // ---- background music ----
+  var bgAudioInput = document.getElementById('bgAudioInput');
+  var bgAudioClearBtn = document.getElementById('bgAudioClearBtn');
+  var bgVolumeRow = document.getElementById('bgVolumeRow');
+  var bgVolumeInput = document.getElementById('bgVolumeInput');
+  var bgVolumeVal = document.getElementById('bgVolumeVal');
+  var bgAudioHint = document.getElementById('bgAudioHint');
+  var bgAudioEl = null;
+  var bgAudioObjectUrl = null;
+
+  bgAudioInput.addEventListener('change', function (e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    if (bgAudioObjectUrl) URL.revokeObjectURL(bgAudioObjectUrl);
+    bgAudioObjectUrl = URL.createObjectURL(file);
+    if (bgAudioEl) { bgAudioEl.pause(); bgAudioEl.remove(); }
+    bgAudioEl = document.createElement('audio');
+    bgAudioEl.src = bgAudioObjectUrl;
+    bgAudioEl.loop = true;
+    bgAudioEl.volume = parseInt(bgVolumeInput.value, 10) / 100;
+    bgAudioEl.style.display = 'none';
+    document.body.appendChild(bgAudioEl);
+    bgAudioClearBtn.style.display = 'inline';
+    bgVolumeRow.style.display = 'flex';
+    bgAudioHint.style.display = 'block';
+    statusEl.textContent = 'Music जुड़ गया — अब "Download Video" दबाने पर साथ में record होगी।';
+  });
+
+  bgAudioClearBtn.addEventListener('click', function () {
+    if (bgAudioEl) { bgAudioEl.pause(); bgAudioEl.remove(); bgAudioEl = null; }
+    if (bgAudioObjectUrl) { URL.revokeObjectURL(bgAudioObjectUrl); bgAudioObjectUrl = null; }
+    bgAudioInput.value = '';
+    bgAudioClearBtn.style.display = 'none';
+    bgVolumeRow.style.display = 'none';
+    bgAudioHint.style.display = 'none';
+  });
+
+  bgVolumeInput.addEventListener('input', function () {
+    var v = parseInt(bgVolumeInput.value, 10);
+    bgVolumeVal.textContent = v + '%';
+    if (bgAudioEl) bgAudioEl.volume = v / 100;
+  });
+
   function drawCoverImage(img, x, y, w, h) {
     var ir = img.width / img.height, dr = w / h;
     var sx, sy, sw, sh;
@@ -425,7 +513,16 @@
     var brandStart = t + 0.3;
     var total = brandStart + 1.1 + outroHold + tail;
 
-    return { title: title, bodyLines: bodyLines, titleStart: titleStart, starts: starts, brandStart: brandStart, total: total };
+    // wrap the spoken/body message in quotation marks (opening on first line, closing on last)
+    // for display — timing above is based on the unquoted lines, so pacing is unaffected
+    var displayBodyLines = bodyLines.map(function (line, i) {
+      var out = line;
+      if (i === 0) out = '“' + out;
+      if (i === bodyLines.length - 1) out = out + '”';
+      return out;
+    });
+
+    return { title: title, bodyLines: displayBodyLines, titleStart: titleStart, starts: starts, brandStart: brandStart, total: total };
   }
 
   function clamp01(x) { return Math.max(0, Math.min(1, x)); }
@@ -546,7 +643,7 @@
       ctx.font = '700 64px "Noto Serif Devanagari", serif';
       ctx.textAlign = 'center';
       ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 2;
-      var tLines = wrapLines(ctx, tl.title, W - 140);
+      var tLines = wrapLines(ctx, tl.title, W * 0.68);
       var ty0 = 150 + 150 + 64 + titleState.ty;
       tLines.forEach(function (line, i) {
         ctx.fillText(line, W / 2, ty0 + i * 74);
@@ -572,7 +669,7 @@
         ctx.textAlign = 'center';
         var by = divY + 90;
         tl.bodyLines.forEach(function (line, idx) {
-          var bLines = wrapLines(ctx, line, W - 184);
+          var bLines = wrapLines(ctx, line, W * 0.65);
           var st = fadeState(t, tl.starts[idx], 0.9);
           if (st.opacity > 0.01) {
             ctx.save();
@@ -703,16 +800,36 @@
     downloadBtn.disabled = true; previewBtn.disabled = true;
     var tl = buildTimeline();
     var mimeType = pickMimeType();
-    var stream = canvas.captureStream(30);
+    var videoStream = canvas.captureStream(30);
+    var combinedStream = videoStream;
+    var usingAudio = false;
+
+    if (bgAudioEl) {
+      try {
+        bgAudioEl.currentTime = 0;
+        var audioStreamPromise = bgAudioEl.play();
+        var audioTracks = (bgAudioEl.captureStream ? bgAudioEl.captureStream() : (bgAudioEl.mozCaptureStream ? bgAudioEl.mozCaptureStream() : null));
+        if (audioTracks) {
+          var tracks = videoStream.getVideoTracks().concat(audioTracks.getAudioTracks());
+          combinedStream = new MediaStream(tracks);
+          usingAudio = true;
+        }
+      } catch (e) { usingAudio = false; combinedStream = videoStream; }
+    }
+
     var chunks = [];
     var recorder;
+    var recorderOpts = { mimeType: mimeType, videoBitsPerSecond: 6000000 };
+    if (usingAudio) recorderOpts.audioBitsPerSecond = 128000;
     try {
-      recorder = new MediaRecorder(stream, { mimeType: mimeType, videoBitsPerSecond: 6000000 });
+      recorder = new MediaRecorder(combinedStream, recorderOpts);
     } catch (e) {
-      recorder = new MediaRecorder(stream);
+      try { recorder = new MediaRecorder(combinedStream); }
+      catch (e2) { recorder = new MediaRecorder(videoStream); usingAudio = false; }
     }
     recorder.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
     recorder.onstop = function () {
+      if (bgAudioEl) { bgAudioEl.pause(); bgAudioEl.currentTime = 0; }
       var blob = new Blob(chunks, { type: recorder.mimeType || mimeType });
       var ext = (recorder.mimeType || mimeType).indexOf('mp4') >= 0 ? 'mp4' : 'webm';
       var fileName = 'lumiora-reel.' + ext;
@@ -755,7 +872,7 @@
       if (start === null) start = ts;
       var t = (ts - start) / 1000;
       drawFrame(Math.min(t, tl.total), tl);
-      statusEl.textContent = 'Recording… ' + t.toFixed(1) + 's / ' + tl.total.toFixed(1) + 's';
+      statusEl.textContent = 'Recording… ' + t.toFixed(1) + 's / ' + tl.total.toFixed(1) + 's' + (usingAudio ? ' (music के साथ)' : '');
       if (t < tl.total) {
         requestAnimationFrame(recLoop);
       } else {

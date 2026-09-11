@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+<meta name="robots" content="noindex, nofollow">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lumiora Weekly Affirmation Calendar</title>
@@ -195,6 +197,38 @@
 </head>
 <body>
 
+<div id="lumiora-lock-overlay" style="position:fixed;inset:0;z-index:999999;background:#0b0e17;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;text-align:center;font-family:Arial,sans-serif;">
+  <div style="max-width:320px;width:100%;">
+    <p style="color:#fff;font-size:20px;margin-bottom:16px;">🔒 Password Daalein</p>
+    <input id="lumiora-lock-input" type="password" inputmode="text" autocomplete="off" style="width:100%;padding:16px;font-size:18px;border-radius:8px;border:1px solid #2a3150;margin-bottom:14px;text-align:center;box-sizing:border-box;" />
+    <button id="lumiora-lock-btn" style="width:100%;padding:16px;font-size:18px;border-radius:8px;border:none;background:#4a6cf7;color:#fff;cursor:pointer;">Unlock</button>
+    <p id="lumiora-lock-error" style="color:#ff6b6b;margin-top:12px;display:none;">Galat password, dobara try karein.</p>
+  </div>
+</div>
+<script>
+(function(){
+  var PASS = "Tcjsep26";
+  var overlay = document.getElementById('lumiora-lock-overlay');
+  if(localStorage.getItem('lumiora_unlocked') === 'yes'){
+    overlay.style.display = 'none';
+  }
+  function tryUnlock(){
+    var val = document.getElementById('lumiora-lock-input').value;
+    if(val === PASS){
+      localStorage.setItem('lumiora_unlocked','yes');
+      overlay.style.display = 'none';
+    } else {
+      document.getElementById('lumiora-lock-error').style.display = 'block';
+    }
+  }
+  document.getElementById('lumiora-lock-btn').addEventListener('click', tryUnlock);
+  document.getElementById('lumiora-lock-input').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); tryUnlock(); }
+  });
+})();
+</script>
+
+
 <h1>Lumiora — Weekly Affirmation Calendar</h1>
 <p class="sub">Monday to Sunday · 7 trilingual affirmation cards · Cosmic silhouette style</p>
 
@@ -204,6 +238,19 @@
   <button id="newWeekBtn" style="padding:12px 18px;background:#7d6cff;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">+ New week</button>
   <button id="renameWeekBtn" style="padding:12px 18px;background:#0f1223;color:#e8c675;border:2px solid #2c3252;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Rename</button>
   <button id="deleteWeekBtn" style="padding:12px 18px;background:#0f1223;color:#e07a7a;border:2px solid #2c3252;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Delete week</button>
+  <button id="pasteWeekBtn" style="padding:12px 18px;background:#0f1223;color:#6fe3d9;border:2px solid #6fe3d9;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">📋 Paste full week</button>
+</div>
+
+<div id="pasteWeekPanel" style="display:none;max-width:1000px;margin:0 auto 18px;background:#0f1223;border:2px solid #6fe3d9;border-radius:10px;padding:16px;">
+  <p style="margin:0 0 8px;font-size:14px;color:#d8c9a3;">Poori week ek saath yahan paste karein — har din ek line mein, is format mein (Claude se milne wali table isi format mein hogi):</p>
+  <p style="margin:0 0 10px;font-size:13px;color:#8f8a7c;font-family:monospace;">Monday | Theme | Hindi quote | English quote | Spanish quote</p>
+  <textarea id="pasteWeekInput" style="min-height:160px;width:100%;" placeholder="Monday | Courage | साहस वह है... | Bravery is doing... | La valentia es...
+Tuesday | Patience | ...
+..."></textarea>
+  <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+    <button id="fillWeekBtn" style="padding:12px 18px;background:#7d6cff;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Sabhi 7 din bhar dein</button>
+    <button id="cancelPasteWeekBtn" style="padding:12px 18px;background:transparent;color:#b9b2a0;border:2px solid #2c3252;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Cancel</button>
+  </div>
 </div>
 
 <div class="day-tabs" id="dayTabs"></div>
@@ -238,6 +285,7 @@
     <label>Background style</label>
     <div class="bg-grid" id="bgGrid"></div>
     <button id="applyBgAllBtn" style="margin-top:10px;width:100%;padding:12px;background:transparent;color:#e8c675;border:2px solid #e8c675;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Apply this background to all 7 days</button>
+    <button id="rotateBgBtn" style="margin-top:8px;width:100%;padding:12px;background:transparent;color:#6fe3d9;border:2px solid #6fe3d9;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">🎨 Rotate backgrounds across all 7 days</button>
 
     <label>Ya apni photo upload karein (is din ke liye)</label>
     <input type="file" id="customBgUpload" accept="image/*">
@@ -614,6 +662,17 @@ document.getElementById("applyBgAllBtn").onclick = () => {
   statusEl.textContent = "Ye background sabhi 7 dinon par laga diya gaya.";
 };
 
+document.getElementById("rotateBgBtn").onclick = () => {
+  for (let i = 0; i < 7; i++) {
+    state[i].bg = i % BACKGROUNDS.length;
+    delete state[i].customBg;
+  }
+  saveCurrentWeek();
+  renderBgGrid();
+  drawCard();
+  statusEl.textContent = "Har din ko alag background mil gaya: " + DAYS.map((d,i) => d + "=" + BACKGROUNDS[i % BACKGROUNDS.length].name).join(", ");
+};
+
 document.getElementById("resetDay").onclick = () => {
   const def = DEFAULTS[activeDay];
   state[activeDay] = {
@@ -623,6 +682,11 @@ document.getElementById("resetDay").onclick = () => {
   customBgUpload.value = "";
   syncControlsFromState();
 };
+
+function quoteText(text) {
+  if (!text) return text;
+  return "“" + text + "”";
+}
 
 function wrapText(context, text, x, y, maxWidth, lineHeight) {
   const words = text.split(" ");
@@ -678,7 +742,7 @@ function drawCardToContext(context, w, h, dayIndex, lang) {
     context.font = "600 " + d.themeSize + "px 'Cormorant Garamond', serif";
     context.fillText(d.theme, w/2, h*0.22);
 
-    const maxWidth = w * 0.82;
+    const maxWidth = w * 0.65;
 
     if (PAIR_MAP[lang]) {
       const [l1, l2] = PAIR_MAP[lang];
@@ -690,20 +754,20 @@ function drawCardToContext(context, w, h, dayIndex, lang) {
       let y = h * 0.36;
       context.font = (l1 === "hi" ? "500 " : "italic 500 ") + size1 + "px 'Cormorant Garamond', serif";
       context.fillStyle = LANG_QUOTE_COLORS[l1] || "#f3ead9";
-      const lines1 = wrapText(context, d[l1], w/2, y, maxWidth, lh1);
+      const lines1 = wrapText(context, quoteText(d[l1]), w/2, y, maxWidth, lh1);
 
       y += (lines1 - 1) * lh1 + lh1 * 0.9 + 46;
 
       context.font = (l2 === "hi" ? "500 " : "italic 500 ") + size2 + "px 'Cormorant Garamond', serif";
       context.fillStyle = LANG_QUOTE_COLORS[l2] || "#f3ead9";
       context.globalAlpha = 0.92;
-      wrapText(context, d[l2], w/2, y, maxWidth, lh2);
+      wrapText(context, quoteText(d[l2]), w/2, y, maxWidth, lh2);
       context.globalAlpha = 1;
     } else {
       context.font = (lang === "hi" ? "500 " : "italic 500 ") + d.quoteSize + "px 'Cormorant Garamond', serif";
       context.fillStyle = LANG_QUOTE_COLORS[lang] || "#f3ead9";
       const lh = d.quoteSize * 1.35;
-      wrapText(context, d[lang], w/2, h*0.46, maxWidth, lh);
+      wrapText(context, quoteText(d[lang]), w/2, h*0.46, maxWidth, lh);
     }
 
     context.font = "500 " + Math.round(w*0.026) + "px Poppins, sans-serif";
@@ -873,6 +937,71 @@ document.getElementById("deleteWeekBtn").onclick = () => {
   renderWeekSelect();
   syncControlsFromState();
   statusEl.textContent = "Week delete kar di gayi.";
+};
+
+const DAY_ALIASES = {
+  "monday": 0, "mon": 0, "सोमवार": 0,
+  "tuesday": 1, "tue": 1, "tues": 1, "मंगलवार": 1,
+  "wednesday": 2, "wed": 2, "बुधवार": 2,
+  "thursday": 3, "thu": 3, "thurs": 3, "गुरुवार": 3,
+  "friday": 4, "fri": 4, "शुक्रवार": 4,
+  "saturday": 5, "sat": 5, "शनिवार": 5,
+  "sunday": 6, "sun": 6, "रविवार": 6
+};
+
+function parseAndFillWeek(text) {
+  const lines = text.split(/\r?\n/);
+  const filledDays = [];
+  lines.forEach(line => {
+    if (!line.includes("|")) return;
+    let cells = line.split("|").map(c => c.trim());
+    if (cells.length && cells[0] === "") cells.shift();
+    if (cells.length && cells[cells.length - 1] === "") cells.pop();
+    if (cells.length < 2) return;
+    const dayKey = cells[0].toLowerCase().replace(/\*/g, "").trim();
+    const dayIdx = DAY_ALIASES.hasOwnProperty(dayKey) ? DAY_ALIASES[dayKey] : undefined;
+    if (dayIdx === undefined) return; // skips header row, markdown --- separator row, etc.
+    if (/^-+$/.test(cells[1] || "")) return;
+    if (cells.length < 5) return; // need Day, Theme, Hindi, English, Spanish
+    const [, theme, hi, en, es] = cells;
+    if (!theme && !hi && !en && !es) return;
+    const d = state[dayIdx];
+    if (theme) d.theme = theme;
+    if (hi) d.hi = hi;
+    if (en) d.en = en;
+    if (es) d.es = es;
+    ["hi", "en", "es", "hi_en", "en_es"].forEach(l => { delete d[captionKeyFor(l)]; });
+    filledDays.push(DAYS[dayIdx]);
+  });
+  return filledDays;
+}
+
+const pasteWeekBtn = document.getElementById("pasteWeekBtn");
+const pasteWeekPanel = document.getElementById("pasteWeekPanel");
+const pasteWeekInput = document.getElementById("pasteWeekInput");
+
+pasteWeekBtn.onclick = () => {
+  pasteWeekPanel.style.display = pasteWeekPanel.style.display === "none" ? "block" : "none";
+};
+
+document.getElementById("cancelPasteWeekBtn").onclick = () => {
+  pasteWeekInput.value = "";
+  pasteWeekPanel.style.display = "none";
+};
+
+document.getElementById("fillWeekBtn").onclick = () => {
+  const filledDays = parseAndFillWeek(pasteWeekInput.value);
+  if (filledDays.length === 0) {
+    statusEl.textContent = "Koi din match nahi hua. Format check karein: Day | Theme | Hindi quote | English quote | Spanish quote — har din ek line mein.";
+    return;
+  }
+  saveCurrentWeek();
+  activeDay = 0;
+  syncControlsFromState();
+  renderWeekSelect();
+  pasteWeekInput.value = "";
+  pasteWeekPanel.style.display = "none";
+  statusEl.textContent = filledDays.length + " din bhar diye gaye (" + filledDays.join(", ") + "). Ab background chunein aur download karein.";
 };
 
 renderWeekSelect();

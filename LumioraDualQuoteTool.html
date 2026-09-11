@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+<meta name="robots" content="noindex, nofollow">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lumiora - Dual Language Quote Generator</title>
@@ -146,8 +148,57 @@
   .quote-block {
     position: absolute;
     top: 10%;
-    left: 8%;
-    right: 8%;
+    left: 18%;
+    right: 18%;
+  }
+  #card.mode-reel .quote-block {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .size-toggle-row {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0 4px;
+  }
+  .size-btn {
+    flex: 1;
+    background: #0e1220;
+    color: #cfd4ee;
+    border: 1px solid #2a3150;
+    border-radius: 8px;
+    padding: 12px 6px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0;
+  }
+  .size-btn.active {
+    background: linear-gradient(135deg, #4a6cf7, #7b4af7);
+    color: #fff;
+    border-color: transparent;
+  }
+  .caption-box {
+    width: 100%;
+    background: #0e1220;
+    color: #fff;
+    border: 1px solid #2a3150;
+    border-radius: 8px;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    min-height: 140px;
+    resize: vertical;
+  }
+  .caption-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .caption-actions button {
+    margin-top: 10px;
+  }
+  #copyCaptionBtn {
+    background: linear-gradient(135deg, #2e9e5b, #1f7a45);
   }
   .quote-text {
     text-align: center;
@@ -258,6 +309,38 @@
 </style>
 </head>
 <body>
+
+<div id="lumiora-lock-overlay" style="position:fixed;inset:0;z-index:999999;background:#0b0e17;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;text-align:center;font-family:Arial,sans-serif;">
+  <div style="max-width:320px;width:100%;">
+    <p style="color:#fff;font-size:20px;margin-bottom:16px;">🔒 Password Daalein</p>
+    <input id="lumiora-lock-input" type="password" inputmode="text" autocomplete="off" style="width:100%;padding:16px;font-size:18px;border-radius:8px;border:1px solid #2a3150;margin-bottom:14px;text-align:center;box-sizing:border-box;" />
+    <button id="lumiora-lock-btn" style="width:100%;padding:16px;font-size:18px;border-radius:8px;border:none;background:#4a6cf7;color:#fff;cursor:pointer;">Unlock</button>
+    <p id="lumiora-lock-error" style="color:#ff6b6b;margin-top:12px;display:none;">Galat password, dobara try karein.</p>
+  </div>
+</div>
+<script>
+(function(){
+  var PASS = "Tcjsep26";
+  var overlay = document.getElementById('lumiora-lock-overlay');
+  if(localStorage.getItem('lumiora_unlocked') === 'yes'){
+    overlay.style.display = 'none';
+  }
+  function tryUnlock(){
+    var val = document.getElementById('lumiora-lock-input').value;
+    if(val === PASS){
+      localStorage.setItem('lumiora_unlocked','yes');
+      overlay.style.display = 'none';
+    } else {
+      document.getElementById('lumiora-lock-error').style.display = 'block';
+    }
+  }
+  document.getElementById('lumiora-lock-btn').addEventListener('click', tryUnlock);
+  document.getElementById('lumiora-lock-input').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); tryUnlock(); }
+  });
+})();
+</script>
+
 <div class="hub-back-wrap"><a class="hub-back" href="index.html">&#8592; Hub par wapas</a></div>
 
 <div class="app">
@@ -308,6 +391,12 @@ Great things never come from comfort zones.</textarea>
       <div class="hint-text">Dono box mein lines ka number aur order match hona chahiye — pehli Hindi line pehli English line ke saath slide banegi</div>
     </div>
 
+    <label>Image Size</label>
+    <div class="size-toggle-row">
+      <button type="button" class="size-btn active" id="sizePostBtn" data-mode="post">1080 x 1350<br>Post</button>
+      <button type="button" class="size-btn" id="sizeReelBtn" data-mode="reel">1080 x 1920<br>Reel/Story</button>
+    </div>
+
     <label>Font Size</label>
     <input type="range" id="fontSize" min="16" max="34" value="24">
 
@@ -336,6 +425,16 @@ Great things never come from comfort zones.</textarea>
     <button id="downloadBtn">📥 Image Download Karein</button>
     <div id="carouselProgress"></div>
     <div id="statusMsg" style="text-align:center; font-size:12px; color:#9aa3c0; margin-top:8px; font-family:Arial, sans-serif;"></div>
+
+    <label>Hashtags (caption ke saath jud jaayenge)</label>
+    <input type="text" id="hashtagsInput" style="width:100%;background:#0e1220;color:#fff;border:1px solid #2a3150;border-radius:8px;padding:10px;font-family:Arial, sans-serif;font-size:13px;" value="#Lumiora #Motivation #प्रेरणा #Motivación #PositiveVibes #InspirationalQuotes #सकारात्मकसोच">
+
+    <label>Facebook Caption</label>
+    <textarea id="captionText" class="caption-box"></textarea>
+    <div class="caption-actions">
+      <button type="button" id="refreshCaptionBtn" style="background:#2a3150;">🔄 Quote Se Refresh Karein</button>
+      <button type="button" id="copyCaptionBtn">📋 Caption Copy Karein</button>
+    </div>
   </div>
 
   <div class="card-wrap">
@@ -450,6 +549,52 @@ Great things never come from comfort zones.</textarea>
   const fontSize = document.getElementById('fontSize');
   const bgStyle = document.getElementById('bgStyle');
   const carouselProgress = document.getElementById('carouselProgress');
+  const sizePostBtn = document.getElementById('sizePostBtn');
+  const sizeReelBtn = document.getElementById('sizeReelBtn');
+  const hashtagsInput = document.getElementById('hashtagsInput');
+  const captionText = document.getElementById('captionText');
+  const refreshCaptionBtn = document.getElementById('refreshCaptionBtn');
+  const copyCaptionBtn = document.getElementById('copyCaptionBtn');
+
+  let sizeMode = 'post'; // 'post' = 1080x1350, 'reel' = 1080x1920
+  const sizeDims = { post: { w: 1080, h: 1350, ratio: '1080/1350', maxWidth: 480 },
+                      reel: { w: 1080, h: 1920, ratio: '1080/1920', maxWidth: 340 } };
+
+  function applySizeMode() {
+    const d = sizeDims[sizeMode];
+    card.style.aspectRatio = d.ratio;
+    card.style.maxWidth = d.maxWidth + 'px';
+    card.classList.toggle('mode-reel', sizeMode === 'reel');
+    sizePostBtn.classList.toggle('active', sizeMode === 'post');
+    sizeReelBtn.classList.toggle('active', sizeMode === 'reel');
+    drawStars();
+  }
+
+  sizePostBtn.addEventListener('click', () => { sizeMode = 'post'; applySizeMode(); });
+  sizeReelBtn.addEventListener('click', () => { sizeMode = 'reel'; applySizeMode(); });
+
+  function generateCaption() {
+    const pair = getActivePair();
+    let parts = [];
+    if (pair.hi) parts.push(quoteWrap(pair.hi));
+    if (pair.en) parts.push(quoteWrap(pair.en));
+    const body = parts.join('\n\n');
+    const tags = hashtagsInput.value.trim();
+    return tags ? body + '\n\n' + tags : body;
+  }
+
+  refreshCaptionBtn.addEventListener('click', () => {
+    captionText.value = generateCaption();
+  });
+
+  copyCaptionBtn.addEventListener('click', () => {
+    if (!captionText.value.trim()) { statusMsg.textContent = '⚠️ Caption khaali hai, pehle "Quote Se Refresh Karein" dabayein.'; return; }
+    navigator.clipboard.writeText(captionText.value).then(() => {
+      statusMsg.textContent = '✅ Caption copy ho gaya! Facebook/Instagram par paste kar dein.';
+    }).catch(() => {
+      statusMsg.textContent = '⚠️ Copy nahi ho paya, caption ko manually select karke copy karein.';
+    });
+  });
 
   function getCarouselPairs() {
     const hiLines = carouselInputHi.value.split('\n').map(l => l.trim()).filter(Boolean);
@@ -470,10 +615,12 @@ Great things never come from comfort zones.</textarea>
     return { hi: quoteInputHi.value, en: quoteInput.value };
   }
 
+  function quoteWrap(t) { return t ? '“' + t + '”' : t; }
+
   function updateCard() {
     const pair = getActivePair();
-    quoteDisplay.textContent = pair.en;
-    quoteDisplayHi.textContent = pair.hi;
+    quoteDisplay.textContent = quoteWrap(pair.en);
+    quoteDisplayHi.textContent = quoteWrap(pair.hi);
     brandDisplay.textContent = brandInput.value;
     const base = parseInt(fontSize.value, 10);
     quoteDisplayHi.style.fontSize = (base + 2) + 'px';
@@ -504,8 +651,10 @@ Great things never come from comfort zones.</textarea>
   bgStyle.addEventListener('change', updateCard);
 
   window.addEventListener('resize', drawStars);
+  applySizeMode();
   drawStars();
   updateCard();
+  captionText.value = generateCaption();
 
   const downloadBtn = document.getElementById('downloadBtn');
   const statusMsg = document.getElementById('statusMsg');
@@ -534,11 +683,13 @@ Great things never come from comfort zones.</textarea>
       String(today.getDate()).padStart(2,'0');
     const words = slugify(text);
     const prefix = slideNum ? `slide-${slideNum}-` : '';
-    return `lumiora-dual-${dateStr}-${prefix}${words}.png`;
+    return `lumiora-dual-${sizeMode}-${dateStr}-${prefix}${words}.png`;
   }
 
   function captureCard() {
-    return html2canvas(card, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: null })
+    const rect = card.getBoundingClientRect();
+    const exportScale = sizeDims[sizeMode].w / rect.width;
+    return html2canvas(card, { scale: exportScale, useCORS: true, allowTaint: true, backgroundColor: null })
       .then(canvasOut => new Promise((resolve, reject) => {
         canvasOut.toBlob((blob) => {
           if (!blob) { reject(new Error('Image nahi ban payi')); return; }
@@ -599,8 +750,8 @@ Great things never come from comfort zones.</textarea>
     for (let i = 0; i < pairs.length; i++) {
       downloadBtn.textContent = `⏳ Slide ${i+1} / ${pairs.length} ban rahi hai...`;
       carouselProgress.textContent = `⏳ Slide ${i+1} / ${pairs.length} taiyar ho rahi hai...`;
-      quoteDisplayHi.textContent = pairs[i].hi;
-      quoteDisplay.textContent = pairs[i].en;
+      quoteDisplayHi.textContent = quoteWrap(pairs[i].hi);
+      quoteDisplay.textContent = quoteWrap(pairs[i].en);
       await new Promise(r => setTimeout(r, 500));
       try {
         const blob = await captureCard();
@@ -615,8 +766,8 @@ Great things never come from comfort zones.</textarea>
     downloadBtn.disabled = false;
     downloadBtn.textContent = originalBtnText;
     carouselProgress.textContent = `✅ ${pairs.length} slides download ho gayi. Agar sirf pehli ya kuch hi save hui hon to browser ne baaki block kiya hoga — address bar ke paas download icon par "Always allow" choose karke button dobara dabayein.`;
-    quoteDisplayHi.textContent = pairs[0].hi;
-    quoteDisplay.textContent = pairs[0].en;
+    quoteDisplayHi.textContent = quoteWrap(pairs[0].hi);
+    quoteDisplay.textContent = quoteWrap(pairs[0].en);
   }
 
   function startDownload() {

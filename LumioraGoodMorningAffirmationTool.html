@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta name="robots" content="noindex, nofollow">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumiora Weekly Affirmation Tool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FDF6F0;
+    --blush:#F3C6D3;
+    --peach:#F5A987;
+    --sage:#8FA998;
+    --plum:#3F2E3E;
+    --gold:#C9975B;
+    --panel:#FFFFFF;
+    --line:#EDE1D9;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:var(--cream);
+    color:var(--plum);
+    min-height:100vh;
+  }
+  header{
+    padding:28px 24px 20px;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#FFFDFB,var(--cream));
+  }
+  header h1{
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:30px;
+    margin:0 0 4px;
+    color:var(--plum);
+  }
+  header p{
+    margin:0;
+    font-size:14px;
+    color:#7A6B72;
+  }
+  .layout{
+    display:grid;
+    grid-template-columns:380px 1fr;
+    gap:0;
+    max-width:1280px;
+    margin:0 auto;
+    align-items:start;
+  }
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr;}
+  }
+  .panel{
+    padding:24px;
+  }
+  .card-box{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px;
+    margin-bottom:18px;
+  }
+  .card-box h2{
+    font-size:15px;
+    margin:0 0 12px;
+    color:var(--plum);
+    font-weight:600;
+  }
+  .day-nav{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .day-nav button{
+    flex:0 0 auto;
+    width:56px;
+    height:56px;
+    border-radius:14px;
+    border:1px solid var(--line);
+    background:var(--cream);
+    font-size:22px;
+    color:var(--plum);
+    cursor:pointer;
+  }
+  .day-nav button:active{ background:var(--blush); }
+  .day-nav input{
+    flex:1;
+    height:56px;
+    text-align:center;
+    font-size:20px;
+    font-weight:600;
+    border-radius:14px;
+    border:1px solid var(--line);
+    background:var(--cream);
+    color:var(--plum);
+  }
+  .search-box input{
+    width:100%;
+    height:52px;
+    padding:0 16px;
+    font-size:15px;
+    border-radius:14px;
+    border:1px solid var(--line);
+    background:var(--cream);
+    color:var(--plum);
+    margin-bottom:12px;
+  }
+  .quote-list{
+    max-height:340px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .quote-item{
+    text-align:left;
+    padding:14px 16px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:var(--cream);
+    cursor:pointer;
+    font-size:14px;
+    line-height:1.5;
+    color:var(--plum);
+  }
+  .quote-item:hover{ border-color:var(--gold); }
+  .quote-item.active{ background:var(--blush); border-color:var(--peach); }
+  .quote-item .day-tag{
+    display:inline-block;
+    font-size:11px;
+    font-weight:600;
+    color:#8A5A3A;
+    background:#FBEAD9;
+    border-radius:20px;
+    padding:2px 10px;
+    margin-bottom:6px;
+  }
+  label.field-label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:#7A6B72;
+    margin:10px 0 6px;
+  }
+  textarea{
+    width:100%;
+    min-height:64px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:var(--cream);
+    color:var(--plum);
+    padding:12px 14px;
+    font-size:14px;
+    font-family:'Poppins',sans-serif;
+    resize:vertical;
+  }
+  .lang-toggle{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .lang-toggle button{
+    padding:14px 8px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:var(--cream);
+    font-size:13px;
+    font-weight:600;
+    color:var(--plum);
+    cursor:pointer;
+  }
+  .lang-toggle button.active{
+    background:var(--sage);
+    color:#fff;
+    border-color:var(--sage);
+  }
+  .theme-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .theme-swatch{
+    height:64px;
+    border-radius:12px;
+    border:2px solid transparent;
+    cursor:pointer;
+    display:flex;
+    align-items:flex-end;
+    padding:8px;
+    font-size:12px;
+    font-weight:600;
+    color:#fff;
+    text-shadow:0 1px 3px rgba(0,0,0,.35);
+  }
+  .theme-swatch.active{ border-color:var(--plum); }
+  .morning-toggle{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 16px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:var(--cream);
+  }
+  .switch{
+    position:relative;
+    width:56px;
+    height:32px;
+    border-radius:20px;
+    background:#DAD0D6;
+    cursor:pointer;
+    flex:0 0 auto;
+  }
+  .switch.on{ background:var(--sage); }
+  .switch .knob{
+    position:absolute;
+    top:3px; left:3px;
+    width:26px;height:26px;
+    border-radius:50%;
+    background:#fff;
+    transition:left .15s ease;
+  }
+  .switch.on .knob{ left:27px; }
+  .preview-col{
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  #cardCanvas{
+    width:100%;
+    max-width:440px;
+    border-radius:18px;
+    box-shadow:0 6px 24px rgba(63,46,62,.15);
+  }
+  .action-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    width:100%;
+    max-width:440px;
+    margin-top:18px;
+  }
+  .action-row button{
+    height:58px;
+    border-radius:14px;
+    border:none;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .btn-download{ background:var(--plum); color:#fff; }
+  .btn-copy{ background:var(--gold); color:#fff; }
+  .btn-copy.copied{ background:var(--sage); }
+  .caption-preview{
+    width:100%;
+    max-width:440px;
+    margin-top:14px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+    font-size:13px;
+    color:#5B4A53;
+    white-space:pre-wrap;
+  }
+</style>
+</head>
+<body>
+
+<div id="lumiora-lock-overlay" style="position:fixed;inset:0;z-index:999999;background:#0b0e17;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;text-align:center;font-family:Arial,sans-serif;">
+  <div style="max-width:320px;width:100%;">
+    <p style="color:#fff;font-size:20px;margin-bottom:16px;">🔒 Password Daalein</p>
+    <input id="lumiora-lock-input" type="password" inputmode="text" autocomplete="off" style="width:100%;padding:16px;font-size:18px;border-radius:8px;border:1px solid #2a3150;margin-bottom:14px;text-align:center;box-sizing:border-box;" />
+    <button id="lumiora-lock-btn" style="width:100%;padding:16px;font-size:18px;border-radius:8px;border:none;background:#4a6cf7;color:#fff;cursor:pointer;">Unlock</button>
+    <p id="lumiora-lock-error" style="color:#ff6b6b;margin-top:12px;display:none;">Galat password, dobara try karein.</p>
+  </div>
+</div>
+<script>
+(function(){
+  var PASS = "Tcjsep26";
+  var overlay = document.getElementById('lumiora-lock-overlay');
+  if(localStorage.getItem('lumiora_unlocked') === 'yes'){
+    overlay.style.display = 'none';
+  }
+  function tryUnlock(){
+    var val = document.getElementById('lumiora-lock-input').value;
+    if(val === PASS){
+      localStorage.setItem('lumiora_unlocked','yes');
+      overlay.style.display = 'none';
+    } else {
+      document.getElementById('lumiora-lock-error').style.display = 'block';
+    }
+  }
+  document.getElementById('lumiora-lock-btn').addEventListener('click', tryUnlock);
+  document.getElementById('lumiora-lock-input').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); tryUnlock(); }
+  });
+})();
+</script>
+
+
+<header>
+  <h1>Lumiora Weekly Affirmation Tool</h1>
+  <p>Hindi • English • Spanish affirmation cards, ready in a tap</p>
+</header>
+
+<div class="layout">
+  <div class="panel">
+
+    <div class="card-box">
+      <h2>Din चुनें (1-30)</h2>
+      <div class="day-nav">
+        <button id="prevDay" aria-label="Previous day">&#8592;</button>
+        <input type="number" id="dayInput" min="1" max="30" value="1" inputmode="numeric">
+        <button id="nextDay" aria-label="Next day">&#8594;</button>
+      </div>
+      <div class="search-box">
+        <input type="text" id="searchBox" placeholder="Quote खोजें... (keyword type करें)">
+      </div>
+      <div class="quote-list" id="quoteList"></div>
+    </div>
+
+    <div class="card-box">
+      <h2>Text (edit कर सकते हैं)</h2>
+      <label class="field-label">Hindi</label>
+      <textarea id="hiText"></textarea>
+      <label class="field-label">English</label>
+      <textarea id="enText"></textarea>
+      <label class="field-label">Spanish</label>
+      <textarea id="esText"></textarea>
+    </div>
+
+    <div class="card-box">
+      <h2>Card पर कौन सी भाषा दिखे</h2>
+      <div class="lang-toggle">
+        <button data-lang="hi" class="active">Hindi</button>
+        <button data-lang="en">English</button>
+        <button data-lang="es">Spanish</button>
+        <button data-lang="hi-en">Hindi + English</button>
+        <button data-lang="en-es" style="grid-column: 1 / -1;">English + Spanish</button>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <h2>Good Morning फूल जोड़ें</h2>
+      <div class="morning-toggle">
+        <span>सुप्रभात / Good Morning greeting</span>
+        <div class="switch" id="morningSwitch"><div class="knob"></div></div>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <h2>Background Theme</h2>
+      <div class="theme-grid" id="themeGrid"></div>
+      <label class="field-label">Ya Apni Photo Upload Karein (background)</label>
+      <input type="file" id="bgImageUpload" accept="image/*" style="width:100%;height:52px;padding:0 16px;font-size:13px;border-radius:14px;border:1px solid var(--line);background:var(--cream);color:var(--plum);">
+      <button type="button" id="removeBgImageBtn" style="margin-top:8px;width:100%;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--cream);color:var(--plum);font-size:13px;font-weight:600;cursor:pointer;">❌ Photo Hatayein (Theme par wapas)</button>
+    </div>
+
+  </div>
+
+  <div class="preview-col">
+    <canvas id="cardCanvas" width="1080" height="1350"></canvas>
+    <div class="action-row">
+      <button class="btn-download" id="downloadBtn">Download PNG</button>
+      <button class="btn-copy" id="copyBtn">Copy Caption</button>
+    </div>
+    <div class="caption-preview" id="captionPreview"></div>
+  </div>
+</div>
+
+<script>
+const QUOTES = [
+{d:1,hi:"परिवार वही खजाना है जो समय के साथ और कीमती होता जाता है।",en:"Family is the treasure that only grows richer with time.",es:"La familia es el tesoro que se vuelve más valioso con el tiempo.",cap:"हर पल अनमोल है परिवार के साथ ❤️ #FamilyFirst #Lumiora #PricelessMoments"},
+{d:2,hi:"पुरानी तस्वीरें दिल की सबसे प्यारी यादें होती हैं।",en:"Old photographs are the heart's fondest memories.",es:"Las fotos antiguas son los recuerdos más queridos del corazón.",cap:"यादें कभी पुरानी नहीं होतीं 📸 #Memories #FamilyLove #Lumiora"},
+{d:3,hi:"जो साथ बूढ़ा होता है, वही असली साथ है।",en:"The bond that grows old together is the truest bond.",es:"El vínculo que envejece junto es el más verdadero.",cap:"साथ चलना ही सबसे बड़ी सफलता है 🙏 #TogetherForever #Lumiora"},
+{d:4,hi:"हर झुर्री में एक कहानी छुपी होती है।",en:"Every wrinkle hides a story worth telling.",es:"Cada arruga esconde una historia digna de contar.",cap:"हर चेहरे में एक किताब छुपी है 📖 #LifeStory #AgingGracefully #Lumiora"},
+{d:5,hi:"बच्चों की हँसी ही घर की सबसे बड़ी दौलत है।",en:"Children's laughter is a home's greatest wealth.",es:"La risa de los niños es la mayor riqueza de un hogar.",cap:"ये हँसी ही असली दौलत है 😄 #FamilyJoy #Lumiora"},
+{d:6,hi:"समय बीतता है, पर प्यार वहीं रहता है।",en:"Time passes, but love always stays.",es:"El tiempo pasa, pero el amor siempre permanece.",cap:"प्यार कभी पुराना नहीं होता ❤️ #TimelessLove #Lumiora"},
+{d:7,hi:"घर वो नहीं जो दीवारों से बनता है, घर वो है जो अपनों से बनता है।",en:"Home isn't built with walls, it's built with loved ones.",es:"El hogar no se construye con paredes, se construye con seres queridos.",cap:"घर मतलब अपने लोग 🏡 #HomeIsFamily #Lumiora"},
+{d:8,hi:"माता-पिता का साया सबसे बड़ा आशीर्वाद है।",en:"A parent's presence is life's greatest blessing.",es:"La presencia de los padres es la mayor bendición de la vida.",cap:"माता-पिता का साथ अनमोल है 🙏 #ParentsBlessing #Lumiora"},
+{d:9,hi:"हर पीढ़ी अपनी कहानी छोड़ जाती है।",en:"Every generation leaves behind its own story.",es:"Cada generación deja su propia historia.",cap:"कहानियाँ पीढ़ियों तक जीवित रहती हैं 📖 #GenerationsOfLove #Lumiora"},
+{d:10,hi:"जो बीत गया वो यादें बन जाता है, जो साथ है वो जिंदगी है।",en:"What's gone becomes memory; what remains is life itself.",es:"Lo que se fue se convierte en recuerdo; lo que queda es la vida misma.",cap:"आज को जी लीजिए, कल यादें बनेगी 🌸 #LiveTheMoment #Lumiora"},
+{d:11,hi:"परिवार की मुस्कान ही सबसे सुंदर तस्वीर है।",en:"A family's smile is the most beautiful picture of all.",es:"La sonrisa de una familia es la imagen más hermosa.",cap:"सबसे सुंदर तस्वीर - अपनों की मुस्कान 😊 #FamilyPortrait #Lumiora"},
+{d:12,hi:"उम्र बढ़ती है, पर रिश्तों की मिठास नहीं घटती।",en:"Age increases, but the sweetness of relationships never fades.",es:"La edad aumenta, pero la dulzura de las relaciones nunca se desvanece.",cap:"रिश्ते वक़्त के साथ और मीठे होते हैं 🍯 #Relationships #Lumiora"},
+{d:13,hi:"अपनों के साथ बिताया हर पल जिंदगी का असली सुख है।",en:"Every moment spent with loved ones is life's true happiness.",es:"Cada momento con seres queridos es la verdadera felicidad de la vida.",cap:"असली सुख अपनों के साथ है 🥰 #TrueHappiness #Lumiora"},
+{d:14,hi:"दादा-दादी की गोद दुनिया की सबसे सुरक्षित जगह है।",en:"A grandparent's lap is the safest place in the world.",es:"El regazo de los abuelos es el lugar más seguro del mundo.",cap:"दादा-दादी का प्यार अनमोल है 👴👵 #Grandparents #Lumiora"},
+{d:15,hi:"जिंदगी की सबसे अच्छी तस्वीरें कैमरे में नहीं, दिल में होती हैं।",en:"Life's best pictures aren't captured in cameras, but in the heart.",es:"Las mejores fotos de la vida no están en la cámara, sino en el corazón.",cap:"दिल में बसी तस्वीरें सबसे खूबसूरत होती हैं ❤️ #HeartfeltMemories #Lumiora"},
+{d:16,hi:"परिवार का साथ हर तूफान को झेलने की ताकत देता है।",en:"The support of family gives strength to weather every storm.",es:"El apoyo de la familia da fuerza para enfrentar cualquier tormenta.",cap:"परिवार है तो हर मुश्किल आसान है 💪 #FamilyStrength #Lumiora"},
+{d:17,hi:"हँसते-खेलते पल ही जिंदगी की असली पूँजी हैं।",en:"Moments of laughter and play are life's real riches.",es:"Los momentos de risa y juego son la verdadera riqueza de la vida.",cap:"हँसी ही सबसे बड़ी पूँजी है 😄 #PricelessMoments #Lumiora"},
+{d:18,hi:"जो अपनों के साथ जिया, वही जीवन सच में जिया।",en:"The life truly lived is the one spent with loved ones.",es:"La vida verdaderamente vivida es la que se pasa con seres queridos.",cap:"अपनों के साथ जीना ही असली जीना है 🌿 #LifeWithLove #Lumiora"},
+{d:19,hi:"बचपन की तस्वीरें बुढ़ापे में सबसे बड़ी मुस्कान देती हैं।",en:"Childhood photos bring the biggest smiles in old age.",es:"Las fotos de la infancia traen las sonrisas más grandes en la vejez.",cap:"बचपन की यादें हमेशा मुस्कुराने पर मजबूर करती हैं 😊 #ChildhoodMemories #Lumiora"},
+{d:20,hi:"हर सफर अधूरा है अगर अपनों का साथ न हो।",en:"Every journey feels incomplete without loved ones by your side.",es:"Todo viaje se siente incompleto sin seres queridos a tu lado.",cap:"सफर तभी पूरा है जब अपने साथ हों ✈️ #TravelWithFamily #Lumiora"},
+{d:21,hi:"वक़्त के हर पड़ाव पर परिवार ही सबसे बड़ा सहारा है।",en:"At every stage of life, family remains the greatest support.",es:"En cada etapa de la vida, la familia sigue siendo el mayor apoyo.",cap:"परिवार हर मोड़ पर साथ है 🤝 #FamilySupport #Lumiora"},
+{d:22,hi:"जो प्यार बचपन से मिला, वही बुढ़ापे तक साथ चलता है।",en:"The love received in childhood walks with you into old age.",es:"El amor recibido en la infancia te acompaña hasta la vejez.",cap:"बचपन का प्यार जीवन भर साथ रहता है ❤️ #EternalLove #Lumiora"},
+{d:23,hi:"हर पुरानी तस्वीर एक नई मुस्कान लेकर आती है।",en:"Every old photograph brings along a fresh smile.",es:"Cada foto antigua trae consigo una sonrisa nueva.",cap:"पुरानी तस्वीरें, नई मुस्कान 📷😊 #OldMemoriesNewSmiles #Lumiora"},
+{d:24,hi:"अपनों की यादें ही जीवन का सबसे बड़ा खजाना हैं।",en:"Memories of loved ones are life's greatest treasure.",es:"Los recuerdos de los seres queridos son el mayor tesoro de la vida.",cap:"यादें ही सबसे बड़ा खजाना हैं 💝 #TreasuredMemories #Lumiora"},
+{d:25,hi:"समय बदलता है, पर अपनों का साथ नहीं बदलता।",en:"Times change, but the bond with loved ones never does.",es:"Los tiempos cambian, pero el vínculo con los seres queridos nunca.",cap:"समय बदले, साथ नहीं बदलता 🙏 #UnchangingLove #Lumiora"},
+{d:26,hi:"हर उम्र में परिवार का साथ सबसे बड़ी नियामत है।",en:"Family's presence at every age is life's greatest gift.",es:"La presencia de la familia en cada edad es el mayor regalo.",cap:"हर उम्र में परिवार सबसे बड़ी नियामत 🎁 #GiftOfFamily #Lumiora"},
+{d:27,hi:"जो लम्हे साथ बीते, वही सबसे खूबसूरत यादें बनते हैं।",en:"The moments spent together become the most beautiful memories.",es:"Los momentos compartidos se convierten en los recuerdos más hermosos.",cap:"साथ बिताए पल सबसे खूबसूरत होते हैं ✨ #BeautifulMoments #Lumiora"},
+{d:28,hi:"अपनों की मुस्कान देखकर ही असली सुकून मिलता है।",en:"True peace comes only from seeing loved ones smile.",es:"La verdadera paz viene solo de ver sonreír a los seres queridos.",cap:"अपनों की मुस्कान ही असली सुकून है 😌 #InnerPeace #Lumiora"},
+{d:29,hi:"परिवार की जड़ें जितनी गहरी, जिंदगी उतनी मजबूत।",en:"The deeper the roots of family, the stronger life becomes.",es:"Cuanto más profundas las raíces de la familia, más fuerte es la vida.",cap:"जड़ें गहरी तो जिंदगी मजबूत 🌳 #StrongRoots #Lumiora"},
+{d:30,hi:"हर तस्वीर एक सफर है, हर सफर एक कहानी है।",en:"Every picture is a journey, every journey is a story.",es:"Cada foto es un viaje, cada viaje es una historia.",cap:"हर तस्वीर में छुपा है एक खूबसूरत सफर 📸✨ #PortraitsOfLife #Lumiora"}
+];
+
+const THEMES = [
+  {name:"Sunrise Blush", top:"#FBD3C7", bottom:"#F3A6A0", label:"#5B2E2A"},
+  {name:"Peach Glow", top:"#FCE0C8", bottom:"#F5A987", label:"#6E3A1E"},
+  {name:"Sage Morning", top:"#E7EFE2", bottom:"#AFC6A5", label:"#33452F"},
+  {name:"Lavender Dawn", top:"#EDE3F0", bottom:"#C9A9D9", label:"#4A2E52"}
+];
+
+let state = {
+  day: 1,
+  lang: "hi",
+  morning: false,
+  theme: 0
+};
+let customBgImage = null;
+
+const bgImageUpload = document.getElementById('bgImageUpload');
+const removeBgImageBtn = document.getElementById('removeBgImageBtn');
+
+const dayInput = document.getElementById('dayInput');
+const hiText = document.getElementById('hiText');
+const enText = document.getElementById('enText');
+const esText = document.getElementById('esText');
+const quoteList = document.getElementById('quoteList');
+const searchBox = document.getElementById('searchBox');
+const themeGrid = document.getElementById('themeGrid');
+const morningSwitch = document.getElementById('morningSwitch');
+const captionPreview = document.getElementById('captionPreview');
+const canvas = document.getElementById('cardCanvas');
+const ctx = canvas.getContext('2d');
+
+function renderQuoteList(filter){
+  quoteList.innerHTML = "";
+  const f = (filter||"").trim().toLowerCase();
+  QUOTES.forEach(q=>{
+    if(f && !(q.hi.includes(f) || q.en.toLowerCase().includes(f) || q.es.toLowerCase().includes(f))) return;
+    const item = document.createElement('button');
+    item.className = 'quote-item' + (q.d===state.day ? ' active':'');
+    item.innerHTML = '<span class="day-tag">Day '+q.d+'</span><br>'+q.en;
+    item.onclick = ()=>{ loadDay(q.d); };
+    quoteList.appendChild(item);
+  });
+}
+
+function loadDay(d){
+  const q = QUOTES.find(x=>x.d===d);
+  if(!q) return;
+  state.day = d;
+  dayInput.value = d;
+  hiText.value = q.hi;
+  enText.value = q.en;
+  esText.value = q.es;
+  captionPreview.textContent = q.cap;
+  renderQuoteList(searchBox.value);
+  draw();
+}
+
+function renderThemes(){
+  themeGrid.innerHTML = "";
+  THEMES.forEach((t,i)=>{
+    const sw = document.createElement('div');
+    sw.className = 'theme-swatch' + (i===state.theme?' active':'');
+    sw.style.background = 'linear-gradient(160deg,'+t.top+','+t.bottom+')';
+    sw.textContent = t.name;
+    sw.onclick = ()=>{ state.theme = i; customBgImage = null; bgImageUpload.value = ''; renderThemes(); draw(); };
+    themeGrid.appendChild(sw);
+  });
+}
+
+document.querySelectorAll('.lang-toggle button').forEach(btn=>{
+  btn.onclick = ()=>{
+    document.querySelectorAll('.lang-toggle button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.lang = btn.dataset.lang;
+    draw();
+  };
+});
+
+morningSwitch.onclick = ()=>{
+  state.morning = !state.morning;
+  morningSwitch.classList.toggle('on', state.morning);
+  draw();
+};
+
+document.getElementById('prevDay').onclick = ()=>{
+  let d = Math.max(1, state.day-1);
+  loadDay(d);
+};
+document.getElementById('nextDay').onclick = ()=>{
+  let d = Math.min(30, state.day+1);
+  loadDay(d);
+};
+dayInput.onchange = ()=>{
+  let d = parseInt(dayInput.value,10);
+  if(isNaN(d)) d=1;
+  d = Math.max(1, Math.min(30,d));
+  loadDay(d);
+};
+searchBox.oninput = ()=> renderQuoteList(searchBox.value);
+[hiText,enText,esText].forEach(t=> t.addEventListener('input', draw));
+
+bgImageUpload.addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    const img = new Image();
+    img.onload = ()=>{ customBgImage = img; draw(); };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+removeBgImageBtn.addEventListener('click', ()=>{
+  customBgImage = null;
+  bgImageUpload.value = '';
+  draw();
+});
+
+function drawImageCover(context, img, x, y, w, h){
+  const imgRatio = img.width / img.height;
+  const boxRatio = w / h;
+  let sx, sy, sw, sh;
+  if(imgRatio > boxRatio){
+    sh = img.height;
+    sw = sh * boxRatio;
+    sx = (img.width - sw)/2;
+    sy = 0;
+  } else {
+    sw = img.width;
+    sh = sw / boxRatio;
+    sx = 0;
+    sy = (img.height - sh)/2;
+  }
+  context.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+}
+
+function wrapText(context, text, x, y, maxWidth, lineHeight){
+  const words = text.split(' ');
+  let line = '';
+  let lines = [];
+  for(let n=0;n<words.length;n++){
+    const testLine = line + words[n] + ' ';
+    const metrics = context.measureText(testLine);
+    if(metrics.width > maxWidth && n > 0){
+      lines.push(line);
+      line = words[n] + ' ';
+    } else {
+      line = testLine;
+    }
+  }
+  lines.push(line);
+  const startY = y - ((lines.length-1)*lineHeight)/2;
+  lines.forEach((l,i)=>{
+    context.fillText(l.trim(), x, startY + i*lineHeight);
+  });
+  return lines.length;
+}
+
+function drawFlower(cx,cy,scale,petalColor,centerColor){
+  ctx.save();
+  ctx.translate(cx,cy);
+  ctx.scale(scale,scale);
+  for(let i=0;i<6;i++){
+    ctx.save();
+    ctx.rotate((Math.PI*2/6)*i);
+    ctx.beginPath();
+    ctx.ellipse(0,-26,16,26,0,0,Math.PI*2);
+    ctx.fillStyle = petalColor;
+    ctx.globalAlpha = 0.85;
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.beginPath();
+  ctx.arc(0,0,14,0,Math.PI*2);
+  ctx.fillStyle = centerColor;
+  ctx.globalAlpha = 1;
+  ctx.fill();
+  ctx.restore();
+}
+
+function draw(){
+  const W = canvas.width, H = canvas.height;
+  const theme = THEMES[state.theme];
+
+  if(customBgImage){
+    drawImageCover(ctx, customBgImage, 0, 0, W, H);
+    const overlay = ctx.createLinearGradient(0,0,0,H);
+    overlay.addColorStop(0, 'rgba(0,0,0,0.35)');
+    overlay.addColorStop(0.5, 'rgba(0,0,0,0.12)');
+    overlay.addColorStop(1, 'rgba(0,0,0,0.45)');
+    ctx.fillStyle = overlay;
+    ctx.fillRect(0,0,W,H);
+  } else {
+    const grad = ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0, theme.top);
+    grad.addColorStop(1, theme.bottom);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,W,H);
+
+    drawFlower(120,130,1.1,'#FFFFFF','#F7E8B0');
+    drawFlower(W-130,150,0.9,'#FFFFFF','#F7E8B0');
+    drawFlower(110,H-160,1.0,'#FFFFFF','#F7E8B0');
+    drawFlower(W-110,H-180,1.2,'#FFFFFF','#F7E8B0');
+  }
+
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.beginPath();
+  ctx.roundRect(70,H*0.30,W-140,H*0.42,28);
+  ctx.fill();
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = theme.label;
+
+  let topY = H*0.30 + 90;
+
+  if(state.morning){
+    ctx.font = "600 46px 'Tiro Devanagari Hindi', serif";
+    ctx.fillText('सुप्रभात', W/2, topY);
+    ctx.font = "500 26px 'Poppins', sans-serif";
+    ctx.fillText('Good Morning', W/2, topY+46);
+    topY += 110;
+  }
+
+  const centerY = state.morning ? H*0.30 + 260 : H*0.30 + 190;
+
+  ctx.font = "500 44px 'Tiro Devanagari Hindi', serif";
+  let text1 = "", text2 = "";
+  if(state.lang === 'hi'){ text1 = hiText.value; }
+  else if(state.lang === 'en'){ ctx.font = "600 48px 'Poppins', sans-serif"; text1 = enText.value; }
+  else if(state.lang === 'es'){ ctx.font = "600 48px 'Poppins', sans-serif"; text1 = esText.value; }
+  else if(state.lang === 'hi-en'){ text1 = hiText.value; text2 = enText.value; }
+  else if(state.lang === 'en-es'){ ctx.font = "600 48px 'Poppins', sans-serif"; text1 = enText.value; text2 = esText.value; }
+
+  const isDual = (state.lang === 'hi-en' || state.lang === 'en-es');
+  if(isDual){
+    const l1 = wrapText(ctx, text1, W/2, centerY-40, W-220, 58);
+    ctx.font = "500 34px 'Poppins', sans-serif";
+    ctx.fillStyle = '#6b5a63';
+    wrapText(ctx, text2, W/2, centerY + (l1*29) + 70, W-260, 46);
+  } else {
+    wrapText(ctx, text1, W/2, centerY, W-220, 62);
+  }
+
+  ctx.font = "600 30px 'Poppins', sans-serif";
+  if(customBgImage){
+    ctx.fillStyle = '#FFFFFF';
+    ctx.shadowColor = 'rgba(0,0,0,0.55)';
+    ctx.shadowBlur = 8;
+  } else {
+    ctx.fillStyle = theme.label;
+    ctx.shadowBlur = 0;
+  }
+  ctx.textAlign = 'center';
+  ctx.fillText('Lumiora', W/2, H-70);
+  ctx.shadowBlur = 0;
+}
+
+document.getElementById('downloadBtn').onclick = ()=>{
+  const link = document.createElement('a');
+  const dayNum = String(state.day).padStart(2,'0');
+  link.download = 'Lumiora_Day'+dayNum+'.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+};
+
+document.getElementById('copyBtn').onclick = ()=>{
+  const btn = document.getElementById('copyBtn');
+  navigator.clipboard.writeText(captionPreview.textContent).then(()=>{
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='Copy Caption'; btn.classList.remove('copied'); }, 1500);
+  });
+};
+
+renderThemes();
+loadDay(1);
+
+document.fonts.ready.then(draw);
+</script>
+</body>
+</html>
