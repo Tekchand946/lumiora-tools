@@ -225,6 +225,10 @@
         <button class="action secondary" id="previewBtn">Preview (loop)</button>
         <button class="action" id="downloadBtn">Download Video</button>
       </div>
+      <div class="btn-row">
+        <button type="button" class="action secondary" id="listenBtn">🎧 Sunein (Preview)</button>
+      </div>
+      <p class="hint">Ye sirf aapke liye hai, banate waqt sunne ke liye — ye awaaz downloaded video mein record nahi hoti (browser ki apni awaaz video mein save nahi ho sakti).</p>
       <div class="status" id="status"></div>
       <p class="hint">Download दबाने पर video असली समय में record होती है (जितनी लंबी video, उतना समय लगेगा) — बीच में tab बंद न करें। iPhone/Mac पर तैयार होते ही सीधे Share sheet खुल जाएगा, जिसमें "Save Video" दबाकर एक ही टैप में Photos में save हो जाएगी (Files app में ढूंढने की ज़रूरत नहीं) — या वहीं से WhatsApp/Instagram पर सीधे भेज भी सकते हैं। अगर Share sheet न खुले तो file अपने आप Downloads folder में save हो जाएगी।</p>
 
@@ -880,6 +884,32 @@
       }
     }
     requestAnimationFrame(recLoop);
+  });
+
+  // ---- free "Listen" preview using the browser's own voice (works only inside the tool, not recordable into the video) ----
+  var listenBtn = document.getElementById('listenBtn');
+  var isSpeaking = false;
+  listenBtn.addEventListener('click', function () {
+    if (!('speechSynthesis' in window)) {
+      alert('Maaf kijiye, is browser mein awaaz padhne ka feature nahi hai.');
+      return;
+    }
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      isSpeaking = false;
+      listenBtn.textContent = '🎧 Sunein (Preview)';
+      return;
+    }
+    var bodyLines = bodyInput.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+    var text = [titleInput.value.trim()].concat(bodyLines).filter(Boolean).join('. ');
+    if (!text) return;
+    var utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'hi-IN';
+    utter.onend = function () { isSpeaking = false; listenBtn.textContent = '🎧 Sunein (Preview)'; };
+    utter.onerror = function () { isSpeaking = false; listenBtn.textContent = '🎧 Sunein (Preview)'; };
+    window.speechSynthesis.speak(utter);
+    isSpeaking = true;
+    listenBtn.textContent = '⏹ Rokein';
   });
 
   // initial static render once fonts are ready

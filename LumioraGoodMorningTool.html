@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta name="robots" content="noindex, nofollow">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumiora Good Morning Wishes</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(180deg, #1a0f08 0%, #2e1710 100%);
+    color: #f3ead9;
+    min-height: 100vh;
+    padding: 16px;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    text-align: center;
+    color: #e8c675;
+    margin: 8px 0 2px;
+    letter-spacing: 0.5px;
+  }
+  .sub {
+    text-align: center;
+    color: #b9b2a0;
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+  .day-tabs {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    max-width: 1000px;
+    margin: 0 auto 18px;
+  }
+  .day-tab {
+    padding: 14px 4px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    background: #2a1a12;
+    border: 2px solid #2c3252;
+    border-radius: 10px;
+    color: #cfc9b8;
+    cursor: pointer;
+    min-height: 48px;
+  }
+  .day-tab.active {
+    background: #e8c675;
+    color: #2e1710;
+    border-color: #e8c675;
+  }
+  .layout {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+  .panel {
+    background: #171b2e;
+    border: 1px solid #2c3252;
+    border-radius: 14px;
+    padding: 18px;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    color: #d8c9a3;
+    margin: 14px 0 6px;
+    font-weight: 600;
+  }
+  label:first-of-type { margin-top: 0; }
+  input[type=text], textarea, select, input[type=number] {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 2px solid #2c3252;
+    background: #0f1223;
+    color: #f3ead9;
+    font-family: 'Poppins', sans-serif;
+  }
+  textarea { resize: vertical; min-height: 70px; }
+  .lang-tabs {
+    display: flex;
+    gap: 6px;
+  }
+  .lang-tab {
+    flex: 1;
+    padding: 12px 4px;
+    text-align: center;
+    background: #0f1223;
+    border: 2px solid #2c3252;
+    border-radius: 8px;
+    color: #cfc9b8;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .lang-tab.active {
+    background: #ff8b5e;
+    border-color: #ff8b5e;
+    color: #fff;
+  }
+  .bg-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  input[type=file] {
+    width: 100%;
+    padding: 10px;
+    font-size: 13px;
+    border-radius: 8px;
+    border: 2px solid #2c3252;
+    background: #0f1223;
+    color: #cfc9b8;
+  }
+  .bg-thumb {
+    height: 70px;
+    border-radius: 8px;
+    border: 3px solid transparent;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+  }
+  .bg-thumb.active { border-color: #e8c675; }
+  .size-toggle {
+    display: flex;
+    gap: 8px;
+  }
+  .size-btn {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    background: #0f1223;
+    border: 2px solid #2c3252;
+    border-radius: 8px;
+    color: #cfc9b8;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .size-btn.active { background: #e8c675; color: #2e1710; border-color: #e8c675; }
+  .num-row { display: flex; gap: 10px; }
+  .num-row > div { flex: 1; }
+  canvas {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid #2c3252;
+    display: block;
+  }
+  .btn {
+    width: 100%;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    margin-top: 12px;
+    min-height: 52px;
+  }
+  .btn-primary { background: #e8c675; color: #2e1710; }
+  .btn-secondary { background: #ff8b5e; color: #fff; }
+  .btn-outline { background: transparent; color: #e8c675; border: 2px solid #e8c675; }
+  .status {
+    text-align: center;
+    font-size: 13px;
+    color: #b9b2a0;
+    margin-top: 8px;
+    min-height: 18px;
+  }
+  .caption-box {
+    background: #0f1223;
+    border: 2px solid #2c3252;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 13px;
+    color: #d8c9a3;
+    white-space: pre-wrap;
+    margin-top: 8px;
+    max-height: 160px;
+    overflow-y: auto;
+  }
+</style>
+</head>
+<body>
+
+<div id="lumiora-lock-overlay" style="position:fixed;inset:0;z-index:999999;background:#0b0e17;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;text-align:center;font-family:Arial,sans-serif;">
+  <div style="max-width:320px;width:100%;">
+    <p style="color:#fff;font-size:20px;margin-bottom:16px;">🔒 Password Daalein</p>
+    <input id="lumiora-lock-input" type="password" inputmode="text" autocomplete="off" style="width:100%;padding:16px;font-size:18px;border-radius:8px;border:1px solid #2a3150;margin-bottom:14px;text-align:center;box-sizing:border-box;" />
+    <button id="lumiora-lock-btn" style="width:100%;padding:16px;font-size:18px;border-radius:8px;border:none;background:#4a6cf7;color:#fff;cursor:pointer;">Unlock</button>
+    <p id="lumiora-lock-error" style="color:#ff6b6b;margin-top:12px;display:none;">Galat password, dobara try karein.</p>
+  </div>
+</div>
+<script>
+(function(){
+  var PASS = "Tcjsep26";
+  var overlay = document.getElementById('lumiora-lock-overlay');
+  if(localStorage.getItem('lumiora_unlocked') === 'yes'){
+    overlay.style.display = 'none';
+  }
+  function tryUnlock(){
+    var val = document.getElementById('lumiora-lock-input').value;
+    if(val === PASS){
+      localStorage.setItem('lumiora_unlocked','yes');
+      overlay.style.display = 'none';
+    } else {
+      document.getElementById('lumiora-lock-error').style.display = 'block';
+    }
+  }
+  document.getElementById('lumiora-lock-btn').addEventListener('click', tryUnlock);
+  document.getElementById('lumiora-lock-input').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); tryUnlock(); }
+  });
+})();
+</script>
+
+
+<h1>Lumiora — Good Morning Wishes</h1>
+<p class="sub">7 trilingual "Good Morning" cards · Cosmic silhouette style · Post any day</p>
+
+<div style="max-width:1000px;margin:0 auto 18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;">
+  <label style="margin:0;">Week:</label>
+  <select id="weekSelect" style="padding:12px;font-size:15px;border-radius:8px;border:2px solid #2c3252;background:#0f1223;color:#f3ead9;min-height:44px;min-width:140px;"></select>
+  <button id="newWeekBtn" style="padding:12px 18px;background:#ff8b5e;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">+ New week</button>
+  <button id="renameWeekBtn" style="padding:12px 18px;background:#0f1223;color:#e8c675;border:2px solid #2c3252;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Rename</button>
+  <button id="deleteWeekBtn" style="padding:12px 18px;background:#0f1223;color:#e07a7a;border:2px solid #2c3252;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Delete week</button>
+  <button id="pasteWeekBtn" style="padding:12px 18px;background:#0f1223;color:#ff9eb5;border:2px solid #ff9eb5;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">📋 Paste full week</button>
+</div>
+
+<div id="pasteWeekPanel" style="display:none;max-width:1000px;margin:0 auto 18px;background:#0f1223;border:2px solid #ff9eb5;border-radius:10px;padding:16px;">
+  <p style="margin:0 0 8px;font-size:14px;color:#d8c9a3;">Poori week ek saath yahan paste karein — har din ek line mein, is format mein (Claude se milne wali table isi format mein hogi):</p>
+  <p style="margin:0 0 10px;font-size:13px;color:#8f8a7c;font-family:monospace;">Card1 | Theme | Hindi quote | English quote | Spanish quote</p>
+  <textarea id="pasteWeekInput" style="min-height:160px;width:100%;" placeholder="Card1 | Courage | साहस वह है... | Bravery is doing... | La valentia es...
+Card2 | Patience | ...
+..."></textarea>
+  <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+    <button id="fillWeekBtn" style="padding:12px 18px;background:#ff8b5e;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Sabhi 7 din bhar dein</button>
+    <button id="cancelPasteWeekBtn" style="padding:12px 18px;background:transparent;color:#b9b2a0;border:2px solid #2c3252;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Cancel</button>
+  </div>
+</div>
+
+<div class="day-tabs" id="dayTabs"></div>
+
+<div class="layout">
+  <div class="panel">
+    <label>Theme (day headline)</label>
+    <input type="text" id="themeInput" placeholder="e.g. New Beginnings">
+
+    <label>Language for this quote</label>
+    <div class="lang-tabs" id="langTabs">
+      <div class="lang-tab" data-lang="hi">हिंदी</div>
+      <div class="lang-tab" data-lang="en">English</div>
+      <div class="lang-tab" data-lang="es">Español</div>
+    </div>
+    <div class="lang-tabs" id="langTabsPair" style="margin-top:6px;">
+      <div class="lang-tab" data-lang="hi_en">हिंदी + English</div>
+      <div class="lang-tab" data-lang="en_es">English + Español</div>
+    </div>
+
+    <div id="singleQuoteWrap">
+      <label>Quote text</label>
+      <textarea id="quoteInput"></textarea>
+    </div>
+    <div id="dualQuoteWrap" style="display:none;">
+      <label id="dualLabel1">Line 1</label>
+      <textarea id="quoteInput1"></textarea>
+      <label id="dualLabel2">Line 2</label>
+      <textarea id="quoteInput2"></textarea>
+    </div>
+
+    <label>Background style</label>
+    <div class="bg-grid" id="bgGrid"></div>
+    <button id="applyBgAllBtn" style="margin-top:10px;width:100%;padding:12px;background:transparent;color:#e8c675;border:2px solid #e8c675;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">Apply this background to all 7 days</button>
+    <button id="rotateBgBtn" style="margin-top:8px;width:100%;padding:12px;background:transparent;color:#ff9eb5;border:2px solid #ff9eb5;border-radius:8px;font-weight:600;cursor:pointer;min-height:44px;">🎨 Rotate backgrounds across all 7 days</button>
+
+    <label>Ya apni photo upload karein (is din ke liye)</label>
+    <input type="file" id="customBgUpload" accept="image/*">
+    <button class="btn btn-outline" id="removeCustomBg" style="margin-top:8px;">Photo hataayein (preset background par wapas jaayein)</button>
+
+    <label>प्रोफाइल/अवतार फ़ोटो जोड़ें (Ring ke andar, sabhi 7 dinon par, optional)</label>
+    <input type="file" id="avatarInput" accept="image/*">
+    <button class="btn btn-outline" id="avatarClearBtn" style="margin-top:8px; display:none;">Avatar हटाएं</button>
+    <p style="font-size:12px;color:#b9b2a0;margin-top:6px;">Top par gol ring ke andar dikhega — sabhi 7 cards aur zip download mein bhi shaamil hoga.</p>
+
+    <label>Background Music जोड़ें (optional, MP3/M4A)</label>
+    <input type="file" id="bgAudioInput" accept="audio/*">
+    <button class="btn btn-outline" id="bgAudioClearBtn" style="margin-top:8px; display:none;">Music हटाएं</button>
+    <p id="bgAudioHint" style="display:none; font-size:12px;color:#b9b2a0;margin-top:6px;">Ye sirf tool mein kaam karte waqt sunne ke liye hai — downloaded PNG/zip mein music nahi judega.</p>
+    <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+      <button type="button" id="musicToggleBtn" style="display:none; width:auto; padding:10px 16px; border-radius:8px; border:2px solid #2c3252; background:#0f1223; color:#f3ead9; cursor:pointer; font-size:18px;">🎵</button>
+      <input type="range" id="bgVolumeInput" min="0" max="100" value="70" style="flex:1; display:none;">
+      <span id="bgVolumeVal" style="font-size:12px; color:#b9b2a0; display:none;">70%</span>
+    </div>
+
+    <label>Card size</label>
+    <div class="size-toggle">
+      <div class="size-btn active" data-size="post">Post (1080×1350) — for Facebook feed</div>
+      <div class="size-btn" data-size="reel">Reel (1080×1920) — for Reels/Stories only</div>
+    </div>
+
+    <label>Theme text colour</label>
+    <div class="size-toggle" id="colorToggle">
+      <div class="size-btn active" data-color="white">White</div>
+      <div class="size-btn" data-color="golden">Golden</div>
+      <div class="size-btn" data-color="black">Black</div>
+    </div>
+    <p style="font-size:13px;color:#b9b2a0;margin-top:8px;">Quote/Line text ka rang ab bhasha ke hisaab se apne aap tay hota hai — हिंदी = Golden, English = White, Español = Teal — taaki dono lines turant alag pehchaani ja sakein.</p>
+
+    <label>Text sizing</label>
+    <div class="num-row">
+      <div>
+        <label style="margin-top:0">Theme size (px)</label>
+        <input type="number" id="themeSize" value="60" min="24" max="90">
+      </div>
+      <div>
+        <label style="margin-top:0">Quote size (px)</label>
+        <input type="number" id="quoteSize" value="75" min="24" max="90">
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-outline" id="listenBtn" style="margin-top:10px;">🎧 Sunein (Preview)</button>
+    <p style="font-size:12px;color:#b9b2a0;margin-top:6px;">Ye sirf aapke liye hai, banate waqt sunne ke liye — Facebook post mein ye button nahi jaayega.</p>
+
+    <label>Facebook caption (auto-generated, editable)</label>
+    <textarea id="captionInput" style="min-height:110px;"></textarea>
+  </div>
+
+  <div class="panel">
+    <canvas id="cardCanvas"></canvas>
+    <button class="btn btn-primary" id="downloadOne">Download this card</button>
+    <button class="btn btn-secondary" id="downloadAll">Download all 7 (zip)</button>
+    <button class="btn btn-outline" id="resetDay">Reset this day to default</button>
+    <div class="status" id="status"></div>
+
+    <div style="margin-top:18px; border-top:2px solid #e8c675; padding-top:16px;">
+      <label>🗣️ AI Awaaz / Auto-Narration (Google Cloud TTS)</label>
+      <p style="font-size:12px;opacity:.75;">Is din ka theme + quote AI khud bolke narration bana dega, jo Reel Video mein music ki jagah (ya uske saath) jud jaata hai.</p>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:8px;">
+        <input type="password" id="ttsApiKeyInput" placeholder="Google Cloud TTS API Key" style="flex:1; min-width:180px; padding:10px; border-radius:8px; border:2px solid #e8c675; background:transparent; color:inherit;">
+        <button type="button" id="ttsSaveKeyBtn" class="btn btn-outline" style="width:auto; padding:10px 14px; font-size:13px;">Save Key</button>
+      </div>
+      <p style="font-size:12px;opacity:.75;">Key sirf isi browser mein save hoti hai, file/GitHub mein kabhi nahi jaati.</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+        <div style="flex:1; min-width:140px;">
+          <label style="font-size:12px;">Hindi Voice</label>
+          <select id="ttsHiVoice" style="width:100%;">
+            <option value="hi-IN-Standard-A">Standard A (Female)</option>
+            <option value="hi-IN-Standard-D">Standard D (Female)</option>
+            <option value="hi-IN-Standard-B">Standard B (Male)</option>
+            <option value="hi-IN-Wavenet-A">Wavenet A (behtar)</option>
+          </select>
+        </div>
+        <div style="flex:1; min-width:140px;">
+          <label style="font-size:12px;">English Voice</label>
+          <select id="ttsEnVoice" style="width:100%;">
+            <option value="en-IN-Standard-A">en-IN Standard A (F)</option>
+            <option value="en-US-Standard-C">en-US Standard C (F)</option>
+            <option value="en-US-Standard-D">en-US Standard D (M)</option>
+          </select>
+        </div>
+        <div style="flex:1; min-width:140px;">
+          <label style="font-size:12px;">Spanish Voice</label>
+          <select id="ttsEsVoice" style="width:100%;">
+            <option value="es-ES-Standard-A">es-ES Standard A (F)</option>
+            <option value="es-US-Standard-A">es-US Standard A (F)</option>
+            <option value="es-US-Standard-B">es-US Standard B (M)</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:10px;">
+        <button type="button" id="narrationBtn" class="btn btn-primary" style="width:auto;">🎙️ AI Narration Banayein</button>
+        <button type="button" id="narrationToggleBtn" class="btn btn-outline" style="display:none; width:auto; padding:10px 16px; font-size:20px; border-radius:50%;">▶️</button>
+      </div>
+      <div id="narrationStatus" style="font-size:12px;opacity:.75; margin-top:6px;"></div>
+
+      <button type="button" id="videoBtn" class="btn btn-primary" style="margin-top:14px; width:100%; background:linear-gradient(135deg, #ff8b5e, #e8c675); color:#2e1710;">🎬 Reel Video Banayein (~10 sec)</button>
+      <p style="font-size:12px;opacity:.75;">Ken-Burns zoom ke saath live reel banegi (is din ke liye, 1080×1920) — background music ya AI narration lagayi hai to wo bhi judegi.</p>
+      <canvas id="videoCanvas" style="display:none;"></canvas>
+      <video id="videoPreview" controls playsinline style="display:none; width:100%; margin:10px auto 0; border-radius:8px; background:#000;"></video>
+      <button type="button" id="convertMp4Btn" class="btn" style="display:none; width:100%; background:linear-gradient(135deg, #2ecc71, #1a8f4c); color:#06210f;">📱 Mobile ke liye MP4 Banayein</button>
+      <p style="font-size:12px;opacity:.75;" id="convertMp4Hint"></p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const DAYS = ["Card1","Card2","Card3","Card4","Card5","Card6","Card7"];
+
+function greetingFor(lang) {
+  if (lang === "hi" || lang === "hi_en") return "सुप्रभात";
+  if (lang === "es") return "Buenos Días";
+  return "Good Morning";
+}
+
+const PAIR_MAP = {
+  hi_en: ["hi", "en"],
+  en_es: ["en", "es"]
+};
+const PAIR_LABELS = {
+  hi_en: ["हिंदी", "English"],
+  en_es: ["English", "Español"]
+};
+
+const DEFAULTS = [
+  {
+    theme: "New Light",
+    hi: "हर सुबह सूरज के साथ एक नई उम्मीद भी उगती है, सुप्रभात!",
+    en: "Every morning the sun rises with a new hope — good morning!",
+    es: "Cada mañana el sol sale con una nueva esperanza, ¡buenos dias!",
+    bg: 0
+  },
+  {
+    theme: "Fresh Start",
+    hi: "आज का दिन कोरा कागज़ है, इसे मुस्कान से भरें। सुप्रभात!",
+    en: "Today is a blank page, fill it with a smile. Good morning!",
+    es: "Hoy es una hoja en blanco, llenala con una sonrisa. ¡Buenos dias!",
+    bg: 1
+  },
+  {
+    theme: "Blessings",
+    hi: "आपकी सुबह शांति और आशीर्वाद से भरी रहे। सुप्रभात!",
+    en: "May your morning be filled with peace and blessings. Good morning!",
+    es: "Que tu mañana este llena de paz y bendiciones. ¡Buenos dias!",
+    bg: 2
+  },
+  {
+    theme: "Energy",
+    hi: "नई ऊर्जा के साथ उठें, आज का दिन आपका इंतज़ार कर रहा है। सुप्रभात!",
+    en: "Rise with fresh energy, today is waiting for you. Good morning!",
+    es: "Levantate con energia renovada, hoy te esta esperando. ¡Buenos dias!",
+    bg: 3
+  },
+  {
+    theme: "Gratitude",
+    hi: "आज की सुबह के लिए धन्यवाद कहें, यही सबसे बड़ा उपहार है। सुप्रभात!",
+    en: "Say thank you for this morning, it is the simplest gift. Good morning!",
+    es: "Da gracias por esta mañana, es el regalo mas simple. ¡Buenos dias!",
+    bg: 4
+  },
+  {
+    theme: "Calm Heart",
+    hi: "धीमी शुरुआत भी उतनी ही खूबसूरत होती है। सुप्रभात!",
+    en: "A slow start can be just as beautiful. Good morning!",
+    es: "Un comienzo lento tambien puede ser hermoso. ¡Buenos dias!",
+    bg: 5
+  },
+  {
+    theme: "Sunday Grace",
+    hi: "आज थोड़ा रुकें, गहरी सांस लें और सुबह को महसूस करें। सुप्रभात!",
+    en: "Pause a little today, breathe deep, and feel the morning. Good morning!",
+    es: "Haz una pausa hoy, respira profundo y siente la mañana. ¡Buenos dias!",
+    bg: 6
+  }
+];
+
+const BACKGROUNDS = [
+  { name: "Golden Sunrise", url: "https://images.pexels.com/photos/146231/pexels-photo-146231.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Misty Morning Hills", url: "https://images.pexels.com/photos/30923399/pexels-photo-30923399.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Sunrise Over Water", url: "https://images.pexels.com/photos/8720528/pexels-photo-8720528.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Dawn Silhouette", url: "https://images.pexels.com/photos/29911779/pexels-photo-29911779.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Morning Light Rays", url: "https://images.pexels.com/photos/12404761/pexels-photo-12404761.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Soft Pink Dawn", url: "https://images.pexels.com/photos/34742289/pexels-photo-34742289.jpeg?auto=compress&cs=tinysrgb&w=1080" },
+  { name: "Sunrise Gradient (no photo)", url: null }
+];
+
+function freshWeekState() {
+  return DEFAULTS.map((d, i) => ({
+    theme: d.theme,
+    hi: d.hi, en: d.en, es: d.es,
+    bg: d.bg,
+    themeSize: 60,
+    quoteSize: 75,
+    size: "post",
+    textColor: "white"
+  }));
+}
+
+function buildCaption(theme, quoteEn) {
+  return quoteEn + "\n\n#Lumiora #GoodMorning #" + theme.replace(/\s+/g,"") + " #GoodMorningWishes #PositiveVibes #Blessings #TrilingualQuotes";
+}
+
+const STORAGE_KEY = "lumiora_good_morning_weeks_v1";
+const CURRENT_KEY = "lumiora_good_morning_current_week_v1";
+
+function loadWeeksStore() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return null;
+}
+
+function saveWeeksStore() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(weeksStore));
+    localStorage.setItem(CURRENT_KEY, currentWeekName);
+  } catch (e) {}
+}
+
+function saveCurrentWeek() {
+  weeksStore[currentWeekName] = state;
+  saveWeeksStore();
+}
+
+function nextWeekName() {
+  let n = 1;
+  while (weeksStore["Week " + n]) n++;
+  return "Week " + n;
+}
+
+let weeksStore = loadWeeksStore();
+if (!weeksStore || Object.keys(weeksStore).length === 0) {
+  weeksStore = { "Week 1": freshWeekState() };
+}
+
+let currentWeekName = null;
+try { currentWeekName = localStorage.getItem(CURRENT_KEY); } catch (e) {}
+if (!currentWeekName || !weeksStore[currentWeekName]) {
+  currentWeekName = Object.keys(weeksStore)[0];
+}
+
+let state = weeksStore[currentWeekName];
+let activeDay = 0;
+let activeLang = "en";
+let avatarPhoto = null; // global across all 7 days
+
+const dayTabsEl = document.getElementById("dayTabs");
+const langTabsEl = document.getElementById("langTabs");
+const langTabsPairEl = document.getElementById("langTabsPair");
+const bgGridEl = document.getElementById("bgGrid");
+const themeInput = document.getElementById("themeInput");
+const quoteInput = document.getElementById("quoteInput");
+const singleQuoteWrap = document.getElementById("singleQuoteWrap");
+const dualQuoteWrap = document.getElementById("dualQuoteWrap");
+const quoteInput1 = document.getElementById("quoteInput1");
+const quoteInput2 = document.getElementById("quoteInput2");
+const dualLabel1 = document.getElementById("dualLabel1");
+const dualLabel2 = document.getElementById("dualLabel2");
+const captionInput = document.getElementById("captionInput");
+const themeSizeInput = document.getElementById("themeSize");
+const quoteSizeInput = document.getElementById("quoteSize");
+const customBgUpload = document.getElementById("customBgUpload");
+const removeCustomBg = document.getElementById("removeCustomBg");
+const statusEl = document.getElementById("status");
+const canvas = document.getElementById("cardCanvas");
+const ctx = canvas.getContext("2d");
+
+function renderDayTabs() {
+  dayTabsEl.innerHTML = "";
+  DAYS.forEach((d, i) => {
+    const el = document.createElement("div");
+    el.className = "day-tab" + (i === activeDay ? " active" : "");
+    el.textContent = d;
+    el.onclick = () => { activeDay = i; syncControlsFromState(); drawCard(); };
+    dayTabsEl.appendChild(el);
+  });
+}
+
+function renderLangTabs() {
+  [...langTabsEl.children].forEach(el => {
+    el.classList.toggle("active", el.dataset.lang === activeLang);
+    el.onclick = () => { activeLang = el.dataset.lang; syncControlsFromState(); };
+  });
+  [...langTabsPairEl.children].forEach(el => {
+    el.classList.toggle("active", el.dataset.lang === activeLang);
+    el.onclick = () => { activeLang = el.dataset.lang; syncControlsFromState(); };
+  });
+}
+
+function captionKeyFor(lang) { return "caption_" + lang; }
+
+function getCaptionFor(day, lang) {
+  const key = captionKeyFor(lang);
+  if (!day[key]) {
+    const baseQuote = PAIR_MAP[lang] ? day.en : day[lang];
+    day[key] = buildCaption(day.theme, baseQuote);
+  }
+  return day[key];
+}
+
+function renderBgGrid() {
+  bgGridEl.innerHTML = "";
+  BACKGROUNDS.forEach((b, i) => {
+    const el = document.createElement("div");
+    el.className = "bg-thumb" + (state[activeDay].bg === i ? " active" : "");
+    el.style.background = b.url ? `url(${b.url})` : "linear-gradient(160deg,#ff9a56,#ff5e78)";
+    el.style.backgroundSize = "cover";
+    el.title = b.name;
+    el.onclick = () => { state[activeDay].bg = i; renderBgGrid(); drawCard(); };
+    bgGridEl.appendChild(el);
+  });
+}
+
+function syncControlsFromState() {
+  renderDayTabs();
+  renderLangTabs();
+  renderBgGrid();
+  const d = state[activeDay];
+  themeInput.value = d.theme;
+
+  if (PAIR_MAP[activeLang]) {
+    const [l1, l2] = PAIR_MAP[activeLang];
+    const [lbl1, lbl2] = PAIR_LABELS[activeLang];
+    singleQuoteWrap.style.display = "none";
+    dualQuoteWrap.style.display = "block";
+    dualLabel1.textContent = "Line 1 (" + lbl1 + ")";
+    dualLabel2.textContent = "Line 2 (" + lbl2 + ")";
+    quoteInput1.value = d[l1];
+    quoteInput2.value = d[l2];
+  } else {
+    singleQuoteWrap.style.display = "block";
+    dualQuoteWrap.style.display = "none";
+    quoteInput.value = d[activeLang];
+  }
+
+  captionInput.value = getCaptionFor(d, activeLang);
+  themeSizeInput.value = d.themeSize;
+  quoteSizeInput.value = d.quoteSize;
+  customBgUpload.value = "";
+  statusEl.textContent = d.customBg ? (DAYS[activeDay] + " ke liye custom photo lagi hui hai.") : "";
+  [...document.querySelectorAll(".size-btn[data-size]")].forEach(b => {
+    b.classList.toggle("active", b.dataset.size === d.size);
+  });
+  [...document.querySelectorAll(".size-btn[data-color]")].forEach(b => {
+    b.classList.toggle("active", b.dataset.color === (d.textColor || "white"));
+  });
+  drawCard();
+}
+
+themeInput.addEventListener("input", () => {
+  state[activeDay].theme = themeInput.value;
+  ["hi","en","es"].forEach(l => { delete state[activeDay][captionKeyFor(l)]; });
+  captionInput.value = getCaptionFor(state[activeDay], activeLang);
+  drawCard();
+});
+quoteInput.addEventListener("input", () => {
+  state[activeDay][activeLang] = quoteInput.value;
+  delete state[activeDay][captionKeyFor(activeLang)];
+  captionInput.value = getCaptionFor(state[activeDay], activeLang);
+  drawCard();
+});
+quoteInput1.addEventListener("input", () => {
+  if (!PAIR_MAP[activeLang]) return;
+  const [l1] = PAIR_MAP[activeLang];
+  state[activeDay][l1] = quoteInput1.value;
+  delete state[activeDay][captionKeyFor(activeLang)];
+  captionInput.value = getCaptionFor(state[activeDay], activeLang);
+  drawCard();
+});
+quoteInput2.addEventListener("input", () => {
+  if (!PAIR_MAP[activeLang]) return;
+  const [, l2] = PAIR_MAP[activeLang];
+  state[activeDay][l2] = quoteInput2.value;
+  delete state[activeDay][captionKeyFor(activeLang)];
+  captionInput.value = getCaptionFor(state[activeDay], activeLang);
+  drawCard();
+});
+captionInput.addEventListener("input", () => { state[activeDay][captionKeyFor(activeLang)] = captionInput.value; });
+themeSizeInput.addEventListener("input", () => { state[activeDay].themeSize = Number(themeSizeInput.value) || 46; drawCard(); });
+quoteSizeInput.addEventListener("input", () => { state[activeDay].quoteSize = Number(quoteSizeInput.value) || 52; drawCard(); });
+
+[...document.querySelectorAll(".size-btn[data-size]")].forEach(b => {
+  b.onclick = () => {
+    state[activeDay].size = b.dataset.size;
+    [...document.querySelectorAll(".size-btn[data-size]")].forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    drawCard();
+  };
+});
+
+[...document.querySelectorAll(".size-btn[data-color]")].forEach(b => {
+  b.onclick = () => {
+    state[activeDay].textColor = b.dataset.color;
+    [...document.querySelectorAll(".size-btn[data-color]")].forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    drawCard();
+  };
+});
+
+customBgUpload.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    state[activeDay].customBg = ev.target.result;
+    drawCard();
+    statusEl.textContent = DAYS[activeDay] + " ke liye custom photo laga di gayi.";
+  };
+  reader.readAsDataURL(file);
+});
+
+removeCustomBg.onclick = () => {
+  delete state[activeDay].customBg;
+  customBgUpload.value = "";
+  drawCard();
+  statusEl.textContent = DAYS[activeDay] + " ka background wapas preset par set kar diya.";
+};
+
+// ---- profile / avatar photo (global, drawn inside a gold ring at top of every day's card) ----
+const avatarInput = document.getElementById("avatarInput");
+const avatarClearBtn = document.getElementById("avatarClearBtn");
+avatarInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      avatarPhoto = img;
+      avatarClearBtn.style.display = "block";
+      drawCard();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+avatarClearBtn.addEventListener("click", () => {
+  avatarPhoto = null;
+  avatarInput.value = "";
+  avatarClearBtn.style.display = "none";
+  drawCard();
+});
+
+// ---- background music (apna MP3/M4A upload karein — sirf tool mein kaam karte waqt sunne ke liye, PNG/zip download mein music nahi judti) ----
+const bgAudioInput = document.getElementById("bgAudioInput");
+const bgAudioClearBtn = document.getElementById("bgAudioClearBtn");
+const bgAudioHint = document.getElementById("bgAudioHint");
+const musicToggleBtn = document.getElementById("musicToggleBtn");
+const bgVolumeInput = document.getElementById("bgVolumeInput");
+const bgVolumeVal = document.getElementById("bgVolumeVal");
+let bgAudioEl = null;
+let bgAudioObjectUrl = null;
+
+bgAudioInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (bgAudioObjectUrl) URL.revokeObjectURL(bgAudioObjectUrl);
+  bgAudioObjectUrl = URL.createObjectURL(file);
+  if (bgAudioEl) { bgAudioEl.pause(); bgAudioEl.remove(); }
+  bgAudioEl = document.createElement("audio");
+  bgAudioEl.src = bgAudioObjectUrl;
+  bgAudioEl.loop = true;
+  bgAudioEl.volume = parseInt(bgVolumeInput.value, 10) / 100;
+  document.body.appendChild(bgAudioEl);
+  bgAudioClearBtn.style.display = "block";
+  bgAudioHint.style.display = "block";
+  musicToggleBtn.style.display = "inline-block";
+  musicToggleBtn.textContent = "🎵";
+  bgVolumeInput.style.display = "inline-block";
+  bgVolumeVal.style.display = "inline-block";
+});
+bgAudioClearBtn.addEventListener("click", () => {
+  if (bgAudioEl) { bgAudioEl.pause(); bgAudioEl.remove(); bgAudioEl = null; }
+  if (bgAudioObjectUrl) { URL.revokeObjectURL(bgAudioObjectUrl); bgAudioObjectUrl = null; }
+  bgAudioInput.value = "";
+  bgAudioClearBtn.style.display = "none";
+  bgAudioHint.style.display = "none";
+  musicToggleBtn.style.display = "none";
+  bgVolumeInput.style.display = "none";
+  bgVolumeVal.style.display = "none";
+});
+musicToggleBtn.addEventListener("click", () => {
+  if (!bgAudioEl) return;
+  if (bgAudioEl.paused) { bgAudioEl.play(); musicToggleBtn.textContent = "🔊"; }
+  else { bgAudioEl.pause(); musicToggleBtn.textContent = "🎵"; }
+});
+bgVolumeInput.addEventListener("input", (e) => {
+  const v = parseInt(e.target.value, 10);
+  bgVolumeVal.textContent = v + "%";
+  if (bgAudioEl) bgAudioEl.volume = v / 100;
+});
+
+// ---- free "Listen" preview using the browser's own voice (works only inside the tool) ----
+const listenBtn = document.getElementById("listenBtn");
+let isSpeaking = false;
+const LANG_CODE = { hi: "hi-IN", en: "en-US", es: "es-ES" };
+
+function loadVoicesOnce() {
+  return new Promise((resolve) => {
+    let voices = window.speechSynthesis.getVoices();
+    if (voices && voices.length) { resolve(voices); return; }
+    const handler = () => {
+      voices = window.speechSynthesis.getVoices();
+      window.speechSynthesis.removeEventListener("voiceschanged", handler);
+      resolve(voices || []);
+    };
+    window.speechSynthesis.addEventListener("voiceschanged", handler);
+    // some browsers never fire voiceschanged — don't hang forever waiting
+    setTimeout(() => resolve(window.speechSynthesis.getVoices() || []), 1200);
+  });
+}
+
+function bestVoiceFor(voices, langCode) {
+  const exact = voices.find(v => v.lang && v.lang.toLowerCase() === langCode.toLowerCase());
+  if (exact) return exact;
+  const prefix = langCode.split("-")[0].toLowerCase();
+  return voices.find(v => v.lang && v.lang.toLowerCase().startsWith(prefix)) || null;
+}
+
+function speakSegments(segments) {
+  if (!segments.length) { isSpeaking = false; listenBtn.textContent = "🎧 Sunein (Preview)"; return; }
+  let i = 0;
+  function next() {
+    if (i >= segments.length) {
+      isSpeaking = false;
+      listenBtn.textContent = "🎧 Sunein (Preview)";
+      return;
+    }
+    const seg = segments[i++];
+    const utter = new SpeechSynthesisUtterance(seg.text);
+    utter.lang = seg.langCode;
+    if (seg.voice) utter.voice = seg.voice;
+    utter.onend = next;
+    utter.onerror = next;
+    window.speechSynthesis.speak(utter);
+  }
+  next();
+}
+
+listenBtn.addEventListener("click", () => {
+  if (!("speechSynthesis" in window)) {
+    alert("Maaf kijiye, is browser mein awaaz padhne ka feature nahi hai.");
+    return;
+  }
+  if (isSpeaking) {
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    listenBtn.textContent = "🎧 Sunein (Preview)";
+    return;
+  }
+  const d = state[activeDay];
+  isSpeaking = true;
+  listenBtn.textContent = "⏹ Rokein";
+  const LANG_NAME = { hi: "Hindi", en: "English", es: "Spanish" };
+  loadVoicesOnce().then((voices) => {
+    // theme is always stored in English (e.g. "Courage"), so it must always be spoken
+    // with an English voice — reading it with a Hindi/Spanish voice is what was garbling it
+    const segments = [];
+    const missingVoiceFor = [];
+    if (d.theme && d.theme.trim()) {
+      segments.push({ text: d.theme, langCode: "en-US", voice: bestVoiceFor(voices, "en-US") });
+    }
+    function addSegment(l) {
+      if (d[l] && d[l].trim()) {
+        const code = LANG_CODE[l];
+        const voice = bestVoiceFor(voices, code);
+        if (!voice) missingVoiceFor.push(LANG_NAME[l]);
+        segments.push({ text: d[l], langCode: code, voice });
+      }
+    }
+    if (PAIR_MAP[activeLang]) {
+      const [l1, l2] = PAIR_MAP[activeLang];
+      addSegment(l1);
+      addSegment(l2);
+    } else {
+      addSegment(activeLang);
+    }
+    // This device/browser has no installed voice at all for this language, so the browser
+    // falls back to its default voice and mispronounces the text — a device setting, not a
+    // code bug. Tell the user plainly instead of silently reading it wrong.
+    if (missingVoiceFor.length) {
+      const prevStatus = statusEl.textContent;
+      statusEl.textContent = "⚠️ Is device/browser mein " + missingVoiceFor.join(" aur ") +
+        " ki koi built-in awaaz (voice) install nahi hai, isliye wo sahi se nahi bol paayega. " +
+        "Phone ki Settings > Text-to-Speech (ya Google app > Settings > Speech) mein jaakar us bhasha ki voice data install karein.";
+      setTimeout(() => { if (!isSpeaking) statusEl.textContent = prevStatus; }, 8000);
+    }
+    speakSegments(segments);
+  });
+});
+
+document.getElementById("applyBgAllBtn").onclick = () => {
+  const d = state[activeDay];
+  for (let i = 0; i < 7; i++) {
+    state[i].bg = d.bg;
+    if (d.customBg) {
+      state[i].customBg = d.customBg;
+    } else {
+      delete state[i].customBg;
+    }
+  }
+  saveCurrentWeek();
+  renderBgGrid();
+  drawCard();
+  statusEl.textContent = "Ye background sabhi 7 dinon par laga diya gaya.";
+};
+
+document.getElementById("rotateBgBtn").onclick = () => {
+  for (let i = 0; i < 7; i++) {
+    state[i].bg = i % BACKGROUNDS.length;
+    delete state[i].customBg;
+  }
+  saveCurrentWeek();
+  renderBgGrid();
+  drawCard();
+  statusEl.textContent = "Har din ko alag background mil gaya: " + DAYS.map((d,i) => d + "=" + BACKGROUNDS[i % BACKGROUNDS.length].name).join(", ");
+};
+
+document.getElementById("resetDay").onclick = () => {
+  const def = DEFAULTS[activeDay];
+  state[activeDay] = {
+    theme: def.theme, hi: def.hi, en: def.en, es: def.es, bg: def.bg,
+    themeSize: 60, quoteSize: 75, size: state[activeDay].size, textColor: "white"
+  };
+  customBgUpload.value = "";
+  syncControlsFromState();
+};
+
+function quoteText(text) {
+  if (!text) return text;
+  return "“" + text + "”";
+}
+
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(" ");
+  let line = "";
+  const lines = [];
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + " ";
+    if (context.measureText(testLine).width > maxWidth && n > 0) {
+      lines.push(line.trim());
+      line = words[n] + " ";
+    } else {
+      line = testLine;
+    }
+  }
+  lines.push(line.trim());
+  lines.forEach((l, i) => {
+    context.fillText(l, x, y + i * lineHeight);
+  });
+  return lines.length;
+}
+
+function dimsFor(size) {
+  return size === "reel" ? { w: 1080, h: 1920 } : { w: 1080, h: 1350 };
+}
+
+function drawCardToContext(context, w, h, dayIndex, lang) {
+  const d = state[dayIndex];
+  const bgDef = BACKGROUNDS[d.bg];
+  const imgSrc = d.customBg || bgDef.url;
+  context.clearRect(0, 0, w, h);
+
+  function drawOverlayAndText() {
+    const grad = context.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, "rgba(10,12,25,0.35)");
+    grad.addColorStop(0.55, "rgba(10,12,25,0.55)");
+    grad.addColorStop(1, "rgba(10,12,25,0.88)");
+    context.fillStyle = grad;
+    context.fillRect(0, 0, w, h);
+
+    // profile/avatar ring (global, same photo on every day's card) + push everything else down a bit so it never overlaps
+    const yOff = avatarPhoto ? h * 0.09 : 0;
+    if (avatarPhoto) {
+      const acx = w / 2, acy = h * 0.075, ar = w * 0.075;
+      context.save();
+      context.beginPath();
+      context.arc(acx, acy, ar, 0, Math.PI * 2);
+      context.closePath();
+      context.save();
+      context.clip();
+      const ir = avatarPhoto.width / avatarPhoto.height, br = 1;
+      let sx, sy, sw, sh;
+      if (ir > br) { sh = avatarPhoto.height; sw = sh * br; sx = (avatarPhoto.width - sw) / 2; sy = 0; }
+      else { sw = avatarPhoto.width; sh = sw / br; sx = 0; sy = (avatarPhoto.height - sh) / 2; }
+      context.drawImage(avatarPhoto, sx, sy, sw, sh, acx - ar, acy - ar, ar * 2, ar * 2);
+      context.restore();
+      context.lineWidth = w * 0.006;
+      context.strokeStyle = "#e8c675";
+      context.shadowColor = "rgba(232,198,117,0.6)";
+      context.shadowBlur = 14;
+      context.stroke();
+      context.restore();
+    }
+
+    context.fillStyle = "#e8c675";
+    context.font = "italic 600 " + Math.round(w*0.052) + "px 'Cormorant Garamond', serif";
+    context.textAlign = "center";
+    context.shadowColor = "rgba(232,198,117,0.5)";
+    context.shadowBlur = 10;
+    context.fillText(greetingFor(lang), w/2, h*0.11 + yOff);
+    context.shadowBlur = 0;
+
+    context.fillStyle = "#e8c675";
+    context.fillRect(w/2 - 90, h*0.14 + yOff, 60, 2);
+    context.fillRect(w/2 + 30, h*0.14 + yOff, 60, 2);
+
+    const colorMap = { white: "#f3ead9", golden: "#e8c675", black: "#151515" };
+    const mainColor = colorMap[d.textColor || "white"];
+    const LANG_QUOTE_COLORS = { hi: "#e8c675", en: "#f3ead9", es: "#ff9eb5" };
+
+    context.fillStyle = mainColor;
+    context.font = "600 " + d.themeSize + "px 'Cormorant Garamond', serif";
+    context.fillText(d.theme, w/2, h*0.22 + yOff);
+
+    const maxWidth = w * 0.65;
+
+    if (PAIR_MAP[lang]) {
+      const [l1, l2] = PAIR_MAP[lang];
+      const size1 = d.quoteSize;
+      const size2 = d.quoteSize;
+      const lh1 = size1 * 1.35;
+      const lh2 = size2 * 1.35;
+
+      let y = h * 0.36 + yOff;
+      context.font = (l1 === "hi" ? "500 " : "italic 500 ") + size1 + "px 'Cormorant Garamond', serif";
+      context.fillStyle = LANG_QUOTE_COLORS[l1] || "#f3ead9";
+      const lines1 = wrapText(context, quoteText(d[l1]), w/2, y, maxWidth, lh1);
+
+      y += (lines1 - 1) * lh1 + lh1 * 0.9 + 46;
+
+      context.font = (l2 === "hi" ? "500 " : "italic 500 ") + size2 + "px 'Cormorant Garamond', serif";
+      context.fillStyle = LANG_QUOTE_COLORS[l2] || "#f3ead9";
+      context.globalAlpha = 0.92;
+      wrapText(context, quoteText(d[l2]), w/2, y, maxWidth, lh2);
+      context.globalAlpha = 1;
+    } else {
+      context.font = (lang === "hi" ? "500 " : "italic 500 ") + d.quoteSize + "px 'Cormorant Garamond', serif";
+      context.fillStyle = LANG_QUOTE_COLORS[lang] || "#f3ead9";
+      const lh = d.quoteSize * 1.35;
+      wrapText(context, quoteText(d[lang]), w/2, h*0.46 + yOff, maxWidth, lh);
+    }
+
+    context.font = "500 " + Math.round(w*0.026) + "px Poppins, sans-serif";
+    context.fillStyle = "#cfc9b8";
+    context.fillText("LUMIORA", w/2, h*0.94);
+    context.font = Math.round(w*0.018) + "px Poppins, sans-serif";
+    context.fillStyle = "#8f8a7c";
+    context.fillText("Good Morning Wishes", w/2, h*0.965);
+  }
+
+  if (imgSrc) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        const scale = Math.max(w / img.width, h / img.height);
+        const iw = img.width * scale, ih = img.height * scale;
+        context.drawImage(img, (w-iw)/2, (h-ih)/2, iw, ih);
+        drawOverlayAndText();
+        resolve();
+      };
+      img.onerror = () => {
+        const grad = context.createLinearGradient(0, 0, w, h);
+        grad.addColorStop(0, "#ff9a56");
+        grad.addColorStop(1, "#ff5e78");
+        context.fillStyle = grad;
+        context.fillRect(0, 0, w, h);
+        drawOverlayAndText();
+        resolve();
+      };
+      img.src = imgSrc;
+    });
+  } else {
+    const grad = context.createLinearGradient(0, 0, w, h);
+    grad.addColorStop(0, "#ff9a56");
+    grad.addColorStop(1, "#ff5e78");
+    context.fillStyle = grad;
+    context.fillRect(0, 0, w, h);
+    context.fillStyle = "rgba(255,255,255,0.7)";
+    for (let i = 0; i < 80; i++) {
+      const sx = Math.random()*w, sy = Math.random()*h*0.6, r = Math.random()*1.8;
+      context.beginPath();
+      context.arc(sx, sy, r, 0, Math.PI*2);
+      context.fill();
+    }
+    drawOverlayAndText();
+    return Promise.resolve();
+  }
+}
+
+function drawCard() {
+  const d = state[activeDay];
+  const { w, h } = dimsFor(d.size);
+  canvas.width = w;
+  canvas.height = h;
+  drawCardToContext(ctx, w, h, activeDay, activeLang);
+  saveCurrentWeek();
+}
+
+function downloadBlob(blob, filename) {
+  if (navigator.userAgent.match(/iPhone|iPad|iPod/)) {
+    const url = URL.createObjectURL(blob);
+    const w = window.open(url, "_blank");
+    if (!w) {
+      const a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  } else {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+}
+
+document.getElementById("downloadOne").onclick = () => {
+  const captionText = getCaptionFor(state[activeDay], activeLang);
+  navigator.clipboard.writeText(captionText).catch(() => {});
+  const langSuffix = { hi: "Hindi", en: "English", es: "Spanish", hi_en: "Hindi-English", en_es: "English-Spanish" }[activeLang] || activeLang;
+  canvas.toBlob((blob) => {
+    downloadBlob(blob, "Lumiora_" + DAYS[activeDay] + "_" + langSuffix + "_GoodMorning.png");
+    statusEl.textContent = DAYS[activeDay] + " (" + langSuffix + ") card downloaded — caption copied, ready to paste on Facebook.";
+  }, "image/png");
+};
+
+document.getElementById("downloadAll").onclick = async () => {
+  statusEl.textContent = "Preparing all 7 cards...";
+  const zip = new JSZip();
+  const tempCanvas = document.createElement("canvas");
+  const tctx = tempCanvas.getContext("2d");
+  let captionsText = "LUMIORA — WEEKLY AFFIRMATION CAPTIONS\n\n";
+  for (let i = 0; i < 7; i++) {
+    const d = state[i];
+    const { w, h } = dimsFor(d.size);
+    tempCanvas.width = w; tempCanvas.height = h;
+    await drawCardToContext(tctx, w, h, i, activeLang);
+    const blob = await new Promise(res => tempCanvas.toBlob(res, "image/png"));
+    zip.file("Lumiora_" + String(i+1).padStart(2,"0") + "_" + DAYS[i] + ".png", blob);
+    captionsText += DAYS[i] + ":\n" + getCaptionFor(d, activeLang) + "\n\n";
+    statusEl.textContent = "Rendered " + (i+1) + " of 7...";
+  }
+  zip.file("Captions.txt", captionsText);
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+  downloadBlob(zipBlob, "Lumiora_Good_Morning_Wishes.zip");
+  statusEl.textContent = "All 7 cards + Captions.txt downloaded as a zip.";
+};
+
+const weekSelectEl = document.getElementById("weekSelect");
+
+function renderWeekSelect() {
+  weekSelectEl.innerHTML = "";
+  Object.keys(weeksStore).forEach((name) => {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    if (name === currentWeekName) opt.selected = true;
+    weekSelectEl.appendChild(opt);
+  });
+}
+
+weekSelectEl.addEventListener("change", () => {
+  currentWeekName = weekSelectEl.value;
+  state = weeksStore[currentWeekName];
+  activeDay = 0;
+  saveWeeksStore();
+  syncControlsFromState();
+});
+
+document.getElementById("newWeekBtn").onclick = () => {
+  const name = nextWeekName();
+  weeksStore[name] = freshWeekState();
+  currentWeekName = name;
+  state = weeksStore[currentWeekName];
+  activeDay = 0;
+  saveWeeksStore();
+  renderWeekSelect();
+  syncControlsFromState();
+  statusEl.textContent = name + " created with fresh defaults.";
+};
+
+document.getElementById("renameWeekBtn").onclick = () => {
+  const newName = prompt("Naya naam is week ke liye:", currentWeekName);
+  if (!newName || !newName.trim() || newName === currentWeekName) return;
+  if (weeksStore[newName]) { alert("Ye naam pehle se hai, doosra naam chunein."); return; }
+  weeksStore[newName] = weeksStore[currentWeekName];
+  delete weeksStore[currentWeekName];
+  currentWeekName = newName;
+  saveWeeksStore();
+  renderWeekSelect();
+  statusEl.textContent = "Week ka naam badal diya gaya.";
+};
+
+document.getElementById("deleteWeekBtn").onclick = () => {
+  if (Object.keys(weeksStore).length <= 1) {
+    alert("Kam se kam ek week hona zaroori hai, ise delete nahi kar sakte.");
+    return;
+  }
+  if (!confirm(currentWeekName + " ko delete karein? Ye wapas nahi aayega.")) return;
+  delete weeksStore[currentWeekName];
+  currentWeekName = Object.keys(weeksStore)[0];
+  state = weeksStore[currentWeekName];
+  activeDay = 0;
+  saveWeeksStore();
+  renderWeekSelect();
+  syncControlsFromState();
+  statusEl.textContent = "Week delete kar di gayi.";
+};
+
+const DAY_ALIASES = {
+  "monday": 0, "mon": 0, "सोमवार": 0,
+  "tuesday": 1, "tue": 1, "tues": 1, "मंगलवार": 1,
+  "wednesday": 2, "wed": 2, "बुधवार": 2,
+  "thursday": 3, "thu": 3, "thurs": 3, "गुरुवार": 3,
+  "friday": 4, "fri": 4, "शुक्रवार": 4,
+  "saturday": 5, "sat": 5, "शनिवार": 5,
+  "sunday": 6, "sun": 6, "रविवार": 6
+};
+
+function parseAndFillWeek(text) {
+  const lines = text.split(/\r?\n/);
+  const filledDays = [];
+  lines.forEach(line => {
+    if (!line.includes("|")) return;
+    let cells = line.split("|").map(c => c.trim());
+    if (cells.length && cells[0] === "") cells.shift();
+    if (cells.length && cells[cells.length - 1] === "") cells.pop();
+    if (cells.length < 2) return;
+    const dayKey = cells[0].toLowerCase().replace(/\*/g, "").trim();
+    const dayIdx = DAY_ALIASES.hasOwnProperty(dayKey) ? DAY_ALIASES[dayKey] : undefined;
+    if (dayIdx === undefined) return; // skips header row, markdown --- separator row, etc.
+    if (/^-+$/.test(cells[1] || "")) return;
+    if (cells.length < 5) return; // need Day, Theme, Hindi, English, Spanish
+    const [, theme, hi, en, es] = cells;
+    if (!theme && !hi && !en && !es) return;
+    const d = state[dayIdx];
+    if (theme) d.theme = theme;
+    if (hi) d.hi = hi;
+    if (en) d.en = en;
+    if (es) d.es = es;
+    ["hi", "en", "es", "hi_en", "en_es"].forEach(l => { delete d[captionKeyFor(l)]; });
+    filledDays.push(DAYS[dayIdx]);
+  });
+  return filledDays;
+}
+
+const pasteWeekBtn = document.getElementById("pasteWeekBtn");
+const pasteWeekPanel = document.getElementById("pasteWeekPanel");
+const pasteWeekInput = document.getElementById("pasteWeekInput");
+
+pasteWeekBtn.onclick = () => {
+  pasteWeekPanel.style.display = pasteWeekPanel.style.display === "none" ? "block" : "none";
+};
+
+document.getElementById("cancelPasteWeekBtn").onclick = () => {
+  pasteWeekInput.value = "";
+  pasteWeekPanel.style.display = "none";
+};
+
+document.getElementById("fillWeekBtn").onclick = () => {
+  const filledDays = parseAndFillWeek(pasteWeekInput.value);
+  if (filledDays.length === 0) {
+    statusEl.textContent = "Koi din match nahi hua. Format check karein: Day | Theme | Hindi quote | English quote | Spanish quote — har din ek line mein.";
+    return;
+  }
+  saveCurrentWeek();
+  activeDay = 0;
+  syncControlsFromState();
+  renderWeekSelect();
+  pasteWeekInput.value = "";
+  pasteWeekPanel.style.display = "none";
+  statusEl.textContent = filledDays.length + " din bhar diye gaye (" + filledDays.join(", ") + "). Ab background chunein aur download karein.";
+};
+
+renderWeekSelect();
+syncControlsFromState();
+
+// ================= 🎬 Reel Video Export + 🎙️ AI Narration (added) =================
+(function(){
+  const videoBtn = document.getElementById('videoBtn');
+  const videoCanvasEl = document.getElementById('videoCanvas');
+  const vctx = videoCanvasEl.getContext('2d');
+  const videoPreview = document.getElementById('videoPreview');
+  const convertMp4Btn = document.getElementById('convertMp4Btn');
+  const convertMp4Hint = document.getElementById('convertMp4Hint');
+  let videoPreviewUrl = null;
+  let lastExportedWebmBlob = null;
+  let ffmpegInstance = null;
+  const VIDEO_W = 1080, VIDEO_H = 1920, VIDEO_FPS = 30, VIDEO_SECONDS = 10;
+
+  function makeTwinkleStars(count){
+    const stars = [];
+    for (let i=0;i<count;i++){
+      stars.push({x:Math.random()*VIDEO_W, y:Math.random()*VIDEO_H, r:Math.random()*1.8+0.4, base:Math.random()*0.45+0.12, speed:Math.random()*0.8+0.3, phase:Math.random()*Math.PI*2});
+    }
+    return stars;
+  }
+
+  function triggerDownloadFile(blob, filename){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 8000);
+  }
+
+  // Snapshot the current day's card at full Reel resolution (1080x1920) without
+  // touching that day's saved Post/Reel size setting.
+  async function snapshotCardAsReel(){
+    const prevW = canvas.width, prevH = canvas.height;
+    canvas.width = VIDEO_W; canvas.height = VIDEO_H;
+    await drawCardToContext(ctx, VIDEO_W, VIDEO_H, activeDay, activeLang);
+    const bitmap = await createImageBitmap(canvas);
+    canvas.width = prevW; canvas.height = prevH;
+    drawCard(); // restore normal on-screen preview
+    return bitmap;
+  }
+
+  function renderVideoFrame(t, snapshot, stars){
+    vctx.clearRect(0,0,VIDEO_W,VIDEO_H);
+    const zoom = 1 + 0.045 * (t / VIDEO_SECONDS);
+    const dw = VIDEO_W * zoom, dh = VIDEO_H * zoom;
+    vctx.drawImage(snapshot, (VIDEO_W-dw)/2, (VIDEO_H-dh)/2, dw, dh);
+    stars.forEach(s=>{
+      const alpha = Math.max(0, s.base * (0.5 + 0.5*Math.sin(t*s.speed*2+s.phase)));
+      vctx.beginPath();
+      vctx.fillStyle = `rgba(255,255,255,${alpha})`;
+      vctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      vctx.fill();
+    });
+  }
+
+  // ---- AI Narration ----
+  const ttsApiKeyInput = document.getElementById('ttsApiKeyInput');
+  const ttsSaveKeyBtn = document.getElementById('ttsSaveKeyBtn');
+  const ttsHiVoice = document.getElementById('ttsHiVoice');
+  const ttsEnVoice = document.getElementById('ttsEnVoice');
+  const ttsEsVoice = document.getElementById('ttsEsVoice');
+  const narrationBtn = document.getElementById('narrationBtn');
+  const narrationToggleBtn = document.getElementById('narrationToggleBtn');
+  const narrationStatus = document.getElementById('narrationStatus');
+  let narrationAudioEl = null;
+  let narrationObjectUrl = null;
+  let sharedAudioCtx = null;
+  const LANG_CODE_TTS = { hi: 'hi-IN', en: 'en-US', es: 'es-ES' };
+
+  function getSharedAudioCtx(){
+    if(!sharedAudioCtx) sharedAudioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    return sharedAudioCtx;
+  }
+  function getOrCreateSourceNode(el){
+    const actx = getSharedAudioCtx();
+    if(!el.__lumioraSrcNode) el.__lumioraSrcNode = actx.createMediaElementSource(el);
+    return el.__lumioraSrcNode;
+  }
+
+  ttsApiKeyInput.value = localStorage.getItem('lumiora_tts_key') || '';
+  ttsSaveKeyBtn.addEventListener('click', () => {
+    localStorage.setItem('lumiora_tts_key', ttsApiKeyInput.value.trim());
+    narrationStatus.textContent = '✅ API key is browser mein save ho gayi.';
+  });
+
+  async function ttsSynthesize(apiKey, text, languageCode, voiceName){
+    const res = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${encodeURIComponent(apiKey)}`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ input:{text}, voice:{languageCode, name:voiceName}, audioConfig:{audioEncoding:'MP3', speakingRate:0.95} })
+    });
+    if(!res.ok){ const t = await res.text().catch(()=> ''); throw new Error('TTS API error '+res.status+': '+t.slice(0,200)); }
+    const data = await res.json();
+    return data.audioContent;
+  }
+  function base64ToArrayBuffer(base64){
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+    return bytes.buffer;
+  }
+  async function concatenateBuffers(actx, buffers, gapSeconds){
+    if (buffers.length === 1) return buffers[0];
+    const sampleRate = buffers[0].sampleRate;
+    const totalDuration = buffers.reduce((sum, b) => sum + b.duration, 0) + gapSeconds * (buffers.length - 1);
+    const offlineCtx = new OfflineAudioContext(1, Math.ceil(totalDuration * sampleRate), sampleRate);
+    let offset = 0;
+    buffers.forEach((buf) => {
+      const src = offlineCtx.createBufferSource();
+      src.buffer = buf;
+      src.connect(offlineCtx.destination);
+      src.start(offset);
+      offset += buf.duration + gapSeconds;
+    });
+    return offlineCtx.startRendering();
+  }
+  function audioBufferToWav(buffer){
+    const numChannels = buffer.numberOfChannels;
+    const sampleRate = buffer.sampleRate;
+    const numFrames = buffer.length;
+    const blockAlign = numChannels*2;
+    const dataSize = numFrames*blockAlign;
+    const arrBuf = new ArrayBuffer(44+dataSize);
+    const view = new DataView(arrBuf);
+    function writeStr(offset,str){ for(let i=0;i<str.length;i++) view.setUint8(offset+i, str.charCodeAt(i)); }
+    writeStr(0,'RIFF'); view.setUint32(4,36+dataSize,true); writeStr(8,'WAVE');
+    writeStr(12,'fmt '); view.setUint32(16,16,true); view.setUint16(20,1,true);
+    view.setUint16(22,numChannels,true); view.setUint32(24,sampleRate,true);
+    view.setUint32(28,sampleRate*blockAlign,true); view.setUint16(32,blockAlign,true); view.setUint16(34,16,true);
+    writeStr(36,'data'); view.setUint32(40,dataSize,true);
+    let offset=44;
+    const channelData=[];
+    for(let ch=0; ch<numChannels; ch++) channelData.push(buffer.getChannelData(ch));
+    for(let i=0;i<numFrames;i++){
+      for(let ch=0; ch<numChannels; ch++){
+        let s = Math.max(-1, Math.min(1, channelData[ch][i]));
+        s = s<0 ? s*0x8000 : s*0x7FFF;
+        view.setInt16(offset, s, true);
+        offset+=2;
+      }
+    }
+    return new Blob([arrBuf], {type:'audio/wav'});
+  }
+
+  function buildNarrationSegments(){
+    const d = state[activeDay];
+    const voiceFor = { hi: ttsHiVoice.value, en: ttsEnVoice.value, es: ttsEsVoice.value };
+    const segs = [];
+    if (d.theme && d.theme.trim()) segs.push({ text: d.theme, lang: 'en-US', voice: ttsEnVoice.value });
+    if (PAIR_MAP[activeLang]) {
+      const [l1, l2] = PAIR_MAP[activeLang];
+      if (d[l1]) segs.push({ text: d[l1], lang: LANG_CODE_TTS[l1], voice: voiceFor[l1] });
+      if (d[l2]) segs.push({ text: d[l2], lang: LANG_CODE_TTS[l2], voice: voiceFor[l2] });
+    } else if (d[activeLang]) {
+      segs.push({ text: d[activeLang], lang: LANG_CODE_TTS[activeLang], voice: voiceFor[activeLang] });
+    }
+    return segs;
+  }
+
+  narrationBtn.addEventListener('click', async () => {
+    const apiKey = (localStorage.getItem('lumiora_tts_key') || ttsApiKeyInput.value).trim();
+    if(!apiKey){ narrationStatus.textContent = '⚠️ Pehle apni Google Cloud TTS API key daal kar "Save Key" karein.'; return; }
+    const segments = buildNarrationSegments();
+    if(!segments.length){ narrationStatus.textContent = '⚠️ Is din/language ke liye quote khaali hai.'; return; }
+    narrationBtn.disabled = true;
+    narrationStatus.textContent = '⏳ AI awaaz banayi ja rahi hai...';
+    try{
+      const actx = getSharedAudioCtx();
+      const buffers = [];
+      for (const seg of segments) {
+        const b64 = await ttsSynthesize(apiKey, seg.text, seg.lang, seg.voice);
+        buffers.push(await actx.decodeAudioData(base64ToArrayBuffer(b64)));
+      }
+      const combined = await concatenateBuffers(actx, buffers, 0.5);
+      const wavBlob = audioBufferToWav(combined);
+      if(narrationObjectUrl) URL.revokeObjectURL(narrationObjectUrl);
+      narrationObjectUrl = URL.createObjectURL(wavBlob);
+      if(narrationAudioEl){ narrationAudioEl.pause(); narrationAudioEl.remove(); }
+      narrationAudioEl = document.createElement('audio');
+      narrationAudioEl.src = narrationObjectUrl;
+      narrationAudioEl.loop = false;
+      document.body.appendChild(narrationAudioEl);
+      narrationToggleBtn.style.display = 'inline-block';
+      narrationToggleBtn.textContent = '▶️';
+      narrationStatus.textContent = `✅ AI narration taiyar (~${combined.duration.toFixed(1)}s). Ab "Reel Video Banayein" dabayein.`;
+    }catch(err){
+      narrationStatus.textContent = '⚠️ Error: ' + err.message;
+    }
+    narrationBtn.disabled = false;
+  });
+
+  narrationToggleBtn.addEventListener('click', () => {
+    if(!narrationAudioEl) return;
+    if(narrationAudioEl.paused){ narrationAudioEl.currentTime = 0; narrationAudioEl.play(); narrationToggleBtn.textContent = '⏸️'; }
+    else { narrationAudioEl.pause(); narrationToggleBtn.textContent = '▶️'; }
+  });
+
+  async function buildExportAudio(){
+    const hasNarration = !!(narrationAudioEl && narrationAudioEl.src);
+    const hasMusic = !!(typeof bgAudioEl !== 'undefined' && bgAudioEl && bgAudioEl.src);
+    if(!hasNarration && !hasMusic) return { audioTracks: [], playables: [], durationOverride: null };
+    if(hasNarration && !hasMusic){
+      const stream = narrationAudioEl.captureStream ? narrationAudioEl.captureStream() : null;
+      return { audioTracks: stream?stream.getAudioTracks():[], playables:[narrationAudioEl], durationOverride: Math.min(30, Math.max(6, narrationAudioEl.duration+1)) };
+    }
+    if(hasMusic && !hasNarration){
+      const stream = bgAudioEl.captureStream ? bgAudioEl.captureStream() : null;
+      return { audioTracks: stream?stream.getAudioTracks():[], playables:[bgAudioEl], durationOverride: null };
+    }
+    try{
+      const actx = getSharedAudioCtx();
+      const dest = actx.createMediaStreamDestination();
+      const narrNode = getOrCreateSourceNode(narrationAudioEl);
+      const musicNode = getOrCreateSourceNode(bgAudioEl);
+      const musicGain = actx.createGain();
+      musicGain.gain.value = 0.4;
+      narrNode.connect(dest); narrNode.connect(actx.destination);
+      musicNode.connect(musicGain); musicGain.connect(dest); musicGain.connect(actx.destination);
+      return { audioTracks: dest.stream.getAudioTracks(), playables:[narrationAudioEl, bgAudioEl], durationOverride: Math.min(30, Math.max(6, narrationAudioEl.duration+1)) };
+    }catch(e){
+      const stream = narrationAudioEl.captureStream ? narrationAudioEl.captureStream() : null;
+      return { audioTracks: stream?stream.getAudioTracks():[], playables:[narrationAudioEl], durationOverride: Math.min(30, Math.max(6, narrationAudioEl.duration+1)) };
+    }
+  }
+
+  async function startVideoExport(){
+    if(!videoCanvasEl.captureStream){
+      statusEl.textContent = '⚠️ Ye browser video record support nahi karta. Desktop Chrome ya latest Safari try karein.';
+      return;
+    }
+    videoBtn.disabled = true;
+    statusEl.textContent = '⏳ Card taiyar ho raha hai...';
+    videoCanvasEl.width = VIDEO_W; videoCanvasEl.height = VIDEO_H;
+
+    const snapshot = await snapshotCardAsReel();
+    const stars = makeTwinkleStars(160);
+    const audioPlan = await buildExportAudio();
+    const videoDurationSeconds = audioPlan.durationOverride || VIDEO_SECONDS;
+
+    const canvasStream = videoCanvasEl.captureStream(VIDEO_FPS);
+    let combinedStream = canvasStream;
+    if(audioPlan.audioTracks.length){
+      combinedStream = new MediaStream([...canvasStream.getVideoTracks(), ...audioPlan.audioTracks]);
+    }
+    let mimeType = '';
+    const candidates = ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
+    for(const c of candidates){ if(window.MediaRecorder && MediaRecorder.isTypeSupported(c)){ mimeType = c; break; } }
+    if(!window.MediaRecorder){
+      statusEl.textContent = '⚠️ Ye browser video record support nahi karta.';
+      videoBtn.disabled = false;
+      return;
+    }
+    const recorder = new MediaRecorder(combinedStream, mimeType ? {mimeType, videoBitsPerSecond: 8000000} : {});
+    const chunks = [];
+    recorder.ondataavailable = e => { if(e.data.size) chunks.push(e.data); };
+    const stopped = new Promise(resolve => { recorder.onstop = resolve; });
+
+    audioPlan.playables.forEach(el => { el.currentTime = 0; el.play().catch(()=>{}); });
+    recorder.start();
+    const startTime = performance.now();
+    await new Promise(resolve => {
+      function loop(){
+        const elapsed = (performance.now()-startTime)/1000;
+        renderVideoFrame(elapsed, snapshot, stars);
+        statusEl.textContent = `⏳ Reel record ho rahi hai... ${Math.min(elapsed, videoDurationSeconds).toFixed(1)}s / ${videoDurationSeconds.toFixed(1)}s`;
+        if(elapsed >= videoDurationSeconds){ resolve(); return; }
+        requestAnimationFrame(loop);
+      }
+      loop();
+    });
+    recorder.stop();
+    audioPlan.playables.forEach(el => el.pause());
+    await stopped;
+
+    const blob = new Blob(chunks, {type: mimeType || 'video/webm'});
+    const filename = "Lumiora_GoodMorning_" + DAYS[activeDay] + "_Reel_" + Date.now() + ".webm";
+    triggerDownloadFile(blob, filename);
+
+    if(videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
+    videoPreviewUrl = URL.createObjectURL(blob);
+    videoPreview.src = videoPreviewUrl;
+    videoPreview.style.display = 'block';
+
+    lastExportedWebmBlob = blob;
+    convertMp4Btn.style.display = 'inline-block';
+    convertMp4Hint.style.display = 'block';
+    convertMp4Btn.textContent = '📱 Mobile ke liye MP4 Banayein';
+    convertMp4Btn.disabled = false;
+    videoBtn.disabled = false;
+    statusEl.textContent = '✅ Reel video (WebM) taiyar! Neeche player mein dekh sakte hain. Facebook/Instagram/WhatsApp par seedha upload chalega, ya "Mobile ke liye MP4 Banayein" dabayein.';
+  }
+
+  function loadScriptOnce(src){
+    return new Promise((resolve, reject) => {
+      if(document.querySelector(`script[src="${src}"]`)){ resolve(); return; }
+      const s = document.createElement('script');
+      s.src = src; s.onload = ()=>resolve(); s.onerror = ()=>reject(new Error('Script load failed: '+src));
+      document.head.appendChild(s);
+    });
+  }
+  async function toBlobURLLocal(url, mimeType){
+    const resp = await fetch(url);
+    const buf = await resp.arrayBuffer();
+    return URL.createObjectURL(new Blob([buf], {type: mimeType}));
+  }
+  async function getFFmpeg(){
+    if(ffmpegInstance) return ffmpegInstance;
+    if(typeof window.SharedArrayBuffer === 'undefined'){ window.SharedArrayBuffer = window.ArrayBuffer; }
+    await loadScriptOnce('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js');
+    const { FFmpeg } = window.FFmpegWASM;
+    const ffmpeg = new FFmpeg();
+    const baseURL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd';
+    await ffmpeg.load({
+      coreURL: await toBlobURLLocal(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+      wasmURL: await toBlobURLLocal(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
+    });
+    ffmpegInstance = ffmpeg;
+    return ffmpeg;
+  }
+  async function runFFmpegConvert(ffmpeg, scaleHeight){
+    try{ await ffmpeg.deleteFile('output.mp4'); }catch(e){}
+    await ffmpeg.exec(['-i','input.webm','-vf',`scale=-2:${scaleHeight}`,'-r','24','-c:v','libx264','-preset','ultrafast','-crf','24','-pix_fmt','yuv420p','-c:a','aac','-b:a','96k','-movflags','+faststart','output.mp4']);
+    return ffmpeg.readFile('output.mp4');
+  }
+  convertMp4Btn.addEventListener('click', async () => {
+    if(!lastExportedWebmBlob) return;
+    convertMp4Btn.disabled = true;
+    try{
+      convertMp4Btn.textContent = '⏳ Converter engine load ho raha hai...';
+      const ffmpeg = await getFFmpeg();
+      const inputData = new Uint8Array(await lastExportedWebmBlob.arrayBuffer());
+      await ffmpeg.writeFile('input.webm', inputData);
+      let mp4Data = null, lastErr = null;
+      for(const h of [1920,1280,960,640]){
+        try{ convertMp4Btn.textContent = `⏳ MP4 taiyar ho rahi hai (${h}p)...`; mp4Data = await runFFmpegConvert(ffmpeg, h); break; }
+        catch(e){ lastErr = e; mp4Data = null; }
+      }
+      if(!mp4Data) throw lastErr || new Error('conversion failed');
+      const mp4Blob = new Blob([mp4Data], {type:'video/mp4'});
+      triggerDownloadFile(mp4Blob, "Lumiora_GoodMorning_" + DAYS[activeDay] + "_Reel_" + Date.now() + ".mp4");
+      convertMp4Btn.textContent = '✅ MP4 taiyar! Dobara Download Karein';
+      convertMp4Hint.textContent = 'MP4 download ho gayi — WhatsApp/AirDrop se Photos mein save karke Reels/Facebook par post karein.';
+    }catch(err){
+      convertMp4Btn.textContent = '📱 Mobile ke liye MP4 Banayein';
+      convertMp4Hint.textContent = '⚠️ MP4 banane mein dikkat aayi: ' + err.message + '. WebM ko WhatsApp se bhejkar convert karne wala tareeka use kar lein.';
+    }
+    convertMp4Btn.disabled = false;
+  });
+
+  videoBtn.addEventListener('click', startVideoExport);
+})();
+</script>
+</body>
+</html>

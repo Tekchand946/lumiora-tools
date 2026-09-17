@@ -291,6 +291,21 @@ Tuesday | Patience | ...
     <input type="file" id="customBgUpload" accept="image/*">
     <button class="btn btn-outline" id="removeCustomBg" style="margin-top:8px;">Photo hataayein (preset background par wapas jaayein)</button>
 
+    <label>प्रोफाइल/अवतार फ़ोटो जोड़ें (Ring ke andar, sabhi 7 dinon par, optional)</label>
+    <input type="file" id="avatarInput" accept="image/*">
+    <button class="btn btn-outline" id="avatarClearBtn" style="margin-top:8px; display:none;">Avatar हटाएं</button>
+    <p style="font-size:12px;color:#b9b2a0;margin-top:6px;">Top par gol ring ke andar dikhega — sabhi 7 cards aur zip download mein bhi shaamil hoga.</p>
+
+    <label>Background Music जोड़ें (optional, MP3/M4A)</label>
+    <input type="file" id="bgAudioInput" accept="audio/*">
+    <button class="btn btn-outline" id="bgAudioClearBtn" style="margin-top:8px; display:none;">Music हटाएं</button>
+    <p id="bgAudioHint" style="display:none; font-size:12px;color:#b9b2a0;margin-top:6px;">Ye sirf tool mein kaam karte waqt sunne ke liye hai — downloaded PNG/zip mein music nahi judega.</p>
+    <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+      <button type="button" id="musicToggleBtn" style="display:none; width:auto; padding:10px 16px; border-radius:8px; border:2px solid #2c3252; background:#0f1223; color:#f3ead9; cursor:pointer; font-size:18px;">🎵</button>
+      <input type="range" id="bgVolumeInput" min="0" max="100" value="70" style="flex:1; display:none;">
+      <span id="bgVolumeVal" style="font-size:12px; color:#b9b2a0; display:none;">70%</span>
+    </div>
+
     <label>Card size</label>
     <div class="size-toggle">
       <div class="size-btn active" data-size="post">Post (1080×1350) — for Facebook feed</div>
@@ -317,6 +332,9 @@ Tuesday | Patience | ...
       </div>
     </div>
 
+    <button type="button" class="btn btn-outline" id="listenBtn" style="margin-top:10px;">🎧 Sunein (Preview)</button>
+    <p style="font-size:12px;color:#b9b2a0;margin-top:6px;">Ye sirf aapke liye hai, banate waqt sunne ke liye — Facebook post mein ye button nahi jaayega.</p>
+
     <label>Facebook caption (auto-generated, editable)</label>
     <textarea id="captionInput" style="min-height:110px;"></textarea>
   </div>
@@ -327,6 +345,55 @@ Tuesday | Patience | ...
     <button class="btn btn-secondary" id="downloadAll">Download all 7 (zip)</button>
     <button class="btn btn-outline" id="resetDay">Reset this day to default</button>
     <div class="status" id="status"></div>
+
+    <div style="margin-top:18px; border-top:2px solid #2c3252; padding-top:16px;">
+      <label>🗣️ AI Awaaz / Auto-Narration (Google Cloud TTS)</label>
+      <p style="font-size:12px;color:#b9b2a0;">Is din ka theme + quote AI khud bolke narration bana dega, jo Reel Video mein music ki jagah (ya uske saath) jud jaata hai.</p>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:8px;">
+        <input type="password" id="ttsApiKeyInput" placeholder="Google Cloud TTS API Key" style="flex:1; min-width:180px; background:#0f1223;color:#f3ead9;border:2px solid #2c3252;border-radius:8px;padding:10px;">
+        <button type="button" id="ttsSaveKeyBtn" style="width:auto; padding:10px 14px; font-size:13px; background:#0f1223; color:#e8c675; border:2px solid #2c3252; border-radius:8px; cursor:pointer;">Save Key</button>
+      </div>
+      <p style="font-size:12px;color:#b9b2a0;">Key sirf isी browser mein save hoti hai, file/GitHub mein kabhi nahi jaati.</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+        <div style="flex:1; min-width:140px;">
+          <label style="font-size:12px;">Hindi Voice</label>
+          <select id="ttsHiVoice" style="width:100%;">
+            <option value="hi-IN-Standard-A">Standard A (Female)</option>
+            <option value="hi-IN-Standard-D">Standard D (Female)</option>
+            <option value="hi-IN-Standard-B">Standard B (Male)</option>
+            <option value="hi-IN-Wavenet-A">Wavenet A (behtar)</option>
+          </select>
+        </div>
+        <div style="flex:1; min-width:140px;">
+          <label style="font-size:12px;">English Voice</label>
+          <select id="ttsEnVoice" style="width:100%;">
+            <option value="en-IN-Standard-A">en-IN Standard A (F)</option>
+            <option value="en-US-Standard-C">en-US Standard C (F)</option>
+            <option value="en-US-Standard-D">en-US Standard D (M)</option>
+          </select>
+        </div>
+        <div style="flex:1; min-width:140px;">
+          <label style="font-size:12px;">Spanish Voice</label>
+          <select id="ttsEsVoice" style="width:100%;">
+            <option value="es-ES-Standard-A">es-ES Standard A (F)</option>
+            <option value="es-US-Standard-A">es-US Standard A (F)</option>
+            <option value="es-US-Standard-B">es-US Standard B (M)</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:10px;">
+        <button type="button" id="narrationBtn" style="width:auto; background:linear-gradient(135deg, #7b4af7, #4a6cf7); color:#fff; border:none; padding:10px 16px; border-radius:8px; cursor:pointer;">🎙️ AI Narration Banayein</button>
+        <button type="button" id="narrationToggleBtn" style="display:none; width:auto; padding:10px 16px; font-size:20px; border-radius:50%; border:2px solid #2c3252; background:#0f1223; color:#f3ead9; cursor:pointer;">▶️</button>
+      </div>
+      <div id="narrationStatus" style="font-size:12px;color:#b9b2a0; margin-top:6px;"></div>
+
+      <button type="button" id="videoBtn" class="btn btn-primary" style="margin-top:14px; width:100%; background:linear-gradient(135deg, #e5c07b, #a8752f);">🎬 Reel Video Banayein (~10 sec)</button>
+      <p style="font-size:12px;color:#b9b2a0;">Ken-Burns zoom ke saath live reel banegi (is din ke liye, 1080×1920) — background music ya AI narration lagayi hai to wo bhi judegi.</p>
+      <canvas id="videoCanvas" style="display:none;"></canvas>
+      <video id="videoPreview" controls playsinline style="display:none; width:100%; margin:10px auto 0; border-radius:8px; background:#000;"></video>
+      <button type="button" id="convertMp4Btn" class="btn" style="display:none; width:100%; background:linear-gradient(135deg, #2ecc71, #1a8f4c); color:#06210f;">📱 Mobile ke liye MP4 Banayein</button>
+      <p style="font-size:12px;color:#b9b2a0;" id="convertMp4Hint"></p>
+    </div>
   </div>
 </div>
 
@@ -473,6 +540,7 @@ if (!currentWeekName || !weeksStore[currentWeekName]) {
 let state = weeksStore[currentWeekName];
 let activeDay = 0;
 let activeLang = "en";
+let avatarPhoto = null; // global across all 7 days
 
 const dayTabsEl = document.getElementById("dayTabs");
 const langTabsEl = document.getElementById("langTabs");
@@ -646,6 +714,114 @@ removeCustomBg.onclick = () => {
   statusEl.textContent = DAYS[activeDay] + " ka background wapas preset par set kar diya.";
 };
 
+// ---- profile / avatar photo (global, drawn inside a gold ring at top of every day's card) ----
+const avatarInput = document.getElementById("avatarInput");
+const avatarClearBtn = document.getElementById("avatarClearBtn");
+avatarInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      avatarPhoto = img;
+      avatarClearBtn.style.display = "block";
+      drawCard();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+avatarClearBtn.addEventListener("click", () => {
+  avatarPhoto = null;
+  avatarInput.value = "";
+  avatarClearBtn.style.display = "none";
+  drawCard();
+});
+
+// ---- background music (apna MP3/M4A upload karein — sirf tool mein kaam karte waqt sunne ke liye, PNG/zip download mein music nahi judti) ----
+const bgAudioInput = document.getElementById("bgAudioInput");
+const bgAudioClearBtn = document.getElementById("bgAudioClearBtn");
+const bgAudioHint = document.getElementById("bgAudioHint");
+const musicToggleBtn = document.getElementById("musicToggleBtn");
+const bgVolumeInput = document.getElementById("bgVolumeInput");
+const bgVolumeVal = document.getElementById("bgVolumeVal");
+let bgAudioEl = null;
+let bgAudioObjectUrl = null;
+
+bgAudioInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (bgAudioObjectUrl) URL.revokeObjectURL(bgAudioObjectUrl);
+  bgAudioObjectUrl = URL.createObjectURL(file);
+  if (bgAudioEl) { bgAudioEl.pause(); bgAudioEl.remove(); }
+  bgAudioEl = document.createElement("audio");
+  bgAudioEl.src = bgAudioObjectUrl;
+  bgAudioEl.loop = true;
+  bgAudioEl.volume = parseInt(bgVolumeInput.value, 10) / 100;
+  document.body.appendChild(bgAudioEl);
+  bgAudioClearBtn.style.display = "block";
+  bgAudioHint.style.display = "block";
+  musicToggleBtn.style.display = "inline-block";
+  musicToggleBtn.textContent = "🎵";
+  bgVolumeInput.style.display = "inline-block";
+  bgVolumeVal.style.display = "inline-block";
+});
+bgAudioClearBtn.addEventListener("click", () => {
+  if (bgAudioEl) { bgAudioEl.pause(); bgAudioEl.remove(); bgAudioEl = null; }
+  if (bgAudioObjectUrl) { URL.revokeObjectURL(bgAudioObjectUrl); bgAudioObjectUrl = null; }
+  bgAudioInput.value = "";
+  bgAudioClearBtn.style.display = "none";
+  bgAudioHint.style.display = "none";
+  musicToggleBtn.style.display = "none";
+  bgVolumeInput.style.display = "none";
+  bgVolumeVal.style.display = "none";
+});
+musicToggleBtn.addEventListener("click", () => {
+  if (!bgAudioEl) return;
+  if (bgAudioEl.paused) { bgAudioEl.play(); musicToggleBtn.textContent = "🔊"; }
+  else { bgAudioEl.pause(); musicToggleBtn.textContent = "🎵"; }
+});
+bgVolumeInput.addEventListener("input", (e) => {
+  const v = parseInt(e.target.value, 10);
+  bgVolumeVal.textContent = v + "%";
+  if (bgAudioEl) bgAudioEl.volume = v / 100;
+});
+
+// ---- free "Listen" preview using the browser's own voice (works only inside the tool) ----
+const listenBtn = document.getElementById("listenBtn");
+let isSpeaking = false;
+listenBtn.addEventListener("click", () => {
+  if (!("speechSynthesis" in window)) {
+    alert("Maaf kijiye, is browser mein awaaz padhne ka feature nahi hai.");
+    return;
+  }
+  if (isSpeaking) {
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    listenBtn.textContent = "🎧 Sunein (Preview)";
+    return;
+  }
+  const d = state[activeDay];
+  let text;
+  if (PAIR_MAP[activeLang]) {
+    const [l1, l2] = PAIR_MAP[activeLang];
+    text = [d.theme, d[l1], d[l2]].filter(Boolean).join(". ");
+  } else {
+    text = [d.theme, d[activeLang]].filter(Boolean).join(". ");
+  }
+  if (!text.trim()) return;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = activeLang === "en" || (PAIR_MAP[activeLang] && PAIR_MAP[activeLang][0] === "en") ? "en-US"
+    : activeLang === "es" || (PAIR_MAP[activeLang] && PAIR_MAP[activeLang][1] === "es") ? "es-ES"
+    : "hi-IN";
+  utter.onend = () => { isSpeaking = false; listenBtn.textContent = "🎧 Sunein (Preview)"; };
+  utter.onerror = () => { isSpeaking = false; listenBtn.textContent = "🎧 Sunein (Preview)"; };
+  window.speechSynthesis.speak(utter);
+  isSpeaking = true;
+  listenBtn.textContent = "⏹ Rokein";
+});
+
 document.getElementById("applyBgAllBtn").onclick = () => {
   const d = state[activeDay];
   for (let i = 0; i < 7; i++) {
@@ -726,13 +902,37 @@ function drawCardToContext(context, w, h, dayIndex, lang) {
     context.fillStyle = grad;
     context.fillRect(0, 0, w, h);
 
+    // profile/avatar ring (global, same photo on every day's card) + push everything else down a bit so it never overlaps
+    const yOff = avatarPhoto ? h * 0.09 : 0;
+    if (avatarPhoto) {
+      const acx = w / 2, acy = h * 0.075, ar = w * 0.075;
+      context.save();
+      context.beginPath();
+      context.arc(acx, acy, ar, 0, Math.PI * 2);
+      context.closePath();
+      context.save();
+      context.clip();
+      const ir = avatarPhoto.width / avatarPhoto.height, br = 1;
+      let sx, sy, sw, sh;
+      if (ir > br) { sh = avatarPhoto.height; sw = sh * br; sx = (avatarPhoto.width - sw) / 2; sy = 0; }
+      else { sw = avatarPhoto.width; sh = sw / br; sx = 0; sy = (avatarPhoto.height - sh) / 2; }
+      context.drawImage(avatarPhoto, sx, sy, sw, sh, acx - ar, acy - ar, ar * 2, ar * 2);
+      context.restore();
+      context.lineWidth = w * 0.006;
+      context.strokeStyle = "#e8c675";
+      context.shadowColor = "rgba(232,198,117,0.6)";
+      context.shadowBlur = 14;
+      context.stroke();
+      context.restore();
+    }
+
     context.fillStyle = "#e8c675";
     context.font = "600 " + Math.round(w*0.032) + "px Poppins, sans-serif";
     context.textAlign = "center";
-    context.fillText(dayLabelFor(lang, dayIndex), w/2, h*0.10);
+    context.fillText(dayLabelFor(lang, dayIndex), w/2, h*0.10 + yOff);
 
     context.fillStyle = "#e8c675";
-    context.fillRect(w/2 - 60, h*0.13, 120, 3);
+    context.fillRect(w/2 - 60, h*0.13 + yOff, 120, 3);
 
     const colorMap = { white: "#f3ead9", golden: "#e8c675", black: "#151515" };
     const mainColor = colorMap[d.textColor || "white"];
@@ -740,7 +940,7 @@ function drawCardToContext(context, w, h, dayIndex, lang) {
 
     context.fillStyle = mainColor;
     context.font = "600 " + d.themeSize + "px 'Cormorant Garamond', serif";
-    context.fillText(d.theme, w/2, h*0.22);
+    context.fillText(d.theme, w/2, h*0.22 + yOff);
 
     const maxWidth = w * 0.65;
 
@@ -751,7 +951,7 @@ function drawCardToContext(context, w, h, dayIndex, lang) {
       const lh1 = size1 * 1.35;
       const lh2 = size2 * 1.35;
 
-      let y = h * 0.36;
+      let y = h * 0.36 + yOff;
       context.font = (l1 === "hi" ? "500 " : "italic 500 ") + size1 + "px 'Cormorant Garamond', serif";
       context.fillStyle = LANG_QUOTE_COLORS[l1] || "#f3ead9";
       const lines1 = wrapText(context, quoteText(d[l1]), w/2, y, maxWidth, lh1);
@@ -767,7 +967,7 @@ function drawCardToContext(context, w, h, dayIndex, lang) {
       context.font = (lang === "hi" ? "500 " : "italic 500 ") + d.quoteSize + "px 'Cormorant Garamond', serif";
       context.fillStyle = LANG_QUOTE_COLORS[lang] || "#f3ead9";
       const lh = d.quoteSize * 1.35;
-      wrapText(context, quoteText(d[lang]), w/2, h*0.46, maxWidth, lh);
+      wrapText(context, quoteText(d[lang]), w/2, h*0.46 + yOff, maxWidth, lh);
     }
 
     context.font = "500 " + Math.round(w*0.026) + "px Poppins, sans-serif";
@@ -1006,6 +1206,357 @@ document.getElementById("fillWeekBtn").onclick = () => {
 
 renderWeekSelect();
 syncControlsFromState();
+
+// ================= 🎬 Reel Video Export + 🎙️ AI Narration (added) =================
+(function(){
+  const videoBtn = document.getElementById('videoBtn');
+  const videoCanvasEl = document.getElementById('videoCanvas');
+  const vctx = videoCanvasEl.getContext('2d');
+  const videoPreview = document.getElementById('videoPreview');
+  const convertMp4Btn = document.getElementById('convertMp4Btn');
+  const convertMp4Hint = document.getElementById('convertMp4Hint');
+  let videoPreviewUrl = null;
+  let lastExportedWebmBlob = null;
+  let ffmpegInstance = null;
+  const VIDEO_W = 1080, VIDEO_H = 1920, VIDEO_FPS = 30, VIDEO_SECONDS = 10;
+
+  function makeTwinkleStars(count){
+    const stars = [];
+    for (let i=0;i<count;i++){
+      stars.push({x:Math.random()*VIDEO_W, y:Math.random()*VIDEO_H, r:Math.random()*1.8+0.4, base:Math.random()*0.45+0.12, speed:Math.random()*0.8+0.3, phase:Math.random()*Math.PI*2});
+    }
+    return stars;
+  }
+
+  function triggerDownloadFile(blob, filename){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 8000);
+  }
+
+  // Snapshot the current day's card at full Reel resolution (1080x1920) without
+  // touching that day's saved Post/Reel size setting.
+  async function snapshotCardAsReel(){
+    const prevW = canvas.width, prevH = canvas.height;
+    canvas.width = VIDEO_W; canvas.height = VIDEO_H;
+    await drawCardToContext(ctx, VIDEO_W, VIDEO_H, activeDay, activeLang);
+    const bitmap = await createImageBitmap(canvas);
+    canvas.width = prevW; canvas.height = prevH;
+    drawCard(); // restore normal on-screen preview
+    return bitmap;
+  }
+
+  function renderVideoFrame(t, snapshot, stars){
+    vctx.clearRect(0,0,VIDEO_W,VIDEO_H);
+    const zoom = 1 + 0.045 * (t / VIDEO_SECONDS);
+    const dw = VIDEO_W * zoom, dh = VIDEO_H * zoom;
+    vctx.drawImage(snapshot, (VIDEO_W-dw)/2, (VIDEO_H-dh)/2, dw, dh);
+    stars.forEach(s=>{
+      const alpha = Math.max(0, s.base * (0.5 + 0.5*Math.sin(t*s.speed*2+s.phase)));
+      vctx.beginPath();
+      vctx.fillStyle = `rgba(255,255,255,${alpha})`;
+      vctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      vctx.fill();
+    });
+  }
+
+  // ---- AI Narration ----
+  const ttsApiKeyInput = document.getElementById('ttsApiKeyInput');
+  const ttsSaveKeyBtn = document.getElementById('ttsSaveKeyBtn');
+  const ttsHiVoice = document.getElementById('ttsHiVoice');
+  const ttsEnVoice = document.getElementById('ttsEnVoice');
+  const ttsEsVoice = document.getElementById('ttsEsVoice');
+  const narrationBtn = document.getElementById('narrationBtn');
+  const narrationToggleBtn = document.getElementById('narrationToggleBtn');
+  const narrationStatus = document.getElementById('narrationStatus');
+  let narrationAudioEl = null;
+  let narrationObjectUrl = null;
+  let sharedAudioCtx = null;
+  const LANG_CODE_TTS = { hi: 'hi-IN', en: 'en-US', es: 'es-ES' };
+
+  function getSharedAudioCtx(){
+    if(!sharedAudioCtx) sharedAudioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    return sharedAudioCtx;
+  }
+  function getOrCreateSourceNode(el){
+    const actx = getSharedAudioCtx();
+    if(!el.__lumioraSrcNode) el.__lumioraSrcNode = actx.createMediaElementSource(el);
+    return el.__lumioraSrcNode;
+  }
+
+  ttsApiKeyInput.value = localStorage.getItem('lumiora_tts_key') || '';
+  ttsSaveKeyBtn.addEventListener('click', () => {
+    localStorage.setItem('lumiora_tts_key', ttsApiKeyInput.value.trim());
+    narrationStatus.textContent = '✅ API key is browser mein save ho gayi.';
+  });
+
+  async function ttsSynthesize(apiKey, text, languageCode, voiceName){
+    const res = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${encodeURIComponent(apiKey)}`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ input:{text}, voice:{languageCode, name:voiceName}, audioConfig:{audioEncoding:'MP3', speakingRate:0.95} })
+    });
+    if(!res.ok){ const t = await res.text().catch(()=> ''); throw new Error('TTS API error '+res.status+': '+t.slice(0,200)); }
+    const data = await res.json();
+    return data.audioContent;
+  }
+  function base64ToArrayBuffer(base64){
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+    return bytes.buffer;
+  }
+  async function concatenateBuffers(actx, buffers, gapSeconds){
+    if (buffers.length === 1) return buffers[0];
+    const sampleRate = buffers[0].sampleRate;
+    const totalDuration = buffers.reduce((sum, b) => sum + b.duration, 0) + gapSeconds * (buffers.length - 1);
+    const offlineCtx = new OfflineAudioContext(1, Math.ceil(totalDuration * sampleRate), sampleRate);
+    let offset = 0;
+    buffers.forEach((buf) => {
+      const src = offlineCtx.createBufferSource();
+      src.buffer = buf;
+      src.connect(offlineCtx.destination);
+      src.start(offset);
+      offset += buf.duration + gapSeconds;
+    });
+    return offlineCtx.startRendering();
+  }
+  function audioBufferToWav(buffer){
+    const numChannels = buffer.numberOfChannels;
+    const sampleRate = buffer.sampleRate;
+    const numFrames = buffer.length;
+    const blockAlign = numChannels*2;
+    const dataSize = numFrames*blockAlign;
+    const arrBuf = new ArrayBuffer(44+dataSize);
+    const view = new DataView(arrBuf);
+    function writeStr(offset,str){ for(let i=0;i<str.length;i++) view.setUint8(offset+i, str.charCodeAt(i)); }
+    writeStr(0,'RIFF'); view.setUint32(4,36+dataSize,true); writeStr(8,'WAVE');
+    writeStr(12,'fmt '); view.setUint32(16,16,true); view.setUint16(20,1,true);
+    view.setUint16(22,numChannels,true); view.setUint32(24,sampleRate,true);
+    view.setUint32(28,sampleRate*blockAlign,true); view.setUint16(32,blockAlign,true); view.setUint16(34,16,true);
+    writeStr(36,'data'); view.setUint32(40,dataSize,true);
+    let offset=44;
+    const channelData=[];
+    for(let ch=0; ch<numChannels; ch++) channelData.push(buffer.getChannelData(ch));
+    for(let i=0;i<numFrames;i++){
+      for(let ch=0; ch<numChannels; ch++){
+        let s = Math.max(-1, Math.min(1, channelData[ch][i]));
+        s = s<0 ? s*0x8000 : s*0x7FFF;
+        view.setInt16(offset, s, true);
+        offset+=2;
+      }
+    }
+    return new Blob([arrBuf], {type:'audio/wav'});
+  }
+
+  function buildNarrationSegments(){
+    const d = state[activeDay];
+    const voiceFor = { hi: ttsHiVoice.value, en: ttsEnVoice.value, es: ttsEsVoice.value };
+    const segs = [];
+    if (d.theme && d.theme.trim()) segs.push({ text: d.theme, lang: 'en-US', voice: ttsEnVoice.value });
+    if (PAIR_MAP[activeLang]) {
+      const [l1, l2] = PAIR_MAP[activeLang];
+      if (d[l1]) segs.push({ text: d[l1], lang: LANG_CODE_TTS[l1], voice: voiceFor[l1] });
+      if (d[l2]) segs.push({ text: d[l2], lang: LANG_CODE_TTS[l2], voice: voiceFor[l2] });
+    } else if (d[activeLang]) {
+      segs.push({ text: d[activeLang], lang: LANG_CODE_TTS[activeLang], voice: voiceFor[activeLang] });
+    }
+    return segs;
+  }
+
+  narrationBtn.addEventListener('click', async () => {
+    const apiKey = (localStorage.getItem('lumiora_tts_key') || ttsApiKeyInput.value).trim();
+    if(!apiKey){ narrationStatus.textContent = '⚠️ Pehle apni Google Cloud TTS API key daal kar "Save Key" karein.'; return; }
+    const segments = buildNarrationSegments();
+    if(!segments.length){ narrationStatus.textContent = '⚠️ Is din/language ke liye quote khaali hai.'; return; }
+    narrationBtn.disabled = true;
+    narrationStatus.textContent = '⏳ AI awaaz banayi ja rahi hai...';
+    try{
+      const actx = getSharedAudioCtx();
+      const buffers = [];
+      for (const seg of segments) {
+        const b64 = await ttsSynthesize(apiKey, seg.text, seg.lang, seg.voice);
+        buffers.push(await actx.decodeAudioData(base64ToArrayBuffer(b64)));
+      }
+      const combined = await concatenateBuffers(actx, buffers, 0.5);
+      const wavBlob = audioBufferToWav(combined);
+      if(narrationObjectUrl) URL.revokeObjectURL(narrationObjectUrl);
+      narrationObjectUrl = URL.createObjectURL(wavBlob);
+      if(narrationAudioEl){ narrationAudioEl.pause(); narrationAudioEl.remove(); }
+      narrationAudioEl = document.createElement('audio');
+      narrationAudioEl.src = narrationObjectUrl;
+      narrationAudioEl.loop = false;
+      document.body.appendChild(narrationAudioEl);
+      narrationToggleBtn.style.display = 'inline-block';
+      narrationToggleBtn.textContent = '▶️';
+      narrationStatus.textContent = `✅ AI narration taiyar (~${combined.duration.toFixed(1)}s). Ab "Reel Video Banayein" dabayein.`;
+    }catch(err){
+      narrationStatus.textContent = '⚠️ Error: ' + err.message;
+    }
+    narrationBtn.disabled = false;
+  });
+
+  narrationToggleBtn.addEventListener('click', () => {
+    if(!narrationAudioEl) return;
+    if(narrationAudioEl.paused){ narrationAudioEl.currentTime = 0; narrationAudioEl.play(); narrationToggleBtn.textContent = '⏸️'; }
+    else { narrationAudioEl.pause(); narrationToggleBtn.textContent = '▶️'; }
+  });
+
+  async function buildExportAudio(){
+    const hasNarration = !!(narrationAudioEl && narrationAudioEl.src);
+    const hasMusic = !!(typeof bgAudioEl !== 'undefined' && bgAudioEl && bgAudioEl.src);
+    if(!hasNarration && !hasMusic) return { audioTracks: [], playables: [], durationOverride: null };
+    if(hasNarration && !hasMusic){
+      const stream = narrationAudioEl.captureStream ? narrationAudioEl.captureStream() : null;
+      return { audioTracks: stream?stream.getAudioTracks():[], playables:[narrationAudioEl], durationOverride: Math.min(30, Math.max(6, narrationAudioEl.duration+1)) };
+    }
+    if(hasMusic && !hasNarration){
+      const stream = bgAudioEl.captureStream ? bgAudioEl.captureStream() : null;
+      return { audioTracks: stream?stream.getAudioTracks():[], playables:[bgAudioEl], durationOverride: null };
+    }
+    try{
+      const actx = getSharedAudioCtx();
+      const dest = actx.createMediaStreamDestination();
+      const narrNode = getOrCreateSourceNode(narrationAudioEl);
+      const musicNode = getOrCreateSourceNode(bgAudioEl);
+      const musicGain = actx.createGain();
+      musicGain.gain.value = 0.4;
+      narrNode.connect(dest); narrNode.connect(actx.destination);
+      musicNode.connect(musicGain); musicGain.connect(dest); musicGain.connect(actx.destination);
+      return { audioTracks: dest.stream.getAudioTracks(), playables:[narrationAudioEl, bgAudioEl], durationOverride: Math.min(30, Math.max(6, narrationAudioEl.duration+1)) };
+    }catch(e){
+      const stream = narrationAudioEl.captureStream ? narrationAudioEl.captureStream() : null;
+      return { audioTracks: stream?stream.getAudioTracks():[], playables:[narrationAudioEl], durationOverride: Math.min(30, Math.max(6, narrationAudioEl.duration+1)) };
+    }
+  }
+
+  async function startVideoExport(){
+    if(!videoCanvasEl.captureStream){
+      statusEl.textContent = '⚠️ Ye browser video record support nahi karta. Desktop Chrome ya latest Safari try karein.';
+      return;
+    }
+    videoBtn.disabled = true;
+    statusEl.textContent = '⏳ Card taiyar ho raha hai...';
+    videoCanvasEl.width = VIDEO_W; videoCanvasEl.height = VIDEO_H;
+
+    const snapshot = await snapshotCardAsReel();
+    const stars = makeTwinkleStars(160);
+    const audioPlan = await buildExportAudio();
+    const videoDurationSeconds = audioPlan.durationOverride || VIDEO_SECONDS;
+
+    const canvasStream = videoCanvasEl.captureStream(VIDEO_FPS);
+    let combinedStream = canvasStream;
+    if(audioPlan.audioTracks.length){
+      combinedStream = new MediaStream([...canvasStream.getVideoTracks(), ...audioPlan.audioTracks]);
+    }
+    let mimeType = '';
+    const candidates = ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
+    for(const c of candidates){ if(window.MediaRecorder && MediaRecorder.isTypeSupported(c)){ mimeType = c; break; } }
+    if(!window.MediaRecorder){
+      statusEl.textContent = '⚠️ Ye browser video record support nahi karta.';
+      videoBtn.disabled = false;
+      return;
+    }
+    const recorder = new MediaRecorder(combinedStream, mimeType ? {mimeType, videoBitsPerSecond: 8000000} : {});
+    const chunks = [];
+    recorder.ondataavailable = e => { if(e.data.size) chunks.push(e.data); };
+    const stopped = new Promise(resolve => { recorder.onstop = resolve; });
+
+    audioPlan.playables.forEach(el => { el.currentTime = 0; el.play().catch(()=>{}); });
+    recorder.start();
+    const startTime = performance.now();
+    await new Promise(resolve => {
+      function loop(){
+        const elapsed = (performance.now()-startTime)/1000;
+        renderVideoFrame(elapsed, snapshot, stars);
+        statusEl.textContent = `⏳ Reel record ho rahi hai... ${Math.min(elapsed, videoDurationSeconds).toFixed(1)}s / ${videoDurationSeconds.toFixed(1)}s`;
+        if(elapsed >= videoDurationSeconds){ resolve(); return; }
+        requestAnimationFrame(loop);
+      }
+      loop();
+    });
+    recorder.stop();
+    audioPlan.playables.forEach(el => el.pause());
+    await stopped;
+
+    const blob = new Blob(chunks, {type: mimeType || 'video/webm'});
+    const filename = "Lumiora_" + DAYS[activeDay] + "_Reel_" + Date.now() + ".webm";
+    triggerDownloadFile(blob, filename);
+
+    if(videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
+    videoPreviewUrl = URL.createObjectURL(blob);
+    videoPreview.src = videoPreviewUrl;
+    videoPreview.style.display = 'block';
+
+    lastExportedWebmBlob = blob;
+    convertMp4Btn.style.display = 'inline-block';
+    convertMp4Hint.style.display = 'block';
+    convertMp4Btn.textContent = '📱 Mobile ke liye MP4 Banayein';
+    convertMp4Btn.disabled = false;
+    videoBtn.disabled = false;
+    statusEl.textContent = '✅ Reel video (WebM) taiyar! Neeche player mein dekh sakte hain. Facebook/Instagram/WhatsApp par seedha upload chalega, ya "Mobile ke liye MP4 Banayein" dabayein.';
+  }
+
+  function loadScriptOnce(src){
+    return new Promise((resolve, reject) => {
+      if(document.querySelector(`script[src="${src}"]`)){ resolve(); return; }
+      const s = document.createElement('script');
+      s.src = src; s.onload = ()=>resolve(); s.onerror = ()=>reject(new Error('Script load failed: '+src));
+      document.head.appendChild(s);
+    });
+  }
+  async function toBlobURLLocal(url, mimeType){
+    const resp = await fetch(url);
+    const buf = await resp.arrayBuffer();
+    return URL.createObjectURL(new Blob([buf], {type: mimeType}));
+  }
+  async function getFFmpeg(){
+    if(ffmpegInstance) return ffmpegInstance;
+    if(typeof window.SharedArrayBuffer === 'undefined'){ window.SharedArrayBuffer = window.ArrayBuffer; }
+    await loadScriptOnce('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js');
+    const { FFmpeg } = window.FFmpegWASM;
+    const ffmpeg = new FFmpeg();
+    const baseURL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd';
+    await ffmpeg.load({
+      coreURL: await toBlobURLLocal(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+      wasmURL: await toBlobURLLocal(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
+    });
+    ffmpegInstance = ffmpeg;
+    return ffmpeg;
+  }
+  async function runFFmpegConvert(ffmpeg, scaleHeight){
+    try{ await ffmpeg.deleteFile('output.mp4'); }catch(e){}
+    await ffmpeg.exec(['-i','input.webm','-vf',`scale=-2:${scaleHeight}`,'-r','24','-c:v','libx264','-preset','ultrafast','-crf','24','-pix_fmt','yuv420p','-c:a','aac','-b:a','96k','-movflags','+faststart','output.mp4']);
+    return ffmpeg.readFile('output.mp4');
+  }
+  convertMp4Btn.addEventListener('click', async () => {
+    if(!lastExportedWebmBlob) return;
+    convertMp4Btn.disabled = true;
+    try{
+      convertMp4Btn.textContent = '⏳ Converter engine load ho raha hai...';
+      const ffmpeg = await getFFmpeg();
+      const inputData = new Uint8Array(await lastExportedWebmBlob.arrayBuffer());
+      await ffmpeg.writeFile('input.webm', inputData);
+      let mp4Data = null, lastErr = null;
+      for(const h of [1920,1280,960,640]){
+        try{ convertMp4Btn.textContent = `⏳ MP4 taiyar ho rahi hai (${h}p)...`; mp4Data = await runFFmpegConvert(ffmpeg, h); break; }
+        catch(e){ lastErr = e; mp4Data = null; }
+      }
+      if(!mp4Data) throw lastErr || new Error('conversion failed');
+      const mp4Blob = new Blob([mp4Data], {type:'video/mp4'});
+      triggerDownloadFile(mp4Blob, "Lumiora_" + DAYS[activeDay] + "_Reel_" + Date.now() + ".mp4");
+      convertMp4Btn.textContent = '✅ MP4 taiyar! Dobara Download Karein';
+      convertMp4Hint.textContent = 'MP4 download ho gayi — WhatsApp/AirDrop se Photos mein save karke Reels/Facebook par post karein.';
+    }catch(err){
+      convertMp4Btn.textContent = '📱 Mobile ke liye MP4 Banayein';
+      convertMp4Hint.textContent = '⚠️ MP4 banane mein dikkat aayi: ' + err.message + '. WebM ko WhatsApp se bhejkar convert karne wala tareeka use kar lein.';
+    }
+    convertMp4Btn.disabled = false;
+  });
+
+  videoBtn.addEventListener('click', startVideoExport);
+})();
 </script>
 </body>
 </html>
