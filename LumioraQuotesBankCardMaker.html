@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Lumiora Quotes Bank Card Maker</title>
+<style>
+/* ── Password ── */
+#lockScreen{position:fixed;inset:0;background:#0d0d1a;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:'Segoe UI',sans-serif;}
+#lockScreen h1{color:#FFD700;font-size:2rem;margin-bottom:8px;letter-spacing:2px;}
+#lockScreen p{color:#aaa;margin-bottom:28px;font-size:.95rem;}
+#pwInput{padding:14px 22px;border-radius:12px;border:2px solid #7D3C98;background:#1a1a2e;color:#fff;font-size:1.1rem;width:260px;outline:none;text-align:center;letter-spacing:4px;}
+#pwBtn{margin-top:14px;padding:13px 40px;background:linear-gradient(135deg,#7D3C98,#4A235A);color:#FFD700;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;}
+#pwErr{color:#e74c3c;margin-top:10px;font-size:.9rem;min-height:20px;}
+/* ── Base ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0d0d1a,#1a0a2e,#0d1a0d);min-height:100vh;color:#e8e0f0;}
+#app{display:none;}
+header{background:linear-gradient(90deg,#1a0a2e,#2d0a4e,#1a0a2e);border-bottom:2px solid #7D3C98;padding:16px 24px;display:flex;align-items:center;gap:14px;}
+header h1{font-size:1.3rem;color:#FFD700;letter-spacing:1px;}
+header p{font-size:.8rem;color:#b39ddb;margin-top:2px;}
+.logo{font-size:2rem;}
+.main{display:flex;min-height:calc(100vh - 72px);}
+/* ── Left Panel ── */
+.panel-left{width:390px;min-width:340px;background:#12102a;border-right:1px solid #3d1a5e;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
+.sec{font-size:.72rem;font-weight:700;letter-spacing:2px;color:#9b59b6;text-transform:uppercase;margin-bottom:8px;}
+label{font-size:.85rem;color:#c9b8e8;display:block;margin-bottom:5px;}
+textarea,input[type=text],input[type=number],input[type=password],select{width:100%;background:#1e1a38;border:1.5px solid #4a2a6e;color:#e8e0f0;border-radius:10px;padding:10px 12px;font-size:.88rem;outline:none;font-family:'Segoe UI',sans-serif;transition:border-color .2s;}
+textarea{resize:vertical;min-height:80px;}
+textarea:focus,input:focus,select:focus{border-color:#9b59b6;}
+.btn{padding:11px 16px;border:none;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;transition:transform .1s;letter-spacing:.5px;width:100%;}
+.btn:active{transform:scale(.97);}
+.bp{background:linear-gradient(135deg,#8e44ad,#4a235a);color:#FFD700;}
+.bs{background:linear-gradient(135deg,#1a6b3c,#0d3d22);color:#90ee90;}
+.bi{background:linear-gradient(135deg,#1a3a6b,#0d1f3d);color:#87ceeb;}
+.bw{background:linear-gradient(135deg,#7a4a00,#3d2200);color:#FFD700;}
+.bd{background:#3d0d0d;color:#e74c3c;font-size:.8rem;}
+.bv{background:linear-gradient(135deg,#6d1a6d,#3d0a3d);color:#ffb3ff;}
+.bl{background:linear-gradient(135deg,#0a3d2e,#1a6b50);color:#90ffd0;}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{padding:5px 11px;border-radius:20px;font-size:.76rem;cursor:pointer;border:1.5px solid transparent;transition:all .2s;font-weight:600;}
+.chip.active{border-color:#FFD700!important;}
+.bg-galaxy{background:linear-gradient(135deg,#0d0d2b,#1a0a3e,#2d1b69);color:#e8d5ff;}
+.bg-dawn{background:linear-gradient(135deg,#7b2d00,#b85c00,#e8940a);color:#fff5e6;}
+.bg-forest{background:linear-gradient(135deg,#0a2e1a,#1a5e35,#2d8a50);color:#d5f5e3;}
+.bg-ocean{background:linear-gradient(135deg,#0a1a2e,#0d3b6e,#1a6baf);color:#d5e8ff;}
+.bg-rose{background:linear-gradient(135deg,#3d0a1a,#7a1a35,#b52d50);color:#ffd5df;}
+.bg-midnight{background:linear-gradient(135deg,#050510,#0d0d20,#1a1a35);color:#d5d5ff;}
+.bg-golden{background:linear-gradient(135deg,#2d1a00,#5c3800,#8a5500);color:#fff5c0;}
+.bg-white{background:#fff;color:#1a1a1a;}
+.bg-cream{background:linear-gradient(135deg,#f5ead0,#eedcb0);color:#2a1800;}
+.divider{height:1px;background:linear-gradient(90deg,transparent,#4a2a6e,transparent);margin:2px 0;}
+#avatarPreview{width:60px;height:60px;border-radius:50%;border:3px solid #FFD700;object-fit:cover;display:none;}
+.av-row{display:flex;align-items:center;gap:12px;}
+.mode-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;}
+.mode-tab{padding:8px 18px;border-radius:20px;font-size:.82rem;font-weight:700;cursor:pointer;border:2px solid #4a2a6e;background:#1e1a38;color:#b39ddb;transition:all .2s;}
+.mode-tab.active{background:#7D3C98;border-color:#FFD700;color:#FFD700;}
+.paste-hint{background:#1a1035;border:1px dashed #5a3a7e;border-radius:8px;padding:10px 12px;font-size:.78rem;color:#9b78c8;line-height:1.6;}
+/* music */
+.vol-row{display:flex;align-items:center;gap:10px;margin-top:6px;}
+.vol-row input[type=range]{flex:1;accent-color:#FFD700;}
+.vol-row span{color:#FFD700;font-size:.82rem;min-width:34px;text-align:right;}
+/* reel progress */
+#reelProgress{display:none;margin-top:8px;}
+#reelBar{height:8px;background:#1e1a38;border-radius:4px;overflow:hidden;}
+#reelFill{height:100%;width:0%;background:linear-gradient(90deg,#7D3C98,#FFD700);transition:width .3s;}
+#reelStatus{font-size:.78rem;color:#b39ddb;margin-top:4px;text-align:center;}
+/* video preview */
+#videoWrap{display:none;margin-top:10px;border-radius:10px;overflow:hidden;border:2px solid #7D3C98;}
+#videoWrap video{width:100%;display:block;}
+/* ── Right Panel ── */
+.panel-right{flex:1;display:flex;flex-direction:column;align-items:center;padding:24px;gap:14px;overflow-y:auto;}
+#canvasWrap{position:relative;box-shadow:0 8px 40px rgba(0,0,0,.6);border-radius:12px;overflow:hidden;}
+canvas{display:block;max-width:100%;}
+.ctrl-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.ctrl-row .btn{width:auto;padding:11px 20px;}
+.tip{font-size:.76rem;color:#7a6a9a;text-align:center;max-width:480px;line-height:1.5;}
+#captionPreview{background:#1e1a38;border:1px solid #4a2a6e;border-radius:10px;padding:14px;font-size:.85rem;line-height:1.7;color:#d5c8f0;white-space:pre-wrap;min-height:80px;width:100%;max-width:560px;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:#0d0d1a;}
+::-webkit-scrollbar-thumb{background:#4a2a6e;border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD -->
+<div id="lockScreen">
+  <div class="logo">🌟</div>
+  <h1>Lumiora Tools</h1>
+  <p>Quotes Bank Card Maker — Private Tool</p>
+  <input type="password" id="pwInput" placeholder="Password डालें" onkeydown="if(event.key==='Enter')checkPw()">
+  <button class="btn bp" id="pwBtn" onclick="checkPw()">🔓 खोलें</button>
+  <div id="pwErr"></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+<header>
+  <div class="logo">💜</div>
+  <div>
+    <h1>Lumiora Quotes Bank Card Maker</h1>
+    <p>Excel/Sheets से quote paste करो → Card + Reel बनाओ → Download करो</p>
+  </div>
+</header>
+<div class="main">
+
+<!-- ══ LEFT PANEL ══ -->
+<div class="panel-left">
+
+  <!-- QUOTE INPUT -->
+  <div>
+    <div class="sec">📋 Excel / Sheets से Paste करें</div>
+    <div class="paste-hint">💡 Google Sheets → Quote cell → Ctrl+C → नीचे Paste करें</div>
+    <br>
+    <label>Quote + Author (एक ही cell)</label>
+    <textarea id="quoteText" rows="4" placeholder='"जो इंसान यह मान लेता है..." — स्वामी विवेकानंद' oninput="renderCard()"></textarea>
+    <br>
+    <label>Facebook Caption</label>
+    <textarea id="captionText" rows="3" placeholder="🔥 हर सुबह एक नया मौका है..."></textarea>
+    <br>
+    <label>Hashtags</label>
+    <textarea id="hashText" rows="2" placeholder="#Lumiora #LumioraPositive..."></textarea>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SIZE -->
+  <div>
+    <div class="sec">📐 Card Size</div>
+    <div class="mode-tabs">
+      <div class="mode-tab active" onclick="setMode('post',this)">Post 1:1</div>
+      <div class="mode-tab" onclick="setMode('portrait',this)">Portrait 4:5</div>
+      <div class="mode-tab" onclick="setMode('reel',this)">Reel 9:16</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- BACKGROUND -->
+  <div>
+    <div class="sec">🎨 Background Theme</div>
+    <div class="chip-row" id="bgChips">
+      <div class="chip bg-galaxy active" onclick="setBg('galaxy',this)">🌌 Galaxy</div>
+      <div class="chip bg-dawn" onclick="setBg('dawn',this)">🌅 Dawn</div>
+      <div class="chip bg-forest" onclick="setBg('forest',this)">🌿 Forest</div>
+      <div class="chip bg-ocean" onclick="setBg('ocean',this)">🌊 Ocean</div>
+      <div class="chip bg-rose" onclick="setBg('rose',this)">🌹 Rose</div>
+      <div class="chip bg-midnight" onclick="setBg('midnight',this)">🌙 Midnight</div>
+      <div class="chip bg-golden" onclick="setBg('golden',this)">✨ Golden</div>
+      <div class="chip bg-white" onclick="setBg('white',this)" style="border-color:#ccc">⬜ White</div>
+      <div class="chip bg-cream" onclick="setBg('cream',this)" style="border-color:#c8a96e">🟡 Cream</div>
+    </div>
+    <br>
+    <label>अपनी Photo (Background)</label>
+    <input type="file" id="bgPhoto" accept="image/*" onchange="loadBgPhoto(this)" style="color:#b39ddb;font-size:.82rem;">
+    <button class="btn bd" style="margin-top:6px;" onclick="clearBgPhoto()">✕ Photo हटाएं</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- TEXT STYLE -->
+  <div>
+    <div class="sec">🔤 Text Style</div>
+
+    <label>Quote Font Size — <span id="qSizeLabel" style="color:#FFD700;font-weight:700;">32px</span></label>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+      <button class="btn bd" style="width:52px;height:52px;font-size:1.4rem;padding:0;flex-shrink:0;" onclick="adjSize('q',-2)">−</button>
+      <input type="number" id="qSize" value="32" min="16" max="80" style="text-align:center;font-size:1.2rem;font-weight:700;height:52px;" oninput="document.getElementById('qSizeLabel').textContent=this.value+'px';renderCard()">
+      <button class="btn bs" style="width:52px;height:52px;font-size:1.4rem;padding:0;flex-shrink:0;" onclick="adjSize('q',2)">+</button>
+      <button class="btn bw" style="width:70px;height:52px;font-size:.75rem;padding:0;flex-shrink:0;" onclick="adjSize('q',0,true)">Reset</button>
+    </div>
+
+    <label>Author Font Size — <span id="aSizeLabel" style="color:#FFD700;font-weight:700;">22px</span></label>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+      <button class="btn bd" style="width:52px;height:52px;font-size:1.4rem;padding:0;flex-shrink:0;" onclick="adjSize('a',-2)">−</button>
+      <input type="number" id="aSize" value="22" min="12" max="48" style="text-align:center;font-size:1.2rem;font-weight:700;height:52px;" oninput="document.getElementById('aSizeLabel').textContent=this.value+'px';renderCard()">
+      <button class="btn bs" style="width:52px;height:52px;font-size:1.4rem;padding:0;flex-shrink:0;" onclick="adjSize('a',2)">+</button>
+      <button class="btn bw" style="width:70px;height:52px;font-size:.75rem;padding:0;flex-shrink:0;" onclick="adjSize('a',0,true)">Reset</button>
+    </div>
+
+    <label>Text Color</label>
+    <div class="chip-row" id="textChips" style="margin-bottom:10px;">
+      <div class="chip active" onclick="setTc('auto',this)" style="background:#555;border-color:#aaa;">🔆 Auto</div>
+      <div class="chip" onclick="setTc('white',this)" style="background:#222;color:#fff;border-color:#888;">⬜ White</div>
+      <div class="chip" onclick="setTc('black',this)" style="background:#e0e0e0;color:#000;border-color:#888;">⬛ Black</div>
+      <div class="chip" onclick="setTc('gold',this)" style="background:#3d2a00;color:#FFD700;border-color:#FFD700;">🌟 Gold</div>
+    </div>
+
+    <label>Text Position</label>
+    <select id="textPos" onchange="renderCard()">
+      <option value="center">Center — बीच में</option>
+      <option value="bottom">Bottom — नीचे</option>
+      <option value="top">Top — ऊपर</option>
+    </select>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- AVATAR -->
+  <div>
+    <div class="sec">👤 Profile Photo (Avatar Ring)</div>
+    <div class="av-row">
+      <img id="avatarPreview" src="" alt="avatar">
+      <div style="flex:1;">
+        <input type="file" id="avatarFile" accept="image/*" onchange="loadAvatar(this)" style="color:#b39ddb;font-size:.82rem;">
+        <button class="btn bd" style="margin-top:6px;" onclick="clearAvatar()">✕ हटाएं</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- MUSIC -->
+  <div>
+    <div class="sec">🎵 Background Music</div>
+    <input type="file" id="musicFile" accept="audio/mp3,audio/m4a,audio/*" onchange="loadMusic(this)" style="color:#b39ddb;font-size:.82rem;">
+    <div class="vol-row">
+      <span style="color:#b39ddb;font-size:.82rem;">Volume</span>
+      <input type="range" id="volSlider" min="0" max="100" value="60" oninput="setVolume(this.value)">
+      <span id="volLabel">60%</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button class="btn bl" style="flex:1;" onclick="toggleMusic()">▶ Play / ⏸ Pause</button>
+      <button class="btn bd" style="width:80px;" onclick="stopMusic()">⏹ Stop</button>
+    </div>
+    <button class="btn bd" style="margin-top:6px;" onclick="clearMusic()">✕ Music हटाएं</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- WATERMARK -->
+  <div>
+    <div class="sec">🏷️ Watermark</div>
+    <input type="text" id="wmText" value="Lumiora" oninput="renderCard()">
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- NARRATION OPTIONS -->
+  <div>
+    <div class="sec">🎙️ Quote की आवाज़ (Reel के लिए)</div>
+
+    <!-- Google TTS — same as DualQuoteTool -->
+    <div style="background:#1a1035;border:1px solid #7D3C98;border-radius:10px;padding:12px;margin-bottom:10px;">
+      <div style="font-size:.82rem;color:#FFD700;font-weight:700;margin-bottom:6px;">🤖 Google Cloud TTS (Auto — Recommended)</div>
+      <label>API Key (browser में save, file में नहीं)</label>
+      <input type="password" id="ttsKey" placeholder="AIza..." oninput="saveTtsKey()" style="font-size:.88rem;">
+
+      <div style="margin-top:10px;">
+        <label>बोलने की Speed — <span id="ttsSpeedLabel" style="color:#FFD700;font-weight:700;">1.0x</span></label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span style="font-size:.78rem;color:#9b59b6;">धीमा</span>
+          <input type="range" id="ttsSpeed" min="0.7" max="1.5" step="0.05" value="1.0"
+            style="flex:1;accent-color:#FFD700;"
+            oninput="document.getElementById('ttsSpeedLabel').textContent=parseFloat(this.value).toFixed(2)+'x'">
+          <span style="font-size:.78rem;color:#9b59b6;">तेज़</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.7rem;color:#5a3a7e;margin-top:2px;">
+          <span>0.7x</span><span>0.85x</span><span>1.0x</span><span>1.2x</span><span>1.5x</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn bv" style="flex:1;height:48px;" onclick="generateNarration()">🎙️ Test सुनें</button>
+        <button class="btn bd" style="width:56px;height:48px;" onclick="clearNarration()">✕</button>
+      </div>
+      <div id="narrStatus" style="font-size:.78rem;color:#b39ddb;margin-top:6px;min-height:18px;"></div>
+      <audio id="narrAudio" controls style="width:100%;margin-top:6px;display:none;"></audio>
+      <div style="font-size:.72rem;color:#7a6a9a;margin-top:6px;">
+        💡 Key डालो → "Reel Video बनाएं" → आवाज़ auto-mix होगी
+      </div>
+    </div>
+
+    <!-- Uploaded narration (own voice) -->
+    <div style="background:#1a1035;border:1px solid #3d1a5e;border-radius:10px;padding:12px;">
+      <div style="font-size:.82rem;color:#FFD700;font-weight:700;margin-bottom:6px;">🎤 खुद की / किसी और की आवाज़</div>
+      <div style="font-size:.75rem;color:#9b78c8;margin-bottom:8px;">
+        Record करें या किसी app से MP3 बनाएं → यहाँ upload करें → Reel में auto-mix होगी
+      </div>
+      <input type="file" id="narrFile" accept="audio/*" onchange="loadNarrFile(this)" style="color:#b39ddb;font-size:.82rem;">
+      <div id="narrFileStatus" style="font-size:.75rem;color:#90ffd0;margin-top:4px;min-height:16px;"></div>
+      <button class="btn bd" style="margin-top:6px;" onclick="clearNarrFile()">✕ हटाएं</button>
+      <div style="font-size:.72rem;color:#7a6a9a;margin-top:6px;">
+        💡 या नीचे से 5 PNG Frames download करें → CapCut में खुद की आवाज़ add करें
+      </div>
+    </div>
+
+    <!-- Browser preview only -->
+    <div style="margin-top:8px;display:flex;gap:8px;">
+      <button class="btn bl" style="flex:1;" onclick="listenQuote()">🎧 Browser में सुनें</button>
+      <button class="btn bd" style="width:70px;" onclick="stopListen()">⏹</button>
+    </div>
+    <div style="font-size:.7rem;color:#7a6a9a;margin-top:4px;">* Browser preview — Reel में record नहीं होता</div>
+  </div>
+
+</div><!-- /panel-left -->
+
+<!-- ══ RIGHT PANEL ══ -->
+<div class="panel-right">
+
+  <div class="tip">Quote paste करते ही card auto-update होगा। नीचे preview देखें।</div>
+
+  <div id="canvasWrap">
+    <canvas id="card"></canvas>
+  </div>
+
+  <!-- CARD CONTROLS -->
+  <div class="ctrl-row">
+    <button class="btn bp" onclick="renderCard()">🔄 Preview</button>
+    <button class="btn bs" onclick="downloadCard()">⬇️ PNG Download</button>
+    <button class="btn bi" onclick="copyCaption()">📋 Caption Copy</button>
+  </div>
+
+  <!-- 5 PNG FRAMES -->
+  <div style="width:100%;max-width:560px;">
+    <div class="sec">🖼️ 5 PNG Frames (खुद की आवाज़ के लिए)</div>
+    <div style="background:#1a1035;border:1px dashed #5a3a7e;border-radius:8px;padding:10px;font-size:.78rem;color:#9b78c8;line-height:1.7;margin-bottom:8px;">
+      💡 जब खुद की या किसी और की आवाज़ में Reel बनानी हो:<br>
+      1️⃣ 5 PNG frames download करें<br>
+      2️⃣ CapCut / VN में import करें<br>
+      3️⃣ अपनी आवाज़ में quote record करें<br>
+      4️⃣ Music + आवाज़ + frames = Reel तैयार!
+    </div>
+    <button class="btn bw" onclick="download5Frames()">🖼️ 5 PNG Frames Download करें (ZIP)</button>
+    <div id="framesStatus" style="font-size:.78rem;color:#90ffd0;margin-top:6px;"></div>
+  </div>
+
+  <!-- REEL VIDEO -->
+  <div style="width:100%;max-width:560px;">
+    <div class="sec">🎬 Reel Video Export</div>
+    <div class="ctrl-row" style="justify-content:flex-start;">
+      <button class="btn bv" style="flex:1;" onclick="startReelExport()">🎬 Reel Video बनाएं (~10 sec)</button>
+      <button class="btn bd" style="width:80px;" onclick="cancelReel()">✕ रोकें</button>
+    </div>
+    <div id="reelProgress">
+      <div id="reelBar"><div id="reelFill"></div></div>
+      <div id="reelStatus">तैयार हो रहा है...</div>
+    </div>
+    <div id="videoWrap">
+      <video id="videoPreview" controls playsinline></video>
+    </div>
+    <div style="font-size:.72rem;color:#7a6a9a;margin-top:6px;">* WebM format — Facebook/Instagram/WhatsApp सब पर upload होता है</div>
+  </div>
+
+  <!-- CAPTION PREVIEW -->
+  <div style="width:100%;max-width:560px;">
+    <div class="sec" style="margin-bottom:8px;">📱 Facebook Post Preview</div>
+    <div id="captionPreview">Caption और Hashtags यहाँ दिखेंगे...</div>
+    <br>
+    <button class="btn bi" onclick="copyCaption()" style="width:100%;">📋 Full Caption + Hashtags Copy करें</button>
+  </div>
+
+  <div class="tip">⚡ Workflow: Sheets → Paste → Card/Reel Download → Caption Copy → Post!</div>
+</div><!-- /panel-right -->
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+// ══ PASSWORD ══
+const PASS="Tcjsep26";
+function checkPw(){
+  if(document.getElementById('pwInput').value===PASS){
+    document.getElementById('lockScreen').style.display='none';
+    document.getElementById('app').style.display='block';
+    loadTtsKey(); renderCard();
+  } else {
+    document.getElementById('pwErr').textContent='❌ गलत password';
+    document.getElementById('pwInput').value='';
+  }
+}
+
+// ══ STATE ══
+let currentMode='post', currentBg='galaxy', currentTc='auto';
+let bgImage=null, avatarCircle=null;
+let musicAudio=null, musicArrayBuffer=null, narrBlob=null;
+let reelCancelled=false, mediaRecorder=null;
+
+function getDims(){
+  if(currentMode==='post')return{w:1080,h:1080};
+  if(currentMode==='portrait')return{w:1080,h:1350};
+  return{w:1080,h:1920};
+}
+
+// ══ BG MAP ══
+const BG_MAP={
+  galaxy:['#0d0d2b','#1a0a3e','#2d1b69'],
+  dawn:['#7b2d00','#b85c00','#e8940a'],
+  forest:['#0a2e1a','#1a5e35','#2d8a50'],
+  ocean:['#0a1a2e','#0d3b6e','#1a6baf'],
+  rose:['#3d0a1a','#7a1a35','#b52d50'],
+  midnight:['#050510','#0d0d20','#1a1a35'],
+  golden:['#2d1a00','#5c3800','#8a5500'],
+  white:['#ffffff','#f0f0f0','#e0e0e0'],
+  cream:['#f5ead0','#eedcb0','#e0cc90'],
+};
+
+// ══ CONTROLS ══
+function setMode(m,el){currentMode=m;document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderCard();}
+function setBg(b,el){currentBg=b;document.querySelectorAll('#bgChips .chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderCard();}
+function setTc(t,el){currentTc=t;document.querySelectorAll('#textChips .chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderCard();}
+function adjSize(which,delta,reset){
+  const id=which==='q'?'qSize':'aSize', lbl=which==='q'?'qSizeLabel':'aSizeLabel', def=which==='q'?32:22;
+  const el=document.getElementById(id);
+  el.value=reset?def:Math.min(Math.max(parseInt(el.value||def)+delta,12),80);
+  document.getElementById(lbl).textContent=el.value+'px';
+  renderCard();
+}
+
+// ══ BG PHOTO ══
+function loadBgPhoto(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{const i=new Image();i.onload=()=>{bgImage=i;renderCard();};i.src=e.target.result;};r.readAsDataURL(f);}
+function clearBgPhoto(){bgImage=null;document.getElementById('bgPhoto').value='';renderCard();}
+
+// ══ AVATAR ══
+function loadAvatar(inp){
+  const f=inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const i=new Image();
+    i.onload=()=>{
+      const sz=160,c=document.createElement('canvas');c.width=sz;c.height=sz;
+      const x=c.getContext('2d');
+      x.beginPath();x.arc(sz/2,sz/2,sz/2,0,Math.PI*2);x.clip();
+      const sc=Math.max(sz/i.width,sz/i.height);
+      x.drawImage(i,(sz-i.width*sc)/2,(sz-i.height*sc)/2,i.width*sc,i.height*sc);
+      avatarCircle=c;
+      document.getElementById('avatarPreview').src=c.toDataURL();
+      document.getElementById('avatarPreview').style.display='block';
+      renderCard();
+    };
+    i.src=e.target.result;
+  };
+  r.readAsDataURL(f);
+}
+function clearAvatar(){avatarCircle=null;document.getElementById('avatarFile').value='';document.getElementById('avatarPreview').style.display='none';renderCard();}
+
+// ══ MUSIC ══
+function loadMusic(inp){
+  const f=inp.files[0];if(!f)return;
+  if(musicAudio){musicAudio.pause();musicAudio=null;}
+  const objUrl=URL.createObjectURL(f);
+  // Audio element — for preview Play/Pause only
+  musicAudio=new Audio(objUrl);
+  musicAudio.loop=true;
+  musicAudio.volume=document.getElementById('volSlider').value/100;
+  // ArrayBuffer — for reliable reel mixing (fresh decode every time)
+  const reader=new FileReader();
+  reader.onload=e=>{musicArrayBuffer=e.target.result;};
+  reader.readAsArrayBuffer(f);
+}
+function setVolume(v){document.getElementById('volLabel').textContent=v+'%';if(musicAudio)musicAudio.volume=v/100;}
+function toggleMusic(){if(!musicAudio)return;musicAudio.paused?musicAudio.play():musicAudio.pause();}
+function stopMusic(){if(musicAudio){musicAudio.pause();musicAudio.currentTime=0;}}
+function clearMusic(){stopMusic();musicAudio=null;musicArrayBuffer=null;document.getElementById('musicFile').value='';}
+
+// ══ NARRATION FILE UPLOAD (Option B) ══
+let narrArrayBuffer=null;
+function loadNarrFile(inp){
+  const f=inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    narrArrayBuffer=e.target.result;
+    document.getElementById('narrFileStatus').textContent='✅ '+f.name+' — Reel में mix होगी';
+  };
+  r.readAsArrayBuffer(f);
+}
+function clearNarrFile(){
+  narrArrayBuffer=null;
+  document.getElementById('narrFile').value='';
+  document.getElementById('narrFileStatus').textContent='';
+}
+
+// ══ LISTEN (TTS preview) ══
+function listenQuote(){
+  const raw=document.getElementById('quoteText').value.trim();
+  if(!raw){alert('Quote paste करें पहले!');return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(raw);
+  u.lang='hi-IN';u.rate=parseFloat(document.getElementById('ttsSpeed').value)||1.0;u.pitch=1.0;
+  speechSynthesis.speak(u);
+}
+function stopListen(){speechSynthesis.cancel();}
+
+// ══ AI NARRATION (Google Cloud TTS) ══
+function saveTtsKey(){localStorage.setItem('lumiora_tts_key',document.getElementById('ttsKey').value);}
+function loadTtsKey(){const k=localStorage.getItem('lumiora_tts_key')||'';document.getElementById('ttsKey').value=k;}
+async function generateNarration(){
+  const key=document.getElementById('ttsKey').value.trim();
+  if(!key){alert('API Key डालें पहले!');return;}
+  const raw=document.getElementById('quoteText').value.trim();
+  if(!raw){alert('Quote paste करें पहले!');return;}
+  const st=document.getElementById('narrStatus');
+  st.textContent='⏳ Narration बन रहा है...';
+  try{
+    const res=await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${key}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        input:{text:raw},
+        voice:{languageCode:'hi-IN',name:'hi-IN-Wavenet-D',ssmlGender:'MALE'},
+        audioConfig:{audioEncoding:'MP3',speakingRate:parseFloat(document.getElementById('ttsSpeed').value)||1.0,pitch:0}
+      })
+    });
+    const d=await res.json();
+    if(d.error){st.textContent='❌ Error: '+d.error.message;return;}
+    const bytes=Uint8Array.from(atob(d.audioContent),c=>c.charCodeAt(0));
+    narrBlob=new Blob([bytes],{type:'audio/mp3'});
+    const url=URL.createObjectURL(narrBlob);
+    const au=document.getElementById('narrAudio');
+    au.src=url;au.style.display='block';
+    st.textContent='✅ Narration तैयार! नीचे सुनें। Reel बनाते वक़्त auto-mix होगा।';
+  }catch(e){st.textContent='❌ Error: '+e.message;}
+}
+function clearNarration(){narrBlob=null;const au=document.getElementById('narrAudio');au.src='';au.style.display='none';document.getElementById('narrStatus').textContent='';}
+
+// ══ PARSE QUOTE ══
+function parseQA(raw){
+  const sep=raw.lastIndexOf(' — ');
+  if(sep>0)return{quote:raw.slice(0,sep).trim(),author:'— '+raw.slice(sep+3).trim()};
+  const sep2=raw.lastIndexOf(' - ');
+  if(sep2>0)return{quote:raw.slice(0,sep2).trim(),author:'— '+raw.slice(sep2+3).trim()};
+  return{quote:raw.trim(),author:''};
+}
+
+// ══ BRIGHTNESS ══
+function bright(ctx,x,y,w,h){
+  try{const d=ctx.getImageData(x,y,w,h).data;let s=0;for(let i=0;i<d.length;i+=4)s+=d[i]*.299+d[i+1]*.587+d[i+2]*.114;return s/(d.length/4);}catch(e){return 128;}
+}
+
+// ══ WRAP TEXT ══
+function wrapText(ctx,text,maxW){
+  const words=text.split(' ');let lines=[],line='';
+  for(const w of words){const t=line?line+' '+w:w;if(ctx.measureText(t).width>maxW&&line){lines.push(line);line=w;}else line=t;}
+  if(line)lines.push(line);
+  return lines;
+}
+
+// ══ RNG ══
+function rng32(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+// ══ DRAW CARD (core) — returns canvas ══
+function drawCard(canvas){
+  const{w,h}=getDims();
+  canvas.width=w;canvas.height=h;
+  const ctx=canvas.getContext('2d');
+
+  // BG
+  if(bgImage){
+    const sc=Math.max(w/bgImage.width,h/bgImage.height);
+    const bw=bgImage.width*sc,bh=bgImage.height*sc;
+    ctx.drawImage(bgImage,(w-bw)/2,(h-bh)/2,bw,bh);
+    ctx.fillStyle='rgba(0,0,0,0.45)';ctx.fillRect(0,0,w,h);
+  } else {
+    const cols=BG_MAP[currentBg]||BG_MAP.galaxy;
+    const g=ctx.createLinearGradient(0,0,w,h);
+    g.addColorStop(0,cols[0]);g.addColorStop(.5,cols[1]);g.addColorStop(1,cols[2]);
+    ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    // stars
+    const r=rng32(42);ctx.fillStyle='rgba(255,255,255,0.13)';
+    for(let i=0;i<70;i++){ctx.beginPath();ctx.arc(r()*w,r()*h,r()*2+.5,0,Math.PI*2);ctx.fill();}
+  }
+
+  // Sparkle particles on card
+  const rs=rng32(99);
+  for(let i=0;i<25;i++){
+    const px=rs()*w,py=rs()*h,pr=rs()*3+.5;
+    const alpha=rs()*.5+.15;
+    ctx.fillStyle=`rgba(255,215,0,${alpha})`;
+    ctx.beginPath();ctx.arc(px,py,pr,0,Math.PI*2);ctx.fill();
+  }
+
+  // Top gold line
+  const gl=ctx.createLinearGradient(0,0,w,0);
+  gl.addColorStop(0,'transparent');gl.addColorStop(.5,'#FFD700');gl.addColorStop(1,'transparent');
+  ctx.strokeStyle=gl;ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(80,60);ctx.lineTo(w-80,60);ctx.stroke();
+
+  // Brand
+  const wmVal=document.getElementById('wmText').value||'Lumiora';
+  ctx.textAlign='center';
+  ctx.font=`600 ${Math.round(h*.022)}px 'Segoe UI',Arial`;
+  ctx.fillStyle='rgba(255,215,0,0.75)';
+  ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=6;
+  ctx.fillText('✦ '+wmVal+' ✦',w/2,40);
+  ctx.shadowBlur=0;
+
+  // Avatar
+  let avBot=0;
+  if(avatarCircle){
+    const aSz=150,ring=9,ax=w/2-aSz/2,ay=80;
+    ctx.beginPath();ctx.arc(w/2,ay+aSz/2,aSz/2+ring,0,Math.PI*2);
+    const gr=ctx.createRadialGradient(w/2,ay+aSz/2,aSz/2,w/2,ay+aSz/2,aSz/2+ring);
+    gr.addColorStop(0,'#FFD700');gr.addColorStop(1,'#b8860b');
+    ctx.fillStyle=gr;ctx.fill();
+    ctx.drawImage(avatarCircle,ax,ay,aSz,aSz);
+    avBot=ay+aSz+ring+24;
+  }
+
+  // Quote
+  const raw=document.getElementById('quoteText').value.trim();
+  const{quote,author}=parseQA(raw||'यहाँ अपना quote paste करें — लेखक का नाम');
+
+  // Text color
+  let tc;
+  if(currentTc==='white')tc='#ffffff';
+  else if(currentTc==='black')tc='#111111';
+  else if(currentTc==='gold')tc='#FFD700';
+  else tc=bright(ctx,0,0,w,h)>128?'#111111':'#ffffff';
+
+  // Layout
+  const pad=170,textW=w-pad*2;
+  const qSz=parseInt(document.getElementById('qSize').value)||32;
+  const aSz=parseInt(document.getElementById('aSize').value)||22;
+  const pos=document.getElementById('textPos').value;
+  const lineH=qSz*1.65;
+
+  ctx.font=`italic ${qSz}px 'Segoe UI',Arial`;
+  const qLines=wrapText(ctx,'\u201c'+quote+'\u201d',textW);
+  const qH=qLines.length*lineH;
+  const authH=author?aSz*2.2:0,divH=author?50:0;
+  const totalH=qH+divH+authH;
+
+  const zTop=Math.max(avBot+30,h*.12);
+  const zBot=h-130;
+  let sy;
+  if(pos==='top')sy=zTop+20;
+  else if(pos==='bottom')sy=zBot-totalH-20;
+  else sy=zTop+(zBot-zTop-totalH)/2;
+  sy=Math.max(sy,zTop+10);sy=Math.min(sy,zBot-totalH-10);
+
+  ctx.textAlign='center';
+  ctx.font=`italic ${qSz}px 'Segoe UI',Arial`;
+  ctx.fillStyle=tc;ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=10;
+  let cy=sy+qSz;
+  for(const line of qLines){ctx.fillText(line,w/2,cy);cy+=lineH;}
+  ctx.shadowBlur=0;
+
+  if(author){
+    cy+=18;
+    const dg=ctx.createLinearGradient(w/2-160,0,w/2+160,0);
+    dg.addColorStop(0,'transparent');dg.addColorStop(.5,'#FFD700');dg.addColorStop(1,'transparent');
+    ctx.strokeStyle=dg;ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(w/2-160,cy);ctx.lineTo(w/2+160,cy);ctx.stroke();
+    cy+=28;
+    ctx.font=`600 ${aSz}px 'Segoe UI',Arial`;
+    ctx.fillStyle=currentTc==='gold'?'#FFD700':(tc==='#111111'?'#555':'rgba(255,255,255,.85)');
+    ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=6;
+    ctx.fillText(author,w/2,cy+aSz);ctx.shadowBlur=0;
+  }
+
+  // Bottom line
+  const gl2=ctx.createLinearGradient(0,0,w,0);
+  gl2.addColorStop(0,'transparent');gl2.addColorStop(.5,'#FFD700');gl2.addColorStop(1,'transparent');
+  ctx.strokeStyle=gl2;ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(80,h-60);ctx.lineTo(w-80,h-60);ctx.stroke();
+
+  // Watermark bottom
+  const wbr=bright(ctx,0,h-80,w,80);
+  ctx.fillStyle=wbr>128?'rgba(0,0,0,.4)':'rgba(255,255,255,.35)';
+  ctx.shadowColor='rgba(0,0,0,.6)';ctx.shadowBlur=4;
+  ctx.font=`500 ${Math.round(h*.018)}px 'Segoe UI',Arial`;
+  ctx.fillText('© '+wmVal,w/2,h-30);ctx.shadowBlur=0;
+
+  return ctx;
+}
+
+// ══ RENDER (preview) ══
+function renderCard(){
+  const canvas=document.getElementById('card');
+  drawCard(canvas);
+  // Scale display
+  const maxD=Math.min(window.innerWidth*.52,520);
+  const{w,h}=getDims();
+  canvas.style.width=Math.round(maxD)+'px';
+  canvas.style.height=Math.round(maxD*h/w)+'px';
+  // Caption preview
+  const cap=document.getElementById('captionText').value.trim();
+  const hash=document.getElementById('hashText').value.trim();
+  document.getElementById('captionPreview').textContent=(cap||'(Caption paste करें)')+( hash?'\n\n'+hash:'');
+}
+
+// ══ DOWNLOAD PNG ══
+function downloadCard(){
+  const c=document.createElement('canvas');drawCard(c);
+  const a=document.createElement('a');
+  const raw=document.getElementById('quoteText').value.trim();
+  const{author}=parseQA(raw);
+  a.href=c.toDataURL('image/png');
+  a.download='Lumiora_Quote_'+currentMode+'_'+(author.replace(/[^a-zA-Z\u0900-\u097F]/g,'').slice(0,15)||'card')+'.png';
+  a.click();
+}
+
+// ══ COPY CAPTION ══
+function copyCaption(){
+  const cap=document.getElementById('captionText').value.trim();
+  const hash=document.getElementById('hashText').value.trim();
+  const full=(cap+(hash?'\n\n'+hash:'')).trim();
+  if(!full){alert('Caption paste करें पहले!');return;}
+  navigator.clipboard.writeText(full).then(()=>{
+    const btn=event.target;const orig=btn.textContent;
+    btn.textContent='✅ Copied!';setTimeout(()=>btn.textContent=orig,2000);
+  });
+}
+
+// ══ WEBM DURATION FIX ══
+// Chrome MediaRecorder writes duration=Infinity → preview shows 0:00 and seekbar is broken.
+// This patches the Matroska/WebM Segment Duration element with the real duration.
+function fixWebmDuration(blob, durationSec, cb){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const buf=new Uint8Array(e.target.result);
+    // Find 0x4489 (Duration element ID) in the WebM binary
+    for(let i=0;i<buf.length-12;i++){
+      if(buf[i]===0x44&&buf[i+1]===0x89){
+        // Next byte encodes the size of the value (should be 4 or 8)
+        const sz=buf[i+2]&0x7F;  // strip VINT marker bit
+        if(sz===4){
+          // Write float32 duration in milliseconds
+          const view=new DataView(buf.buffer);
+          view.setFloat32(i+3, durationSec*1000, false); // big-endian
+          break;
+        } else if(sz===8){
+          const view=new DataView(buf.buffer);
+          view.setFloat64(i+3, durationSec*1000, false);
+          break;
+        }
+      }
+    }
+    cb(new Blob([buf],{type:'video/webm'}));
+  };
+  reader.readAsArrayBuffer(blob);
+}
+
+// ══ 5 PNG FRAMES DOWNLOAD ══
+async function download5Frames(){
+  const status=document.getElementById('framesStatus');
+  status.textContent='⏳ 5 frames बन रहे हैं...';
+
+  const{w,h}=getDims();
+  const zip=new JSZip();
+  const folder=zip.folder('Lumiora_Frames');
+
+  // Draw base card
+  const base=document.createElement('canvas');
+  drawCard(base);
+
+  for(let f=0;f<5;f++){
+    const fc=document.createElement('canvas');
+    fc.width=w;fc.height=h;
+    const fctx=fc.getContext('2d');
+
+    // Base card
+    fctx.drawImage(base,0,0);
+
+    // Different sparkle positions per frame (different seed)
+    const rp=rng32(1000+f*777);
+    for(let i=0;i<30;i++){
+      const px=rp()*w, py=rp()*h, pr=rp()*4+1;
+      const alpha=rp()*.6+.2;
+      fctx.globalAlpha=alpha;
+      fctx.fillStyle='#FFD700';
+      fctx.beginPath();fctx.arc(px,py,pr,0,Math.PI*2);fctx.fill();
+    }
+    // Some white sparkles too
+    for(let i=0;i<15;i++){
+      const px=rp()*w, py=rp()*h, pr=rp()*2+.5;
+      fctx.globalAlpha=rp()*.4+.1;
+      fctx.fillStyle='#ffffff';
+      fctx.beginPath();fctx.arc(px,py,pr,0,Math.PI*2);fctx.fill();
+    }
+    fctx.globalAlpha=1;
+
+    // Convert to blob and add to zip
+    const blob=await new Promise(res=>fc.toBlob(res,'image/png'));
+    const raw=document.getElementById('quoteText').value.trim();
+    const{author}=parseQA(raw);
+    const name=`Frame_${f+1}_${author.replace(/[^a-zA-Z\u0900-\u097F]/g,'').slice(0,10)||'quote'}.png`;
+    folder.file(name, blob);
+
+    status.textContent=`⏳ Frame ${f+1}/5 तैयार...`;
+  }
+
+  status.textContent='⏳ ZIP बन रहा है...';
+  const zipBlob=await zip.generateAsync({type:'blob'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(zipBlob);
+  a.download='Lumiora_5Frames.zip';
+  a.click();
+  status.textContent='✅ 5 frames ZIP download हो गई! CapCut/VN में import करें।';
+}
+
+// ══ REEL VIDEO EXPORT ══
+let reelRAF=null;
+function cancelReel(){
+  reelCancelled=true;
+  if(mediaRecorder&&mediaRecorder.state!=='inactive')mediaRecorder.stop();
+  document.getElementById('reelProgress').style.display='none';
+}
+
+// Pre-record speech using MediaRecorder on a silent canvas stream + speechSynthesis
+// then use the blob for reel mixing
+async function recordSpeech(text, langCode){
+  return new Promise((resolve)=>{
+    // Use a tiny silent audio context to capture speech via Web Speech API
+    // Chrome does NOT allow capturing speechSynthesis directly,
+    // so we use a workaround: record via system audio is not possible in browser.
+    // BEST FREE approach: use SpeechSynthesisUtterance + record timing,
+    // then play during reel via AudioContext.createMediaStreamDestination
+    // with a custom oscillator... but that only gives tone not voice.
+    //
+    // REAL solution: use Google TTS free tier OR accept speech plays live.
+    // For now: resolve with null so reel works without narration if no API key.
+    resolve(null);
+  });
+}
+
+async function startReelExport(){
+  reelCancelled=false;
+  const{w,h}=getDims();
+  const DURATION=10000;
+  const FPS=30;
+
+  const prog=document.getElementById('reelProgress');
+  const fill=document.getElementById('reelFill');
+  const status=document.getElementById('reelStatus');
+  prog.style.display='block';fill.style.width='0%';
+
+  // ── Step 1: Generate TTS audio if API key present ──
+  const ttsKey=document.getElementById('ttsKey').value.trim();
+  const raw=document.getElementById('quoteText').value.trim();
+  let speechArrayBuffer=null;
+
+  if(ttsKey && raw){
+    status.textContent='🎙️ Quote की आवाज़ बन रही है...';
+    try{
+      const res=await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${ttsKey}`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          input:{text:raw},
+          voice:{languageCode:'hi-IN',name:'hi-IN-Wavenet-D',ssmlGender:'MALE'},
+          audioConfig:{audioEncoding:'MP3',speakingRate:parseFloat(document.getElementById('ttsSpeed').value)||1.0,pitch:0}
+        })
+      });
+      const d=await res.json();
+      if(d.audioContent){
+        const bytes=Uint8Array.from(atob(d.audioContent),c=>c.charCodeAt(0));
+        speechArrayBuffer=bytes.buffer;
+        status.textContent='✅ आवाज़ तैयार! अब Reel बन रही है...';
+      } else {
+        status.textContent='⚠️ TTS error — सिर्फ music के साथ Reel बनेगी';
+      }
+    }catch(e){
+      status.textContent='⚠️ TTS failed — सिर्फ music के साथ Reel बनेगी';
+    }
+  } else if(!ttsKey){
+    status.textContent='🎬 Recording शुरू हो रहा है... (आवाज़ के लिए TTS Key डालें)';
+  }
+
+  // ── Step 2: Draw base card ──
+  const oc=document.createElement('canvas');oc.width=w;oc.height=h;
+  const octx=oc.getContext('2d');
+  const base=document.createElement('canvas');
+  drawCard(base);
+
+  // ── Step 3: Particles ──
+  const parts=[];
+  const rp=rng32(7777);
+  for(let i=0;i<60;i++)parts.push({x:rp()*w,y:rp()*h,r:rp()*3+.5,speed:rp()*1.5+.3,alpha:rp()*.7+.2,phase:rp()*Math.PI*2});
+
+  // ── Step 4: Audio mix ──
+  let audioCtx=null,dest=null,mixStream=null;
+  try{
+    audioCtx=new AudioContext();
+    await audioCtx.resume();
+    dest=audioCtx.createMediaStreamDestination();
+    mixStream=dest.stream;
+
+    // Music
+    if(musicArrayBuffer){
+      const abCopy=musicArrayBuffer.slice(0);
+      const decoded=await audioCtx.decodeAudioData(abCopy);
+      const vol=document.getElementById('volSlider').value/100;
+      const gain=audioCtx.createGain();
+      gain.gain.value=vol;
+      const src=audioCtx.createBufferSource();
+      src.buffer=decoded;src.loop=true;
+      src.connect(gain);gain.connect(dest);gain.connect(audioCtx.destination);
+      src.start(0);
+    }
+
+    // Speech (TTS via Google API) — Option C
+    if(speechArrayBuffer){
+      const abCopy=speechArrayBuffer.slice(0);
+      const decoded=await audioCtx.decodeAudioData(abCopy);
+      const gain=audioCtx.createGain();
+      gain.gain.value=1.0;
+      const src=audioCtx.createBufferSource();
+      src.buffer=decoded;
+      src.connect(gain);gain.connect(dest);gain.connect(audioCtx.destination);
+      src.start(0);
+    }
+
+    // Uploaded narration (Option B) — if no Google TTS
+    if(narrArrayBuffer && !speechArrayBuffer){
+      const abCopy=narrArrayBuffer.slice(0);
+      const decoded=await audioCtx.decodeAudioData(abCopy);
+      const gain=audioCtx.createGain();
+      gain.gain.value=1.0;
+      const src=audioCtx.createBufferSource();
+      src.buffer=decoded;
+      src.connect(gain);gain.connect(dest);gain.connect(audioCtx.destination);
+      src.start(0);
+    }
+
+    // Old narrBlob (AI Narration section generate button)
+    if(narrBlob && !speechArrayBuffer && !narrArrayBuffer){
+      const ab=await narrBlob.arrayBuffer();
+      const decoded=await audioCtx.decodeAudioData(ab);
+      const src=audioCtx.createBufferSource();
+      src.buffer=decoded;src.connect(dest);src.start(0);
+    }
+  }catch(e){console.warn('Audio mix failed:',e);}
+
+  // ── Step 5: Record ──
+  const canvasStream=oc.captureStream(FPS);
+  const tracks=[...canvasStream.getVideoTracks(),...(mixStream?mixStream.getAudioTracks():[])];
+  const combined=new MediaStream(tracks);
+  const chunks=[];
+  const mimeType='video/webm;codecs=vp9,opus';
+  mediaRecorder=new MediaRecorder(combined,{mimeType:MediaRecorder.isTypeSupported(mimeType)?mimeType:'video/webm'});
+  mediaRecorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
+  mediaRecorder.onstop=()=>{
+    if(reelCancelled){status.textContent='❌ Cancel किया गया।';return;}
+    if(audioCtx)audioCtx.close().catch(()=>{});
+    const blob=new Blob(chunks,{type:'video/webm'});
+    fixWebmDuration(blob,DURATION/1000,fixedBlob=>{
+      const url=URL.createObjectURL(fixedBlob);
+      const vw=document.getElementById('videoWrap');
+      const vp=document.getElementById('videoPreview');
+      vp.src='';vp.load();vp.src=url;
+      vp.onloadedmetadata=()=>{vw.style.display='block';vp.play().catch(()=>{});};
+      const a=document.createElement('a');
+      const{author}=parseQA(raw);
+      a.href=url;
+      a.download='Lumiora_Reel_'+(author.replace(/[^a-zA-Z\u0900-\u097F]/g,'').slice(0,15)||'card')+'.webm';
+      a.click();
+      status.textContent='✅ Reel download हो गई! नीचे preview देखें।';
+      fill.style.width='100%';
+    });
+  };
+
+  mediaRecorder.start(100);
+  const startTime=performance.now();
+
+  function frame(){
+    if(reelCancelled)return;
+    const elapsed=performance.now()-startTime;
+    const t=elapsed/DURATION;
+    if(t>=1){mediaRecorder.stop();return;}
+    const zoom=1+t*.04;
+    octx.save();
+    octx.translate(w/2,h/2);octx.scale(zoom,zoom);octx.translate(-w/2,-h/2);
+    octx.drawImage(base,0,0);octx.restore();
+    for(const p of parts){
+      p.y-=p.speed;if(p.y<0)p.y=h;
+      const flicker=.5+.5*Math.sin(elapsed*.003+p.phase);
+      octx.globalAlpha=p.alpha*flicker;
+      octx.fillStyle='#FFD700';
+      octx.beginPath();octx.arc(p.x,p.y,p.r,0,Math.PI*2);octx.fill();
+    }
+    octx.globalAlpha=1;
+    fill.style.width=Math.round(t*100)+'%';
+    status.textContent=`🎬 Recording... ${Math.round(t*10)}/10 sec`;
+    reelRAF=requestAnimationFrame(frame);
+  }
+  reelRAF=requestAnimationFrame(frame);
+}
+
+// Init
+window.addEventListener('resize',renderCard);
+</script>
+</body>
+</html>
