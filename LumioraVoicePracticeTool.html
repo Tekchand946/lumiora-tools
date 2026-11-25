@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumiora Voice Practice</title>
+<style>
+  :root { --bg:#1a120c; --panel:#241a12; --gold:#e8c675; --coral:#ff8b5e; --text:#f5ecd9; --muted:#b9b2a0; --line:#3d2e20; --ok:#2ecc71; --rec:#ff4d4d; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system, "Segoe UI", "Noto Sans Devanagari", sans-serif; }
+  header { text-align:center; padding:20px 16px 6px; }
+  h1 { margin:0; font-family:Georgia, serif; font-weight:400; color:var(--gold); font-size:30px; }
+  .sub { color:var(--muted); font-size:14px; margin-top:6px; }
+  .wrap { max-width:1150px; margin:0 auto; padding:12px 16px 40px; }
+  .picker { background:var(--panel); border:2px dashed var(--gold); border-radius:12px; padding:18px; text-align:center; }
+  .picker input { display:none; }
+  .btn { border:none; border-radius:10px; padding:12px 18px; font-weight:700; font-size:15px; cursor:pointer; min-height:46px; color:#2e1710; background:var(--gold); }
+  .btn.coral { background:linear-gradient(135deg, var(--coral), var(--gold)); }
+  .btn.outline { background:transparent; color:var(--gold); border:2px solid var(--gold); }
+  .btn.rec { background:var(--rec); color:#fff; }
+  .btn.ok { background:var(--ok); color:#06210f; }
+  .btn:disabled { opacity:.45; cursor:not-allowed; }
+  .main { display:none; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap:18px; margin-top:16px; }
+  .main.show { display:grid; }
+  @media (max-width:820px){ .main.show { grid-template-columns:1fr; } }
+  .stage { background:#000; border-radius:12px; display:flex; align-items:center; justify-content:center; aspect-ratio:9/16; max-height:78vh; overflow:hidden; position:relative; }
+  .stage img { max-width:100%; max-height:100%; object-fit:contain; }
+  .stage .recdot { position:absolute; top:12px; left:12px; background:var(--rec); color:#fff; padding:6px 12px; border-radius:20px; font-weight:700; display:none; }
+  .panel { background:var(--panel); border-radius:12px; padding:16px; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px; }
+  .nav { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .count { font-size:18px; font-weight:700; color:var(--gold); }
+  .fname { color:var(--muted); font-size:12px; word-break:break-all; margin-top:4px; }
+  .timer { font-size:42px; font-weight:800; font-variant-numeric:tabular-nums; text-align:center; margin:14px 0 4px; }
+  .hint { color:var(--muted); font-size:13px; line-height:1.5; }
+  .status { margin-top:10px; font-size:14px; min-height:20px; }
+  .meter { height:10px; background:#0f0a06; border-radius:6px; overflow:hidden; margin-top:8px; }
+  .meter > div { height:100%; width:0; background:linear-gradient(90deg, var(--ok), var(--gold), var(--rec)); transition:width .06s; }
+  .takes { margin-top:14px; }
+  .take { display:flex; align-items:center; gap:8px; padding:8px; border:1px solid var(--line); border-radius:8px; margin-top:6px; flex-wrap:wrap; }
+  .take.best { border-color:var(--ok); }
+  .take span { flex:1; min-width:120px; font-size:13px; }
+  .take button { padding:6px 10px; min-height:34px; font-size:13px; border-radius:8px; }
+  .strip { display:flex; gap:6px; overflow-x:auto; margin-top:14px; padding-bottom:6px; }
+  .strip img { height:72px; border-radius:6px; cursor:pointer; opacity:.55; border:2px solid transparent; }
+  .strip img.cur { opacity:1; border-color:var(--gold); }
+  .strip .wrapthumb { position:relative; }
+  .strip .wrapthumb b { position:absolute; right:3px; bottom:3px; background:var(--ok); color:#06210f; font-size:11px; border-radius:8px; padding:0 5px; }
+  label.chk { display:flex; gap:8px; align-items:center; font-size:14px; margin-top:10px; }
+  video { width:100%; margin-top:10px; border-radius:8px; background:#000; display:none; }
+  .upbox { margin-top:14px; padding:12px; border:1px dashed var(--line); border-radius:10px; }
+  .tips { margin-top:16px; border-top:1px solid var(--line); padding-top:12px; }
+  .tips li { margin:4px 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Lumiora — Voice Practice</h1>
+  <div class="sub">Purani PNG cards par voice-over ki practice · record → suniye → behtar take chuniye → chahein to reel bhi banaiye</div>
+</header>
+
+<div class="wrap">
+  <div class="picker" id="picker">
+    <p style="margin:0 0 12px;">Apni PNG / JPG cards chuniye (ek saath kitni bhi):</p>
+    <label class="btn coral" for="imgInput">🖼️ Images chunein</label>
+    <input type="file" id="imgInput" accept="image/*" multiple>
+    <label class="btn outline" for="folderInput" style="margin-left:8px;">📁 Poora folder chunein</label>
+    <input type="file" id="folderInput" accept="image/*" webkitdirectory multiple>
+    <p class="hint" style="margin:10px 0 0;">Jaise: <b>Documents/REELS TO BE POSTED</b> mein padi slide PNG files. Files kahin upload nahi hoti — sab isi computer par rehta hai.</p>
+  </div>
+
+  <div class="main" id="main">
+    <div>
+      <div class="stage"><img id="cardImg" alt="card"><div class="recdot" id="recDot">● REC</div></div>
+      <div class="strip" id="strip"></div>
+    </div>
+
+    <div class="panel">
+      <div class="nav">
+        <button class="btn outline" id="prevBtn">◀ Pichhli</button>
+        <div style="text-align:center;"><div class="count" id="count">1 / 1</div></div>
+        <button class="btn outline" id="nextBtn">Agli ▶</button>
+      </div>
+      <div class="fname" id="fname"></div>
+
+      <div class="timer" id="timer">0.0s</div>
+      <div class="hint" style="text-align:center;" id="timerHint">Reel ke liye 8–15 second achha rehta hai</div>
+      <div class="meter"><div id="meterBar"></div></div>
+
+      <div class="row" style="justify-content:center;">
+        <button class="btn rec" id="recBtn">🔴 Record (Space)</button>
+        <button class="btn outline" id="stopBtn" style="display:none;">⏹️ Rokein (Space)</button>
+      </div>
+      <label class="chk"><input type="checkbox" id="countIn" checked> Record se pehle 3-2-1 ginti</label>
+      <label class="chk"><input type="checkbox" id="autoNext"> Record rukne par apne aap agli card</label>
+
+      <div class="upbox">
+        <b style="color:var(--gold);">📱 Phone se record ki hui awaaz</b>
+        <div class="hint">Phone ke Voice Memos mein bolkar AirDrop se Mac par bhejiye, phir yahan daaliye (.m4a, .mp3, .wav sab chalega).</div>
+        <div class="row" style="margin-top:8px;">
+          <label class="btn outline" for="audioOne">⬆️ Is card ki awaaz daalein</label>
+          <input type="file" id="audioOne" accept="audio/*,.m4a,.mp3,.wav,.aac,.caf" style="display:none;">
+          <label class="btn outline" for="audioMany">⬆️ Sabhi cards ki awaaz ek saath</label>
+          <input type="file" id="audioMany" accept="audio/*,.m4a,.mp3,.wav,.aac,.caf" multiple style="display:none;">
+        </div>
+        <div class="hint" style="margin-top:6px;">"Ek saath" mein files naam ke kram se lagengi: pehli file → Card 1, doosri → Card 2... (isi card se shuru nahi, hamesha Card 1 se)</div>
+      </div>
+
+      <div class="status" id="status">Mic ki permission maangi jaayegi — "Allow" dabayein.</div>
+
+      <div class="takes" id="takes"></div>
+
+      <div class="row">
+        <button class="btn ok" id="reelBtn" disabled>🎬 Is card ki Reel banayein (best take)</button>
+        <button class="btn outline" id="dlAudioBtn" disabled>⬇️ Sirf awaaz download</button>
+      </div>
+      <video id="reelPreview" controls playsinline></video>
+
+      <div class="tips">
+        <b style="color:var(--gold);">Practice tips</b>
+        <ul class="hint">
+          <li>Pehle card ko ek baar mann mein padhiye, phir record kariye.</li>
+          <li>Har line ke baad halka sa ruk jaaiye — jaldi mat kariye.</li>
+          <li>Mic se ek haath ki doori rakhiye, shaant kamre mein record kariye.</li>
+          <li>Har card par 2–3 take lijiye, phir ⭐ se sabse achha chuniye.</li>
+          <li>Hara meter beech tak jaaye to awaaz theek hai; laal tak jaaye to thoda door ho jaaiye.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const imgInput = $('imgInput'), folderInput = $('folderInput');
+  const main = $('main'), cardImg = $('cardImg'), strip = $('strip');
+  const prevBtn = $('prevBtn'), nextBtn = $('nextBtn'), count = $('count'), fname = $('fname');
+  const recBtn = $('recBtn'), stopBtn = $('stopBtn'), timerEl = $('timer'), recDot = $('recDot');
+  const statusEl = $('status'), takesEl = $('takes'), meterBar = $('meterBar');
+  const reelBtn = $('reelBtn'), dlAudioBtn = $('dlAudioBtn'), reelPreview = $('reelPreview');
+  const countIn = $('countIn'), autoNext = $('autoNext');
+
+  let cards = [];      // { name, url, takes:[{url, blob, dur}], best: index }
+  let idx = 0;
+  let stream = null, recorder = null, chunks = [], recStart = 0, timerRaf = null;
+  let actx = null, analyser = null, meterRaf = null;
+  let playing = null;
+
+  function natural(a, b){ return a.localeCompare(b, undefined, { numeric:true, sensitivity:'base' }); }
+
+  function loadFiles(list){
+    const files = [...list].filter(f => /^image\//.test(f.type)).sort((a,b) => natural(a.name, b.name));
+    if (!files.length) { alert('Koi image nahi mili.'); return; }
+    cards.forEach(c => { URL.revokeObjectURL(c.url); c.takes.forEach(t => URL.revokeObjectURL(t.url)); });
+    cards = files.map(f => ({ name: f.name, url: URL.createObjectURL(f), takes: [], best: -1 }));
+    idx = 0;
+    main.classList.add('show');
+    buildStrip(); show();
+  }
+  imgInput.addEventListener('change', e => loadFiles(e.target.files));
+  folderInput.addEventListener('change', e => loadFiles(e.target.files));
+
+  function buildStrip(){
+    strip.innerHTML = '';
+    cards.forEach((c, i) => {
+      const w = document.createElement('div'); w.className = 'wrapthumb';
+      const im = document.createElement('img'); im.src = c.url; im.title = c.name;
+      im.onclick = () => { if (!isRecording()) { idx = i; show(); } };
+      w.appendChild(im);
+      if (c.takes.length) { const b = document.createElement('b'); b.textContent = '🎤' + c.takes.length; w.appendChild(b); }
+      strip.appendChild(w);
+    });
+  }
+
+  function show(){
+    const c = cards[idx]; if (!c) return;
+    cardImg.src = c.url;
+    count.textContent = (idx + 1) + ' / ' + cards.length;
+    fname.textContent = c.name;
+    prevBtn.disabled = idx === 0; nextBtn.disabled = idx === cards.length - 1;
+    [...strip.querySelectorAll('img')].forEach((im, i) => im.classList.toggle('cur', i === idx));
+    const cur = strip.children[idx]; if (cur) cur.scrollIntoView({ block:'nearest', inline:'center' });
+    timerEl.textContent = '0.0s';
+    reelPreview.style.display = 'none';
+    renderTakes();
+  }
+  prevBtn.onclick = () => { if (idx > 0 && !isRecording()) { idx--; show(); } };
+  nextBtn.onclick = () => { if (idx < cards.length - 1 && !isRecording()) { idx++; show(); } };
+
+  function renderTakes(){
+    const c = cards[idx];
+    takesEl.innerHTML = c.takes.length ? '<b style="color:var(--gold);">Is card ke takes</b>' : '<span class="hint">Abhi koi take nahi. 🔴 Record dabaiye.</span>';
+    c.takes.forEach((t, i) => {
+      const d = document.createElement('div'); d.className = 'take' + (i === c.best ? ' best' : '');
+      d.innerHTML = `<span>Take ${i + 1} · ${t.dur.toFixed(1)}s ${i === c.best ? '⭐ best' : ''}</span>`;
+      const play = document.createElement('button'); play.className = 'btn outline'; play.textContent = '▶️ Suniye';
+      play.onclick = () => playTake(t, play);
+      const star = document.createElement('button'); star.className = 'btn outline'; star.textContent = '⭐ Best';
+      star.onclick = () => { c.best = i; renderTakes(); };
+      const del = document.createElement('button'); del.className = 'btn outline'; del.textContent = '🗑️';
+      del.onclick = () => {
+        URL.revokeObjectURL(t.url); c.takes.splice(i, 1);
+        if (c.best === i) c.best = c.takes.length ? c.takes.length - 1 : -1; else if (c.best > i) c.best--;
+        renderTakes(); buildStrip(); show();
+      };
+      d.append(play, star, del); takesEl.appendChild(d);
+    });
+    reelBtn.disabled = c.best < 0; dlAudioBtn.disabled = c.best < 0;
+  }
+
+  function playTake(t, btn){
+    const wasOn = btn.dataset.on === '1';
+    if (playing) { playing.pause(); playing = null; }
+    document.querySelectorAll('.take .btn').forEach(b => { if (b.dataset.on === '1') { b.dataset.on = ''; b.textContent = '▶️ Suniye'; } });
+    if (wasOn) return;
+    playing = new Audio(t.url); btn.textContent = '⏸️ Rokein'; btn.dataset.on = '1';
+    playing.onended = () => { btn.textContent = '▶️ Suniye'; btn.dataset.on = ''; playing = null; };
+    playing.play();
+  }
+
+  function isRecording(){ return !!(recorder && recorder.state === 'recording'); }
+
+  async function ensureMic(){
+    if (stream) return true;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:true, noiseSuppression:true, autoGainControl:true } });
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      analyser = actx.createAnalyser(); analyser.fftSize = 1024;
+      actx.createMediaStreamSource(stream).connect(analyser);
+      return true;
+    } catch (e) {
+      statusEl.textContent = '⚠️ Mic nahi mila ya permission nahi di. Chrome mein address bar ke paas 🔒/🎤 icon se "Allow" karein.';
+      return false;
+    }
+  }
+
+  function runMeter(){
+    const buf = new Uint8Array(analyser.fftSize);
+    const loop = () => {
+      analyser.getByteTimeDomainData(buf);
+      let peak = 0; for (let i = 0; i < buf.length; i++) peak = Math.max(peak, Math.abs(buf[i] - 128));
+      meterBar.style.width = Math.min(100, peak / 128 * 140) + '%';
+      meterRaf = requestAnimationFrame(loop);
+    };
+    loop();
+  }
+
+  async function startRec(){
+    if (isRecording() || !cards.length) return;
+    if (!(await ensureMic())) return;
+    if (actx.state === 'suspended') await actx.resume();
+    if (playing) { playing.pause(); playing = null; }
+    recBtn.disabled = true;
+    if (countIn.checked) {
+      for (const n of [3, 2, 1]) { timerEl.textContent = n; statusEl.textContent = 'Taiyar ho jaaiye...'; await new Promise(r => setTimeout(r, 700)); }
+    }
+    chunks = [];
+    recorder = new MediaRecorder(stream);
+    recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+    recorder.onstop = onStopped;
+    recorder.start();
+    recStart = performance.now();
+    recBtn.style.display = 'none'; recBtn.disabled = false; stopBtn.style.display = 'inline-block';
+    recDot.style.display = 'block';
+    statusEl.textContent = '🔴 Bol rahe hain... khatam karke "Rokein" ya Space dabaiye.';
+    const tick = () => { const s = (performance.now() - recStart) / 1000; timerEl.textContent = s.toFixed(1) + 's'; timerEl.style.color = s > 15 ? 'var(--coral)' : ''; timerRaf = requestAnimationFrame(tick); };
+    tick();
+    if (!meterRaf) runMeter();
+  }
+
+  function stopRec(){ if (isRecording()) recorder.stop(); }
+
+  async function onStopped(){
+    cancelAnimationFrame(timerRaf);
+    recDot.style.display = 'none'; stopBtn.style.display = 'none'; recBtn.style.display = 'inline-block';
+    statusEl.textContent = '⏳ Take save ho raha hai...';
+    try {
+      const raw = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+      const { blob, dur } = await cleanToWav(raw);
+      const c = cards[idx];
+      c.takes.push({ url: URL.createObjectURL(blob), blob, dur });
+      c.best = c.takes.length - 1;
+      statusEl.textContent = `✅ Take ${c.takes.length} save hua (${dur.toFixed(1)}s). ▶️ se suniye — achha na lage to dobara record kariye.`;
+      buildStrip(); renderTakes();
+      [...strip.querySelectorAll('img')].forEach((im, i) => im.classList.toggle('cur', i === idx));
+      if (autoNext.checked && idx < cards.length - 1) { idx++; show(); }
+    } catch (e) {
+      statusEl.textContent = '⚠️ Take save nahi hua: ' + e.message;
+    }
+  }
+
+  // silence trim + mono WAV, so duration is always correct
+  async function cleanToWav(blob){
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const buf = await actx.decodeAudioData(await blob.arrayBuffer());
+    const sr = buf.sampleRate, n = buf.length, chs = buf.numberOfChannels;
+    const mono = new Float32Array(n);
+    for (let c = 0; c < chs; c++) { const d = buf.getChannelData(c); for (let i = 0; i < n; i++) mono[i] += d[i] / chs; }
+    let peak = 0; for (let i = 0; i < n; i += 32) peak = Math.max(peak, Math.abs(mono[i]));
+    const thr = Math.max(0.01, peak * 0.06);
+    let a = 0, b = n - 1;
+    while (a < n && Math.abs(mono[a]) < thr) a++;
+    while (b > a && Math.abs(mono[b]) < thr) b--;
+    if (b <= a) { a = 0; b = n - 1; }
+    a = Math.max(0, a - Math.floor(0.25 * sr)); b = Math.min(n - 1, b + Math.floor(0.4 * sr));
+    const out = mono.subarray(a, b + 1);
+    const len = out.length, ab = new ArrayBuffer(44 + len * 2), v = new DataView(ab);
+    const ws = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+    ws(0, 'RIFF'); v.setUint32(4, 36 + len * 2, true); ws(8, 'WAVE'); ws(12, 'fmt ');
+    v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+    ws(36, 'data'); v.setUint32(40, len * 2, true);
+    for (let i = 0; i < len; i++) { const s = Math.max(-1, Math.min(1, out[i])); v.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7FFF, true); }
+    return { blob: new Blob([ab], { type: 'audio/wav' }), dur: len / sr };
+  }
+
+  // ---- phone recordings: audio file -> take (same trim + WAV as mic takes) ----
+  async function addFileTake(cardIndex, file){
+    const { blob, dur } = await cleanToWav(file);
+    const c = cards[cardIndex];
+    c.takes.push({ url: URL.createObjectURL(blob), blob, dur });
+    c.best = c.takes.length - 1;
+    return dur;
+  }
+  $('audioOne').addEventListener('change', async e => {
+    const f = e.target.files[0]; e.target.value = '';
+    if (!f || !cards.length) return;
+    statusEl.textContent = '⏳ Awaaz lag rahi hai...';
+    try {
+      const dur = await addFileTake(idx, f);
+      statusEl.textContent = `✅ "${f.name}" is card par lag gayi (${dur.toFixed(1)}s). ▶️ se suniye.`;
+      buildStrip(); show();
+    } catch (err) {
+      statusEl.textContent = `⚠️ "${f.name}" nahi chali — shayad file kharab hai ya format support nahi.`;
+    }
+  });
+  $('audioMany').addEventListener('change', async e => {
+    const files = [...e.target.files].sort((a, b) => natural(a.name, b.name)); e.target.value = '';
+    if (!files.length || !cards.length) return;
+    let ok = 0; const bad = [];
+    const n = Math.min(files.length, cards.length);
+    for (let i = 0; i < n; i++) {
+      statusEl.textContent = `⏳ Awaaz lag rahi hai... ${i + 1} / ${n}`;
+      try { await addFileTake(i, files[i]); ok++; } catch (err) { bad.push(files[i].name); }
+    }
+    let msg = `✅ ${ok} cards par awaaz lag gayi.`;
+    if (bad.length) msg += ` ⚠️ Ye nahi chali: ${bad.join(', ')}.`;
+    if (files.length > cards.length) msg += ` ℹ️ ${files.length - cards.length} file(s) zyada thi, unhe chhod diya.`;
+    statusEl.textContent = msg;
+    buildStrip(); show();
+  });
+
+  recBtn.onclick = startRec;
+  stopBtn.onclick = stopRec;
+  document.addEventListener('keydown', e => {
+    if (!cards.length || /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+    if (e.code === 'Space') { e.preventDefault(); isRecording() ? stopRec() : startRec(); }
+    else if (e.key === 'ArrowRight' && !isRecording()) nextBtn.click();
+    else if (e.key === 'ArrowLeft' && !isRecording()) prevBtn.click();
+  });
+
+  function baseName(){ return cards[idx].name.replace(/\.[^.]+$/, ''); }
+  function download(blob, name){
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+  dlAudioBtn.onclick = () => { const c = cards[idx]; if (c.best >= 0) download(c.takes[c.best].blob, baseName() + '_voice.wav'); };
+
+  // ---- reel: card image (slow zoom) + best take, 1080x1920 ----
+  reelBtn.onclick = async () => {
+    const c = cards[idx]; if (c.best < 0) return;
+    const take = c.takes[c.best];
+    reelBtn.disabled = true;
+    try {
+      const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = c.url; });
+      const W = 1080, H = 1920, FPS = 30;
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const g = cv.getContext('2d');
+      const dur = Math.max(5, take.dur + 1.2);
+      const draw = t => {
+        const p = Math.min(1, t / dur), z = 1 + 0.06 * p;
+        g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+        // blurred fill behind, so non-9:16 cards still look full
+        const cover = Math.max(W / img.width, H / img.height);
+        g.save(); g.filter = 'blur(40px) brightness(0.55)';
+        g.drawImage(img, (W - img.width * cover) / 2, (H - img.height * cover) / 2, img.width * cover, img.height * cover);
+        g.restore();
+        const fit = Math.min(W / img.width, H / img.height) * z;
+        g.drawImage(img, (W - img.width * fit) / 2, (H - img.height * fit) / 2, img.width * fit, img.height * fit);
+        const fade = Math.min(1, t / 0.4, (dur - t) / 0.5);
+        if (fade < 1) { g.fillStyle = `rgba(0,0,0,${1 - Math.max(0, fade)})`; g.fillRect(0, 0, W, H); }
+      };
+      draw(0);
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === 'suspended') await actx.resume();
+      const audioBuf = await actx.decodeAudioData(await take.blob.arrayBuffer());
+      const dest = actx.createMediaStreamDestination();
+      const src = actx.createBufferSource(); src.buffer = audioBuf; src.connect(dest);
+      const vs = cv.captureStream(FPS);
+      const ms = new MediaStream([...vs.getVideoTracks(), ...dest.stream.getAudioTracks()]);
+      const types = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a.40.2', 'video/webm;codecs=vp9,opus', 'video/webm'];
+      const mime = types.find(t => window.MediaRecorder && MediaRecorder.isTypeSupported(t)) || '';
+      const rec = new MediaRecorder(ms, mime ? { mimeType: mime, videoBitsPerSecond: 8000000 } : {});
+      const parts = []; rec.ondataavailable = e => { if (e.data.size) parts.push(e.data); };
+      const done = new Promise(r => rec.onstop = r);
+      rec.start();
+      const t0 = performance.now();
+      src.start(actx.currentTime + 0.3);
+      await new Promise(r => {
+        const loop = () => {
+          const t = (performance.now() - t0) / 1000;
+          draw(t);
+          statusEl.textContent = `⏳ Reel ban rahi hai... ${Math.min(t, dur).toFixed(1)}s / ${dur.toFixed(1)}s`;
+          if (t >= dur) return r();
+          requestAnimationFrame(loop);
+        };
+        loop();
+      });
+      rec.stop(); await done;
+      const isMp4 = mime.includes('mp4');
+      const out = new Blob(parts, { type: isMp4 ? 'video/mp4' : 'video/webm' });
+      download(out, baseName() + '_voice_reel.' + (isMp4 ? 'mp4' : 'webm'));
+      reelPreview.src = URL.createObjectURL(out); reelPreview.style.display = 'block';
+      statusEl.textContent = `✅ Reel taiyar (${isMp4 ? 'MP4' : 'WebM'}, 1080×1920) — Downloads mein aa gayi.`;
+    } catch (e) {
+      statusEl.textContent = '⚠️ Reel nahi bani: ' + e.message;
+    }
+    reelBtn.disabled = false;
+  };
+})();
+</script>
+</body>
+</html>
